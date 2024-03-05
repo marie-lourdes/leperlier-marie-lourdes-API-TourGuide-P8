@@ -19,7 +19,7 @@ import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.user.User;
 import tripPricer.Provider;
 
-public class TestTourGuideService {
+public class TourGuideServiceTest {
 
 	@Test
 	public void getUserLocation() {

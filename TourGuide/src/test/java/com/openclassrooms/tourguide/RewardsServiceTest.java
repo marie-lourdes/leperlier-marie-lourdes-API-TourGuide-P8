@@ -20,7 +20,7 @@ import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.user.User;
 import com.openclassrooms.tourguide.user.UserReward;
 
-public class TestRewardsService {
+public class RewardsServiceTest {
 
 	@Test
 	public void userGetRewards() {
