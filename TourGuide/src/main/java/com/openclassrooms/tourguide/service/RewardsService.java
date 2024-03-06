@@ -43,7 +43,7 @@ public class RewardsService {
 		for(VisitedLocation visitedLocation : userLocations) {
 			for(Attraction attraction : attractions) {
 				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-					if(nearAttraction(visitedLocation, attraction)) {
+					if(isNearAttraction(visitedLocation, attraction)) {
 						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 					}
 				}
@@ -51,11 +51,11 @@ public class RewardsService {
 		}
 	}
 	
-	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
+	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {//? à implementer dans un service GpsUtilService
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
 	
-	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
+	private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {//? à implementer dans un service GpsUtilService
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}
 	
@@ -63,7 +63,7 @@ public class RewardsService {
 		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
 	
-	public double getDistance(Location loc1, Location loc2) {
+	public double getDistance(Location loc1, Location loc2) {//? à implementer dans un service GpsUtilService
         double lat1 = Math.toRadians(loc1.latitude);
         double lon1 = Math.toRadians(loc1.longitude);
         double lat2 = Math.toRadians(loc2.latitude);

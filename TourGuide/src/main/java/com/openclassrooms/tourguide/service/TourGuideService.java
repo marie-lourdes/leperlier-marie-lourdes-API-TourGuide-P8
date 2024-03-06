@@ -106,7 +106,7 @@ public class TourGuideService {
 		return nearbyAttractions;
 	}
 
-	private void addShutDownHook() {
+	private void addShutDownHook() {//? externaliser cette methode qui ne correspond pas au service  
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				tracker.stopTracking();
