@@ -50,9 +50,8 @@ public class RewardsServiceTest {
 
 	//@Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
-	public void nearAllAttractions() throws Exception{
+	public void nearAllAttractions(){ //ajouter try/catch ConcurrentModificationException
 		GpsUtil gpsUtil = new GpsUtil();
-		try {
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
@@ -63,10 +62,6 @@ public class RewardsServiceTest {
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
 		tourGuideService.tracker.stopTracking();
 
-		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
-		}catch(ConcurrentModificationException e){
-			System.out.println("Concurrent Exception method test near All Attraction"+e.getMessage());
-		}
+		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());	
 	}
-
 }

@@ -110,7 +110,7 @@ public class TourGuideService {
 	private void addShutDownHook() {//? externaliser cette methode qui ne correspond pas au service  
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
-				tracker.stopTracking();
+				tracker.stopTracking(); 
 			}
 		});
 	}

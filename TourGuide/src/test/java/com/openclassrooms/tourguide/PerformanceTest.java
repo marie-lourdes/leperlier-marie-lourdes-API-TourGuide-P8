@@ -73,7 +73,7 @@ public class PerformanceTest {
 
 	//@Disabled
 	@Test
-	public void highVolumeGetRewards() {
+	public void highVolumeGetRewards() {//ajouter try/catch ConcurrentModificationException
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 

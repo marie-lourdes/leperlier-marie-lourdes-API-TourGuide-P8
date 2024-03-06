@@ -45,6 +45,8 @@ public class Tracker extends Thread {
 		while (true) {//?? provoque boucle infinie si toujours a true*
 			// passez en parametre de la boucle while la variable stop , et a la fin de la method run  pour stopper le thread reafectez la variable a false pour entrer a nouveau dans la boucle
 			if (Thread.currentThread().isInterrupted() || stop) {
+				//testez la condition sans la varinale stop et le placez dans lewhile pour testerl exception ConccurrentModificationexception 
+				//le programme est interrompu si le thread est interrompu mais ne les thread attribut "interrupted" =false dans le debug donc ne devrait pas stopper le programme
 				logger.debug("Tracker stopping");
 				break;
 			}
