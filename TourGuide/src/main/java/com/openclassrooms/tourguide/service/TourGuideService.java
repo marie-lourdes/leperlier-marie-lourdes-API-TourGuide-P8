@@ -64,7 +64,8 @@ public class TourGuideService {
 				: trackUserLocation(user);
 		return visitedLocation;
 	}
-
+	
+	// -------------------? à integrer dans un service crud UserService? une seule classe dedié aux method crud des données en BDD------------------------
 	public User getUser(String userName) {
 		return internalUserMap.get(userName);
 	}

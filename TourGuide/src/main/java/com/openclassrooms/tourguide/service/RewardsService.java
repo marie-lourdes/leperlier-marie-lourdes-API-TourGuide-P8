@@ -17,7 +17,7 @@ public class RewardsService {
     private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
 	// proximity in miles
-    private int defaultProximityBuffer = 10;
+    private int defaultProximityBuffer = 10;//?type Buffer pour la manipulation des données au lieu de int
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
 	private final GpsUtil gpsUtil;
@@ -50,19 +50,22 @@ public class RewardsService {
 			}
 		}
 	}
-	
-	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {//? à implementer dans un service GpsUtilService
+	//? a implementer dans le tour guideService avec les 5 premier attraction proche du dernier lieu visité par l user, peur importe la distance et une methode getDistance d interface
+	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
+
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
 	
-	private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {//? à implementer dans un service GpsUtilService
+	/*private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {//? methode propre au reward service avec une methode getDistance d interface à creer
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
-	}
+	}*/
 	
 	private int getRewardPoints(Attraction attraction, User user) {
 		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
 	
+	//?Utiliser une interface commune DistanceCalculator pour rewardService et tourguide service avec une methode getDistance()
+	//
 	public double getDistance(Location loc1, Location loc2) {//? à implementer dans un service GpsUtilService
         double lat1 = Math.toRadians(loc1.latitude);
         double lon1 = Math.toRadians(loc1.longitude);
