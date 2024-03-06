@@ -56,9 +56,9 @@ public class RewardsService {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
 	
-	/*private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {//? methode propre au reward service avec une methode getDistance d interface à creer
+	private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {//? methode propre au reward service avec une methode getDistance d interface à creer
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
-	}*/
+	}
 	
 	private int getRewardPoints(Attraction attraction, User user) {
 		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
