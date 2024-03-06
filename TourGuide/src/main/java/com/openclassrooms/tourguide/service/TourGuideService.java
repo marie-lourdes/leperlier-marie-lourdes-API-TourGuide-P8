@@ -59,7 +59,7 @@ public class TourGuideService {
 		return user.getUserRewards();
 	}
 
-	public VisitedLocation getUserLocation(User user) {//?Renomer methode get UserViditedLocation
+	public VisitedLocation getUserLocation(User user) {//?Renomer methode getUserVisitedLocation
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
 				: trackUserLocation(user);
 		return visitedLocation;
