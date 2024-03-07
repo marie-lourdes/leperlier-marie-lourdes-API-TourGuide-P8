@@ -36,7 +36,7 @@ public class RewardsService {
 		proximityBuffer = defaultProximityBuffer;
 	}
 	
-	public void calculateRewards(User user) {
+	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode avec en parametre getAllUser().get(0).pour recuperer le premier
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 		List<Attraction> attractions = gpsUtil.getAttractions();
 		
