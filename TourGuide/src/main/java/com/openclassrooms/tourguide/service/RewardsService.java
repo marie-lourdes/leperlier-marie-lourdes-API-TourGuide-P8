@@ -1,5 +1,6 @@
 package com.openclassrooms.tourguide.service;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -37,18 +38,23 @@ public class RewardsService {
 	}
 	
 	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode avec en parametre getAllUser().get(0).pour recuperer le premier
-		List<VisitedLocation> userLocations = user.getVisitedLocations();
-		List<Attraction> attractions = gpsUtil.getAttractions();
-		
-		for(VisitedLocation visitedLocation : userLocations) {
-			for(Attraction attraction : attractions) {
-				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-					if(isNearAttraction(visitedLocation, attraction)) {
-						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+		try {
+			List<VisitedLocation> userLocations = user.getVisitedLocations();
+			List<Attraction> attractions = gpsUtil.getAttractions();
+			
+			for(VisitedLocation visitedLocation : userLocations) {
+				for(Attraction attraction : attractions) {
+					if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
+						if(isNearAttraction(visitedLocation, attraction)) {
+							user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+						}
 					}
 				}
 			}
+		}catch( ConcurrentModificationException e) {
+			System.out.println(e.getMessage());
 		}
+	
 	}
 	//? a implementer dans le tour guideService avec les 5 premier attraction proche du dernier lieu visité par l user, peur importe la distance et une methode getDistance d interface
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
