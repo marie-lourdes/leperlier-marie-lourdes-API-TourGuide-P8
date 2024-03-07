@@ -37,7 +37,7 @@ public class TourGuideService {
 	private final RewardsService rewardsService;
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
-	boolean testMode = true;
+	boolean testMode = true; // fais arreter le thread car reste a true los du debug, stop= true , mais le thread n a pas subit d interruption, un arret volontaire
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
@@ -70,7 +70,7 @@ public class TourGuideService {
 		return internalUserMap.get(userName);
 	}
 
-	public List<User> getAllUsers() {
+	public List<User> getAllUsers() {// les erreurs de test avec l exception ConcurrentModificationException provient de cette methode
 		return internalUserMap.values().stream().collect(Collectors.toList());
 	}
 
@@ -109,6 +109,9 @@ public class TourGuideService {
 
 	private void addShutDownHook() {//? externaliser cette methode qui ne correspond pas au service  
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			//la methode addShutDownHook attend comme un evenment 
+			//system exit ou un appel de methode qui arrete le programme avec tel que 	
+			//executorService.shutdownNow(de la classTracker);
 			public void run() {
 				tracker.stopTracking(); 
 			}
