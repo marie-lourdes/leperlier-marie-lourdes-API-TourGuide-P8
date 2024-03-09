@@ -63,4 +63,16 @@ public class RewardsServiceTest {
 
 		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());	
 	}
+
+	@Test
+	public void testCalculateRewards() throws InterruptedException{
+		GpsUtil gpsUtil = new GpsUtil();
+		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
+
+		InternalTestHelper.setInternalUserNumber(1);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+
+		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));//?
+	}
 }
