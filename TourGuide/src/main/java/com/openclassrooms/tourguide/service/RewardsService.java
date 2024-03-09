@@ -38,11 +38,11 @@ public class RewardsService {
 	}
 
 	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode
-												// avec en parametre getAllUser().get(0).pour recuperer le premier
-	//	try {
+												
 			List<VisitedLocation> userLocations = user.getVisitedLocations();
 			List<Attraction> attractions = gpsUtil.getAttractions();
-
+			
+		// boucles imbriquée lance  erreur de ConcurrentModificationException (iteration et modification lors de l iteration) et userRewards vide
 			for (VisitedLocation visitedLocation : userLocations) {
 				for (Attraction attraction : attractions) {
 			
