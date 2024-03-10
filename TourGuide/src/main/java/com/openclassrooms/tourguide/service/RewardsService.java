@@ -54,12 +54,10 @@ public class RewardsService {
 								  .map(Object::toString)
 								.toList();
 					 
-					 if( listUserRewards.isEmpty()) {
-						 if (isNearAttraction(visitedLocation, attraction)) {
+					 if( listUserRewards.isEmpty() && isNearAttraction(visitedLocation, attraction)) {				
 							 user.addUserReward(
 										new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
-						 }
-							
+						 			
 					 }
 			
 			/*	if (user.getUserRewards().stream()
