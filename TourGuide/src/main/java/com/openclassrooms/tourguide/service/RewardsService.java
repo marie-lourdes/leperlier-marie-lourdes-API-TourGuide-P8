@@ -48,17 +48,20 @@ public class RewardsService {
 			for (VisitedLocation visitedLocation : userLocations) {
 				for (Attraction attraction : attractions) {
 					
-					 listUserRewards=user.getUserRewards().stream()
+				 listUserRewards=user.getUserRewards().stream()
 								.filter(r -> r.attraction.attractionName.equals(attraction.attractionName))
 								  .map(Object::toString)
 								.toList();
 					 
-					 if( listUserRewards.isEmpty() || isNearAttraction(visitedLocation, attraction)) {
-							user.addUserReward(
-									new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+					 if( listUserRewards.isEmpty()) {
+						 if (isNearAttraction(visitedLocation, attraction)) {
+							 user.addUserReward(
+										new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+						 }
+							
 					 }
-			/*
-					if (user.getUserRewards().stream()
+			
+			/*	if (user.getUserRewards().stream()
 							.filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
 						if (isNearAttraction(visitedLocation, attraction)) {
 							user.addUserReward(
@@ -67,7 +70,8 @@ public class RewardsService {
 					}*/
 				}
 			}
-			System.out.println("userRewards"+user.getUserRewards());//? userRewards vide
+			
+		//	System.out.println("userRewards"+user.getUserRewards());//? userRewards vide
 		/*} catch (ConcurrentModificationException e) {
 			System.out.println("erreur ConcurrentException" + e.getMessage());
 		}*/
