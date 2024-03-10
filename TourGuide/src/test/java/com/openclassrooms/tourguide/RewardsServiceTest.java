@@ -54,7 +54,7 @@ public class RewardsServiceTest {
 	public void nearAllAttractions() throws InterruptedException{ //ajouter try/catch ConcurrentModificationException
 		GpsUtil gpsUtil = new GpsUtil();
 		
-		try {
+		//try {
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
@@ -66,9 +66,9 @@ public class RewardsServiceTest {
 		tourGuideService.tracker.stopTracking();
 		System.out.println("userRewards"+userRewards);
 		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());	
-		} catch (ConcurrentModificationException e) {
+		/*} catch (ConcurrentModificationException e) {
 			System.err.print("Error ConcurrentModificationException " + e.getMessage());
-		}
+		}*/
 	}
 
 	@Test

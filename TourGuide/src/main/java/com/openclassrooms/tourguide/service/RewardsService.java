@@ -1,6 +1,7 @@
 package com.openclassrooms.tourguide.service;
 
 import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -39,7 +40,7 @@ public class RewardsService {
 	}
 
 	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode
-												
+			try {									
 			List<VisitedLocation> userLocations = user.getVisitedLocations();
 			List<Attraction> attractions = gpsUtil.getAttractions();
 			List<String> listUserRewards= new ArrayList<String>();
@@ -72,9 +73,9 @@ public class RewardsService {
 			}
 			
 		//	System.out.println("userRewards"+user.getUserRewards());//? userRewards vide
-		/*} catch (ConcurrentModificationException e) {
-			System.out.println("erreur ConcurrentException" + e.getMessage());
-		}*/
+		} catch (ConcurrentModificationException e) {
+			System.err.print("Error ConcurrentModificationException calculateRewards " + e.getMessage());
+		}
 
 	}
 
