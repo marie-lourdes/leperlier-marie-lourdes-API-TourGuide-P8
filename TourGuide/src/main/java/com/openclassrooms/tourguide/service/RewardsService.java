@@ -40,37 +40,35 @@ public class RewardsService {
 	}
 
 	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode
-			try {									
-			List<VisitedLocation> userLocations = user.getVisitedLocations();
+		try {
+			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations();
 			List<Attraction> attractions = gpsUtil.getAttractions();
-			List<String> listUserRewards= new ArrayList<String>();
-			
-		// boucles imbriquée lance  erreur de ConcurrentModificationException (iteration et modification lors de l iteration) et userRewards vide
-			for (VisitedLocation visitedLocation : userLocations) {
+			List<String> listUserRewards = new ArrayList<String>();
+
+			// boucles imbriquée lance erreur de ConcurrentModificationException (iteration
+			// et modification lors de l iteration) et userRewards vide
+			for (VisitedLocation visitedLocation : userVisitedLocations) {
 				for (Attraction attraction : attractions) {
-					
-				 listUserRewards=user.getUserRewards().stream()
-								.filter(r -> r.attraction.attractionName.equals(attraction.attractionName))
-								  .map(Object::toString)
-								.toList();
-					 
-					 if( listUserRewards.isEmpty() && isNearAttraction(visitedLocation, attraction)) {				
-							 user.addUserReward(
-										new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
-						 			
-					 }
-			
-			/*	if (user.getUserRewards().stream()
-							.filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-						if (isNearAttraction(visitedLocation, attraction)) {
-							user.addUserReward(
-									new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
-						}
-					}*/
+
+					listUserRewards = user.getUserRewards().stream()
+							.filter(userReward-> userReward.attraction.attractionName.equals(attraction.attractionName))
+							.map(Object::toString).toList();
+
+					if (listUserRewards.isEmpty() && isNearAttraction(visitedLocation, attraction)) {
+						user.addUserReward(
+								new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+
+					}
+
+					/*
+					 * if (user.getUserRewards().stream() .filter(r ->
+					 * r.attraction.attractionName.equals(attraction.attractionName)).count() == 0)
+					 * { if (isNearAttraction(visitedLocation, attraction)) { user.addUserReward(
+					 * new UserReward(visitedLocation, attraction, getRewardPoints(attraction,
+					 * user))); } }
+					 */
 				}
 			}
-			
-		//	System.out.println("userRewards"+user.getUserRewards());//? userRewards vide
 		} catch (ConcurrentModificationException e) {
 			System.err.print("Error ConcurrentModificationException calculateRewards " + e.getMessage());
 		}
