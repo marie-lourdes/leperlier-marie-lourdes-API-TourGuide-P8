@@ -3,6 +3,7 @@ package com.openclassrooms.tourguide;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -49,7 +50,7 @@ public class RewardsServiceTest {
 
 	//@Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
-	public void nearAllAttractions(){ //ajouter try/catch ConcurrentModificationException
+	public void nearAllAttractions() throws InterruptedException{ //ajouter try/catch ConcurrentModificationException
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
@@ -74,5 +75,6 @@ public class RewardsServiceTest {
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));//?
+		tourGuideService.tracker.stopTracking();
 	}
 }

@@ -47,7 +47,7 @@ public class PerformanceTest {
 
 	// @Disabled
 	@Test
-	public void highVolumeTrackLocation() {
+	public void highVolumeTrackLocation() throws InterruptedException{
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		// Users should be incremented up to 100,000, and test finishes within 15
@@ -73,7 +73,7 @@ public class PerformanceTest {
 
 	// @Disabled
 	@Test
-	public void highVolumeGetRewards() {// ajouter try/catch ConcurrentModificationException
+	public void highVolumeGetRewards() throws InterruptedException{// ajouter try/catch ConcurrentModificationException
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 
