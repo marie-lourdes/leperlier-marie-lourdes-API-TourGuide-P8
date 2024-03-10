@@ -74,7 +74,7 @@ public class RewardsServiceTest {
 	@Test
 	public void testCalculateRewards() throws InterruptedException{
 		GpsUtil gpsUtil = new GpsUtil();
-		try {
+	//	try {
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
@@ -83,8 +83,8 @@ public class RewardsServiceTest {
 
 		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));//?
 		tourGuideService.tracker.stopTracking();
-		} catch (ConcurrentModificationException e) {
+	/*	} catch (ConcurrentModificationException e) {
 			System.err.print("Error ConcurrentModificationException testCalculateRewards " + e.getMessage());
-		}
+		}*/
 	}
 }
