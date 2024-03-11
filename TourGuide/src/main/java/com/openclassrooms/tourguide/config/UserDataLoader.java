@@ -11,30 +11,36 @@ import java.util.stream.IntStream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
-import com.openclassrooms.tourguide.service.TourGuideService;
+import com.openclassrooms.tourguide.service.UserService;
 import com.openclassrooms.tourguide.user.User;
 
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 
+// Database connection will be used for external users, but for testing purposes
+// internal users are provided and stored in memory
+@Component
 public class UserDataLoader {
 	private Logger logger = LoggerFactory.getLogger(UserDataLoader.class);
-	private static final String tripPricerApiKey = "test-server-api-key";
-	// Database connection will be used for external users, but for testing purposes
-	// internal users are provided and stored in memory
-	private final Map<String, User> internalUserMap = new HashMap<>();
 
-	private void initializeInternalUsers() {
+	@Autowired
+	UserService userService;
+	
+	//private final Map<String, User> internalUserMap = new HashMap<>();
+
+	public void initializeInternalUsers() {
 		IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach(i -> {
 			String userName = "internalUser" + i;
 			String phone = "000";
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
 			generateUserLocationHistory(user);
-
-			internalUserMap.put(userName, user);
+			userService.addUser(user);
+			//internalUserMap.put(userName, user);
 		});
 		logger.debug("Created " + InternalTestHelper.getInternalUserNumber() + " internal test users.");
 	}
