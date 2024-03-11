@@ -1,6 +1,5 @@
 package com.openclassrooms.tourguide.service;
 
-import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.stream.Stream;
@@ -42,11 +41,9 @@ public class RewardsService {
 
 	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode
 		try {
-			
 			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations();
 			List<Attraction> attractions = gpsUtil.getAttractions();
 			Stream<UserReward> listUserRewards;
-
 			// boucles imbriquée lance erreur de ConcurrentModificationException (iteration
 			// et modification lors de l iteration) et userRewards vide
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
@@ -61,7 +58,6 @@ public class RewardsService {
 								new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 
 					}
-
 					/*
 					 * if (user.getUserRewards().stream() .filter(r ->
 					 * r.attraction.attractionName.equals(attraction.attractionName)).count() == 0)
@@ -85,11 +81,8 @@ public class RewardsService {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
 
-	private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {// ? methode propre au
-																								// reward service avec
-																								// une methode
-																								// getDistance d
-																								// interface à creer
+	private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
+		// ? methode propre au reward service avec une methode getDistance dinterface à creer																							 
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}
 

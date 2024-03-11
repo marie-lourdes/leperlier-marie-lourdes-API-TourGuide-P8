@@ -21,9 +21,9 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
 public class RewardsServiceTest {
-
-	@Test
-	public void userGetRewards() {
+	
+	@Test // A ajouter dans un test de TourGuideService
+	public void testUserGetRewards() {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 
@@ -40,7 +40,7 @@ public class RewardsServiceTest {
 	}
 
 	@Test
-	public void isWithinAttractionProximity() {
+	public void testIsWithinAttractionProximity() {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		Attraction attraction = gpsUtil.getAttractions().get(0);
@@ -49,7 +49,7 @@ public class RewardsServiceTest {
 
 	//@Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
-	public void nearAllAttractions() throws InterruptedException{ //ajouter try/catch ConcurrentModificationException
+	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException{ //ajouter try/catch ConcurrentModificationException
 		GpsUtil gpsUtil = new GpsUtil();
 		
 		//try {
@@ -63,27 +63,10 @@ public class RewardsServiceTest {
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
 		tourGuideService.tracker.stopTracking();
 		List<Attraction> attractions = gpsUtil.getAttractions();
-		System.out.println("userRewards"+userRewards);
+
 		assertEquals(attractions.size(), userRewards.size());	
 		/*} catch (ConcurrentModificationException e) {
 			System.err.print("Error ConcurrentModificationException " + e.getMessage());
-		}*/
-	}
-
-	@Test
-	public void testCalculateRewards() throws InterruptedException{
-		GpsUtil gpsUtil = new GpsUtil();
-	//	try {
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
-
-		InternalTestHelper.setInternalUserNumber(1);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
-
-		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));//?
-		tourGuideService.tracker.stopTracking();
-	/*	} catch (ConcurrentModificationException e) {
-			System.err.print("Error ConcurrentModificationException testCalculateRewards " + e.getMessage());
 		}*/
 	}
 }

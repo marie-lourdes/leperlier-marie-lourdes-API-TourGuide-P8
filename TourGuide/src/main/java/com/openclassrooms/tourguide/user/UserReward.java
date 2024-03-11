@@ -30,7 +30,7 @@ public class UserReward {
 
 	@Override
 	public String toString() {
-		return "UserReward : {" + "VisitedLocation: " + visitedLocation + "attraction: " + attraction + "rewardPoints: "
+		return "UserReward : {" + " VisitedLocation user id: " + visitedLocation + " ,attraction: " + attraction.attractionName+ " ,rewardPoints: "
 				+ rewardPoints + "}";
 	}
 
