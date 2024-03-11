@@ -46,9 +46,9 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	@Disabled
+
 	@Test
-	public void highVolumeTrackLocation() throws InterruptedException{
+	public void testHighVolumeTrackLocation() throws InterruptedException{
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		// Users should be incremented up to 100,000, and test finishes within 15
@@ -72,9 +72,9 @@ public class PerformanceTest {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	@Disabled
+
 	@Test
-	public void highVolumeGetRewards() throws InterruptedException{// ajouter try/catch ConcurrentModificationException
+	public void testHighVolumeGetRewards() throws InterruptedException{// ajouter try/catch ConcurrentModificationException
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 
