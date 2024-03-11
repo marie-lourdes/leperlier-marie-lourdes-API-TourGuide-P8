@@ -6,7 +6,6 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.config.UserDataLoader;
@@ -24,25 +23,23 @@ import tripPricer.TripPricer;
 public class TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
 	
-	@Autowired
-	UserDataLoader 	userDataLoader;
-	
 	private final GpsUtil gpsUtil;
 	private final RewardsService rewardsService;
+	private final UserDataLoader 	userDataLoader;
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
 	boolean testMode = true;
 
-	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
+	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService,UserDataLoader userDataLoader) {
 		this.gpsUtil = gpsUtil;
 		this.rewardsService = rewardsService;
-		
+		this.	userDataLoader=userDataLoader;
 		Locale.setDefault(Locale.US);
 
 		if (testMode) {
 			logger.info("TestMode enabled");
 			logger.debug("Initializing users");
-			userDataLoader.initializeInternalUsers();
+			this.userDataLoader.initializeInternalUsers();
 			logger.debug("Finished initializing users");
 		}
 		tracker = new Tracker(this, new UserService());
