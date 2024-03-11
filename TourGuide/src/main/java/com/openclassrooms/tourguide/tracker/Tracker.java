@@ -44,11 +44,13 @@ public class Tracker extends Thread {
 		StopWatch stopWatch = new StopWatch();
 		while (stop) {//?? provoque boucle infinie si toujours a true*
 			// passez en parametre de la boucle while la variable stop , et a la fin de la method run  pour stopper le thread reafectez la variable a false pour entrer a nouveau dans la boucle
+			try {
 			if (Thread.currentThread().isInterrupted() ) {
 				//testez la condition sans la varinale stop et le placez dans lewhile pour testerl exception ConccurrentModificationexception 
 				//le programme est interrompu si le thread est interrompu mais ne les thread attribut "interrupted" =false dans le debug donc ne devrait pas stopper le programme
 				logger.debug("Tracker stopping");
-				break;
+				stopTracking();
+			//break;
 			}
 
 			List<User> users = tourGuideService.getAllUsers();
@@ -58,13 +60,14 @@ public class Tracker extends Thread {
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
 			stopWatch.reset();
-			try {
+			
 				logger.debug("Tracker sleeping");
 				TimeUnit.SECONDS.sleep(trackingPollingInterval);//?? provoque des erreurs du 2 eme  du 2eme appel de tourGuideService
-			} catch (InterruptedException e) {
-				break;
+			} catch (InterruptedException e) {	
+				logger.error(e.getMessage());
+				//stopTracking();
 			}
+		break;
 		}
-
 	}
 }

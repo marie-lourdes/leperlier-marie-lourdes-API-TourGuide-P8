@@ -3,6 +3,7 @@ package com.openclassrooms.tourguide.service;
 import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -41,20 +42,21 @@ public class RewardsService {
 
 	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode
 		try {
+			
 			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations();
 			List<Attraction> attractions = gpsUtil.getAttractions();
-			List<String> listUserRewards = new ArrayList<String>();
+			Stream<UserReward> listUserRewards;
 
 			// boucles imbriquée lance erreur de ConcurrentModificationException (iteration
 			// et modification lors de l iteration) et userRewards vide
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
 				for (Attraction attraction : attractions) {
-
+					
 					listUserRewards = user.getUserRewards().stream()
-							.filter(userReward-> userReward.attraction.attractionName.equals(attraction.attractionName))
-							.map(Object::toString).toList();
+							.filter(userReward-> userReward.attraction.attractionName.equals(attraction.attractionName));
+							
 
-					if (listUserRewards.isEmpty() && isNearAttraction(visitedLocation, attraction)) {
+					if (listUserRewards.count()==0 && isNearAttraction(visitedLocation, attraction)) {
 						user.addUserReward(
 								new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 

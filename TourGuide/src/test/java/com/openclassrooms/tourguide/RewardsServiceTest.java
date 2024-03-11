@@ -3,12 +3,10 @@ package com.openclassrooms.tourguide;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
@@ -64,8 +62,9 @@ public class RewardsServiceTest {
 		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));//?
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
 		tourGuideService.tracker.stopTracking();
+		List<Attraction> attractions = gpsUtil.getAttractions();
 		System.out.println("userRewards"+userRewards);
-		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());	
+		assertEquals(attractions.size(), userRewards.size());	
 		/*} catch (ConcurrentModificationException e) {
 			System.err.print("Error ConcurrentModificationException " + e.getMessage());
 		}*/
