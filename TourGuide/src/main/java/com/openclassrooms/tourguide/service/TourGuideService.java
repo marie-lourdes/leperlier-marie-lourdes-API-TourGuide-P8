@@ -45,7 +45,7 @@ public class TourGuideService {
 			userDataLoader.initializeInternalUsers();
 			logger.debug("Finished initializing users");
 		}
-		tracker = new Tracker(this);
+		tracker = new Tracker(this, new UserService());
 		addShutDownHook();
 	}
 

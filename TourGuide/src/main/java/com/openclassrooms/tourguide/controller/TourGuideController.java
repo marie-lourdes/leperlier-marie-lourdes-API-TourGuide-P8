@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.tourguide.service.TourGuideService;
-import com.openclassrooms.tourguide.user.User;
+import com.openclassrooms.tourguide.service.UserService;
 import com.openclassrooms.tourguide.user.UserReward;
 
 import gpsUtil.location.Attraction;
@@ -19,9 +19,11 @@ import tripPricer.Provider;
 @RestController
 @RequestMapping("Tourguide")
 public class TourGuideController {
-
 	@Autowired
 	TourGuideService tourGuideService;
+	
+	@Autowired
+	UserService userService ;
 	
     @GetMapping("/")
     public String index() {
@@ -30,7 +32,7 @@ public class TourGuideController {
     
     @GetMapping("/getLocation") 
     public VisitedLocation getLocation(@RequestParam String userName) {
-    	return tourGuideService.getUserLocation(getUser(userName));
+    	return tourGuideService.getUserLocation(userService.getUser(userName));
     }
     
     //  TODO: Change this method to no longer return a List of Attractions.
@@ -44,23 +46,18 @@ public class TourGuideController {
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @GetMapping("/getNearbyAttractions") 
     public List<Attraction> getNearbyAttractions(@RequestParam String userName) {
-    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
+    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(userService.getUser(userName));
     	return tourGuideService.getNearByAttractions(visitedLocation);
     }
     
     @GetMapping("/getRewards") 
     public List<UserReward> getRewards(@RequestParam String userName) {
-    	return tourGuideService.getUserRewards(getUser(userName));
+    	return tourGuideService.getUserRewards(userService.getUser(userName));
     }
        
     @GetMapping("/getTripDeals")
     public List<Provider> getTripDeals(@RequestParam String userName) {
-    	return tourGuideService.getTripDeals(getUser(userName));
+    	return tourGuideService.getTripDeals(userService.getUser(userName));
     }
-    
-    private User getUser(String userName) {
-    	return tourGuideService.getUser(userName);
-    }
-   
-
+ 
 }
