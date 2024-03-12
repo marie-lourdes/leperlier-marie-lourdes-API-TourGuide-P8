@@ -1,7 +1,6 @@
 package com.openclassrooms.tourguide;
 
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +37,7 @@ public class TourGuideApplication implements CommandLineRunner {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 	
-		List<	RecommendedUserAttractions>  attracUserLocationDistanceSortedCalculated =rewardsService.has5ClosestRecommendedAttractionsProximity(visitedLocation.location);
+		List<	RecommendedUserAttractions>  attracUserLocationDistanceSortedCalculated =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location);
 		System.out.println(attracUserLocationDistanceSortedCalculated );
 		
 	}
