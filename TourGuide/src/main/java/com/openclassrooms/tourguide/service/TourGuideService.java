@@ -72,8 +72,8 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
-	public List<RecommendedUserAttractions>getNearByAttractions(VisitedLocation visitedLocation) {
-		List<RecommendedUserAttractions> attracUserLocationDistanceSorted =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location);
+	public List<RecommendedUserAttractions>getNearByAttractions(VisitedLocation visitedLocation,User user) {
+		List<RecommendedUserAttractions> attracUserLocationDistanceSorted =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location, user);
 		return  attracUserLocationDistanceSorted ;
 	}
 

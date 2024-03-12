@@ -13,12 +13,13 @@ public class RecommendedUserAttractions implements Comparable<RecommendedUserAtt
 	private int rewardPoints;
 
 	public RecommendedUserAttractions(String attractionName, double attractionLat, double attractionLong,
-			double userLocationLat, double userLocationLong, Double distance) {
+			double userLocationLat, double userLocationLong, Double distance,int rewardPoints) {
 		this.attractionName = attractionName;
 		this.attractionLat = attractionLat;
 		this.attractionLong = attractionLong;
 		this.userLocationLat = userLocationLat;
 		this.distance = distance;
+		this.rewardPoints =rewardPoints;
 		
 	}
 

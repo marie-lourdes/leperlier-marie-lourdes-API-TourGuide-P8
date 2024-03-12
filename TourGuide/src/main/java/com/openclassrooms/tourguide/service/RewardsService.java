@@ -63,19 +63,20 @@ public class RewardsService {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
 
-	public List<RecommendedUserAttractions> getClosestRecommendedUserAttractions(Location userLocation) {
+	public List<RecommendedUserAttractions> getClosestRecommendedUserAttractions(Location userLocation, User user) {
 		List<Attraction> attractions = gpsUtil.getAttractions();
 		int i= 0;
 		for (Attraction attraction : attractions) {
 			double dist = getDistance(attraction, userLocation);
+			int rewardPoint =rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 		
 			RecommendedUserAttractions fiveClosestAttraction = new RecommendedUserAttractions(attraction.attractionName,
-					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist);
+					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist,rewardPoint );
 			attracUserLocationDistance.add(fiveClosestAttraction);
 		}
 		Collections.sort(attracUserLocationDistance);
 		
-		System.out.println("all recommeded attractionUser"+attracUserLocationDistance);
+		System.out.println("all recommended attractionUser"+attracUserLocationDistance);
 		for (RecommendedUserAttractions  attraction :attracUserLocationDistance) {
 			i++;
 			if(i<=5) {

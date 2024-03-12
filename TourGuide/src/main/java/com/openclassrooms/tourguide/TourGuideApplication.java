@@ -37,7 +37,7 @@ public class TourGuideApplication implements CommandLineRunner {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 	
-		List<	RecommendedUserAttractions>  attracUserLocationDistanceSortedCalculated =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location);
+		List<	RecommendedUserAttractions>  attracUserLocationDistanceSortedCalculated =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location,user);
 		System.out.println(attracUserLocationDistanceSortedCalculated );
 		
 	}

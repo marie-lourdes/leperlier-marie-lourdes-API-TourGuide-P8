@@ -17,7 +17,7 @@ import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 
 @RestController
-@RequestMapping("Tourguide")
+@RequestMapping("tourguide")
 public class TourGuideController {
 	@Autowired
 	TourGuideService tourGuideService;
@@ -47,7 +47,7 @@ public class TourGuideController {
     @GetMapping("/getNearbyAttractions") 
     public List<RecommendedUserAttractions> getNearbyAttractions(@RequestParam String userName) {
     	VisitedLocation visitedLocation = tourGuideService.getUserLocation(userService.getUser(userName));	
-    	return tourGuideService.getNearByAttractions(visitedLocation);
+    	return tourGuideService.getNearByAttractions(visitedLocation,userService.getUser(userName));
     }
     
     @GetMapping("/getRewards") 
