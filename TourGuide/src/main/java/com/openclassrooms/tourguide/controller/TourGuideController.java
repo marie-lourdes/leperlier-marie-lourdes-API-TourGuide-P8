@@ -47,7 +47,9 @@ public class TourGuideController {
     @GetMapping("/getNearbyAttractions") 
     public List<Attraction> getNearbyAttractions(@RequestParam String userName) {
     	VisitedLocation visitedLocation = tourGuideService.getUserLocation(userService.getUser(userName));
-    	return tourGuideService.getNearByAttractions(visitedLocation);
+    /*	User userId = userService.getUser(userName).getUserId()
+    	getRewardPoints(touristAttraction,userId);*/
+    	return tourGuideService.getNearByAttractions(visitedLocation,userName);
     }
     
     @GetMapping("/getRewards") 
