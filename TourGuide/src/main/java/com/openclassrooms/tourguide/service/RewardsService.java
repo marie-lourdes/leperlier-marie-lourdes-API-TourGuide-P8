@@ -1,12 +1,13 @@
 package com.openclassrooms.tourguide.service;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.tourguide.model.RecommendedAttraction;
+import com.openclassrooms.tourguide.model.RecommendedUserAttractions;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 
@@ -26,7 +27,8 @@ public class RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
-	List<RecommendedAttraction > attracUserLocationDistance = new ArrayList<RecommendedAttraction >();
+	List<RecommendedUserAttractions > attracUserLocationDistance = new ArrayList<>();
+	List<RecommendedUserAttractions > attracUserLocationDistanceSorted = new ArrayList<>();
 
 	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
 		this.gpsUtil = gpsUtil;
@@ -62,17 +64,24 @@ public class RewardsService {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
 
-	public List<RecommendedAttraction > has5ClosestRecommendedAttractionsProximity(Location userLocation) {
+	public List<RecommendedUserAttractions > has5ClosestRecommendedAttractionsProximity(Location userLocation) {
+		//List<Attraction> attractions = gpsUtil.getAttractions();
 		List<Attraction> attractions = gpsUtil.getAttractions();
+		/*List<Double> attracUserLocationDistance =attractions.stream().map(touristAttraction->{
+		
+			return getDistance(touristAttraction, userLocation);
+			})
+				.collect(Collectors.toList());
+		Collections.sort( attracUserLocationDistance );*/
+		
+	for (Attraction attraction : attractions) {
 
-		for (Attraction attraction : attractions) {
-
-			double dist = getDistance(attraction, userLocation);
-			RecommendedAttraction fiveClosestAttraction = new RecommendedAttraction(attraction.attractionName, attraction.latitude,
+		double dist = getDistance(attraction, userLocation);
+			RecommendedUserAttractions fiveClosestAttraction = new RecommendedUserAttractions(attraction.attractionName, attraction.latitude,
 					attraction.longitude, userLocation.latitude, userLocation.longitude, dist);
 			attracUserLocationDistance.add(fiveClosestAttraction);
 		}
-
+	Collections.sort( attracUserLocationDistance );
 		return attracUserLocationDistance;
 	}
 
