@@ -26,6 +26,17 @@ import rewardCentral.RewardCentral;
 
 public class PerformanceTest {
 	private UserService userService ;
+	private GpsUtil gpsUtil;
+	private RewardsService rewardsService;
+	private UserDataLoader userDataLoader;
+
+	@BeforeEach
+	public void init() throws Exception {
+		gpsUtil = new GpsUtil();
+		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		userDataLoader = new UserDataLoader();
+		userService = new UserService();
+	}
 	/*
 	 * A note on performance improvements:
 	 * 
@@ -48,18 +59,11 @@ public class PerformanceTest {
 	 * assertTrue(TimeUnit.MINUTES.toSeconds(20) >=
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
-	
-	@BeforeEach
-	public void init() throws Exception {
-		userService = new UserService();
-	}
+
 	
 	@Disabled
 	@Test
-	public void highVolumeTrackLocation() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		UserDataLoader userDataLoader= new UserDataLoader();
+	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
 		InternalTestHelper.setInternalUserNumber(100);
@@ -83,11 +87,7 @@ public class PerformanceTest {
 
 	@Disabled
 	@Test
-	public void highVolumeGetRewards() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		UserDataLoader userDataLoader= new UserDataLoader();
-
+	public void testHighVolumeGetRewards()throws Exception  {
 		// Users should be incremented up to 100,000, and test finishes within 20
 		// minutes
 		InternalTestHelper.setInternalUserNumber(100);

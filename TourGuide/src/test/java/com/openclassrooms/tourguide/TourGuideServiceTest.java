@@ -35,18 +35,18 @@ public class TourGuideServiceTest {
 	}
 
 	@Test
-	public void getUserLocation() throws Exception {
+	public void testGetUserLocation() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, userDataLoader);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
+		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 		tourGuideService.tracker.stopTracking();
 		assertTrue(visitedLocation.userId.equals(user.getUserId()));
 	}
 
 	@Test
-	public void trackUser() throws Exception {
+	public void testTrackUserLocation() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, userDataLoader);
 
@@ -60,7 +60,7 @@ public class TourGuideServiceTest {
 
 	@Disabled // Not yet implemented
 	@Test
-	public void getNearbyAttractions() throws Exception {
+	public void testGetNearbyAttractions() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, userDataLoader);
 
@@ -74,7 +74,7 @@ public class TourGuideServiceTest {
 		assertEquals(5, attractions.size());
 	}
 
-	public void getTripDeals() throws Exception {
+	public void testGetTripDeals() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, userDataLoader);
 

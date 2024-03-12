@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -24,12 +25,18 @@ import com.openclassrooms.tourguide.user.User;
 import com.openclassrooms.tourguide.user.UserReward;
 
 public class RewardsServiceTest {
+	private GpsUtil gpsUtil;
+	private RewardsService rewardsService;
+	private UserDataLoader userDataLoader;
 
+	@BeforeEach
+	public void init() throws Exception {
+		gpsUtil = new GpsUtil();
+		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		userDataLoader = new UserDataLoader();
+	}
 	@Test
-	public void userGetRewards() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		UserDataLoader userDataLoader= new UserDataLoader();
+	public void testGetUserRewards() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService,userDataLoader);
 
@@ -43,19 +50,14 @@ public class RewardsServiceTest {
 	}
 
 	@Test
-	public void isWithinAttractionProximity() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+	public void testIsWithinAttractionProximity() throws Exception {
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
 	}
 
 	@Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
-	public void nearAllAttractions() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		UserDataLoader userDataLoader= new UserDataLoader();
+	public void testIsNearAttraction_WithAllAttractions_And_UserRewardsCalculated() throws Exception {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
 		InternalTestHelper.setInternalUserNumber(1);

@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.List;
 import java.util.UUID;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.openclassrooms.tourguide.config.UserDataLoader;
@@ -17,12 +18,20 @@ import gpsUtil.GpsUtil;
 import rewardCentral.RewardCentral;
 
 class UserServiceTest {
+	private GpsUtil gpsUtil;
+	private RewardsService rewardsService;
+	private UserDataLoader userDataLoader;
+	
+	@BeforeEach
+	public void init() throws Exception {
+		gpsUtil = new GpsUtil();
+		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		userDataLoader = new UserDataLoader();
+	}
+	
 	@Test
-	public void addUser() {
-		GpsUtil gpsUtil = new GpsUtil();
+	public void testAddUser() throws Exception {
 		UserService userService = new UserService();
-		UserDataLoader userDataLoader= new UserDataLoader();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService,userDataLoader);
 
@@ -42,11 +51,8 @@ class UserServiceTest {
 	}
 
 	@Test
-	public void getAllUsers() {
-		GpsUtil gpsUtil = new GpsUtil();
+	public void testGetAllUsers() throws Exception {	
 		UserService userService = new UserService();
-		UserDataLoader userDataLoader= new UserDataLoader();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService,userDataLoader);
 
