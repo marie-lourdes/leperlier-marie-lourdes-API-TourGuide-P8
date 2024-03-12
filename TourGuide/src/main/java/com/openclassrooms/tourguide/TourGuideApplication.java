@@ -11,9 +11,10 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import com.openclassrooms.tourguide.config.UserDataLoader;
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
+import com.openclassrooms.tourguide.model.RecommendedAttraction;
+import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.RewardsService;
 import com.openclassrooms.tourguide.service.TourGuideService;
-import com.openclassrooms.tourguide.user.User;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.VisitedLocation;
@@ -37,7 +38,7 @@ public class TourGuideApplication implements CommandLineRunner {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 	
-		List<Map<String, Object>>  attracUserLocationDistanceSortedCalculated =rewardsService. has5ClosestAttractionProximity(visitedLocation.location);
+		List<	RecommendedAttraction>  attracUserLocationDistanceSortedCalculated =rewardsService.has5ClosestRecommendedAttractionsProximity(visitedLocation.location);
 		System.out.println(attracUserLocationDistanceSortedCalculated );
 		
 	}

@@ -13,8 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
+import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.UserService;
-import com.openclassrooms.tourguide.user.User;
 
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;

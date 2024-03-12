@@ -9,9 +9,9 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.service.UserService;
-import com.openclassrooms.tourguide.user.User;
 
 /* Les test appel 4 fois la creation d user avec tours guide service , 4 threads
  * au 1er  l appel de la creation d user de tourGuideService service le tracker demarre 

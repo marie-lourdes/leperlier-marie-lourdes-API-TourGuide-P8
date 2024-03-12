@@ -1,15 +1,14 @@
 package com.openclassrooms.tourguide.service;
 
-import java.util.Collections;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.tourguide.user.User;
-import com.openclassrooms.tourguide.user.UserReward;
+import com.openclassrooms.tourguide.model.RecommendedAttraction;
+import com.openclassrooms.tourguide.model.User;
+import com.openclassrooms.tourguide.model.UserReward;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
@@ -27,6 +26,7 @@ public class RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
+	List<RecommendedAttraction > attracUserLocationDistance = new ArrayList<RecommendedAttraction >();
 
 	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
 		this.gpsUtil = gpsUtil;
@@ -61,26 +61,21 @@ public class RewardsService {
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
-	
-	public List<Map<String, Object>> has5ClosestAttractionProximity( Location userLocation) {
+
+	public List<RecommendedAttraction > has5ClosestRecommendedAttractionsProximity(Location userLocation) {
 		List<Attraction> attractions = gpsUtil.getAttractions();
-		Map<String, Object> fiveClocestAttractionMap = new HashMap<String, Object> ();
-		List<Map<String, Object>> attracUserLocationDistance =attractions.stream()
-				.map(touristAttraction->{
-					fiveClocestAttractionMap.put("attractionName", touristAttraction.attractionName);
-					fiveClocestAttractionMap.put("attractionLat", touristAttraction.latitude);
-					fiveClocestAttractionMap.put("attractionLong", touristAttraction.longitude);
-					fiveClocestAttractionMap.put("userLocationLat",userLocation.latitude) ;
-					fiveClocestAttractionMap.put("userLocationLong",userLocation.longitude) ;
-					fiveClocestAttractionMap.put("distance",getDistance(touristAttraction, userLocation)) ;
-					return fiveClocestAttractionMap;
-					})
-			
-				.collect(Collectors.toList());
-	  //  Collections.sort( attracUserLocationDistance );
-	    return attracUserLocationDistance ;
+
+		for (Attraction attraction : attractions) {
+
+			double dist = getDistance(attraction, userLocation);
+			RecommendedAttraction fiveClosestAttraction = new RecommendedAttraction(attraction.attractionName, attraction.latitude,
+					attraction.longitude, userLocation.latitude, userLocation.longitude, dist);
+			attracUserLocationDistance.add(fiveClosestAttraction);
+		}
+
+		return attracUserLocationDistance;
 	}
-	
+
 	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}

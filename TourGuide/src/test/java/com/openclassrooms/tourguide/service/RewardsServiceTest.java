@@ -13,8 +13,8 @@ import org.junit.jupiter.api.Test;
 
 import com.openclassrooms.tourguide.config.UserDataLoader;
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
-import com.openclassrooms.tourguide.user.User;
-import com.openclassrooms.tourguide.user.UserReward;
+import com.openclassrooms.tourguide.model.User;
+import com.openclassrooms.tourguide.model.UserReward;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
