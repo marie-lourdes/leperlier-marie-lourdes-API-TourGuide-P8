@@ -68,6 +68,7 @@ public class RewardsService {
 		int i= 0;
 		for (Attraction attraction : attractions) {
 			double dist = getDistance(attraction, userLocation);
+		
 			RecommendedUserAttractions fiveClosestAttraction = new RecommendedUserAttractions(attraction.attractionName,
 					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist);
 			attracUserLocationDistance.add(fiveClosestAttraction);

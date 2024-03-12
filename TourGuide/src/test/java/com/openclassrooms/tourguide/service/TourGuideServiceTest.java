@@ -11,6 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import com.openclassrooms.tourguide.config.UserDataLoader;
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
+import com.openclassrooms.tourguide.model.RecommendedUserAttractions;
 import com.openclassrooms.tourguide.model.User;
 
 import gpsUtil.GpsUtil;
@@ -64,7 +65,7 @@ public class TourGuideServiceTest {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
 
-		List<Attraction> attractions = tourGuideService.getNearByAttractions(visitedLocation,user.getUserName());
+		List<RecommendedUserAttractions>attractions = tourGuideService.getNearByAttractions(visitedLocation);
 
 		tourGuideService.tracker.stopTracking();
 

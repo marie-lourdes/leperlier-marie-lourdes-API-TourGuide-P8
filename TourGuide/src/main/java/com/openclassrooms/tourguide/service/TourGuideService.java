@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.config.UserDataLoader;
+import com.openclassrooms.tourguide.model.RecommendedUserAttractions;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 import com.openclassrooms.tourguide.tracker.Tracker;
@@ -73,15 +74,15 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
-	public List<Attraction> getNearByAttractions(VisitedLocation visitedLocation,String userName) {
-		List<Attraction> nearbyAttractions = new ArrayList<>();
-		for (Attraction attraction : gpsUtil.getAttractions()) {
+	public List<RecommendedUserAttractions>getNearByAttractions(VisitedLocation visitedLocation) {
+		List<RecommendedUserAttractions> attracUserLocationDistanceSorted =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location);
+	/*	for (Attraction attraction : gpsUtil.getAttractions()) {
 			if (rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
 				nearbyAttractions.add(attraction);
 			}
-		}
+		}*/
 
-		return nearbyAttractions;
+		return  attracUserLocationDistanceSorted ;
 	}
 
 	private void addShutDownHook() {
