@@ -1,6 +1,5 @@
 package com.openclassrooms.tourguide.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -15,7 +14,6 @@ import com.openclassrooms.tourguide.model.UserReward;
 import com.openclassrooms.tourguide.tracker.Tracker;
 
 import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
@@ -76,12 +74,6 @@ public class TourGuideService {
 
 	public List<RecommendedUserAttractions>getNearByAttractions(VisitedLocation visitedLocation) {
 		List<RecommendedUserAttractions> attracUserLocationDistanceSorted =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location);
-	/*	for (Attraction attraction : gpsUtil.getAttractions()) {
-			if (rewardsService.isWithinAttractionProximity(attraction, visitedLocation.location)) {
-				nearbyAttractions.add(attraction);
-			}
-		}*/
-
 		return  attracUserLocationDistanceSorted ;
 	}
 
