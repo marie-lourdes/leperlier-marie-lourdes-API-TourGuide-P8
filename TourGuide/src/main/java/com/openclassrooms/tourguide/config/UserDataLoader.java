@@ -3,8 +3,6 @@ package com.openclassrooms.tourguide.config;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.stream.IntStream;
@@ -29,8 +27,6 @@ public class UserDataLoader {
 
 	@Autowired
 	private UserService userService;
-	
-	private final Map<String, User> internalUserMap = new HashMap<>();
 
 	public void initializeInternalUsers() {
 		IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach(i -> {
@@ -39,8 +35,7 @@ public class UserDataLoader {
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
 			generateUserLocationHistory(user);
-			//userService.addUser(user);
-			internalUserMap.put(userName, user);
+			userService.addUser(user);
 		});
 		logger.debug("Created " + InternalTestHelper.getInternalUserNumber() + " internal test users.");
 	}
