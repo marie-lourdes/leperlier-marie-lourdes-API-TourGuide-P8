@@ -19,7 +19,7 @@ import tripPricer.Provider;
 public class TourGuideController {
 	private TourGuideService tourGuideService;
 	
-	TourGuideController(TourGuideService tourGuideService){
+	public TourGuideController(TourGuideService tourGuideService) {
 		this.tourGuideService= tourGuideService;
 	}
 		
