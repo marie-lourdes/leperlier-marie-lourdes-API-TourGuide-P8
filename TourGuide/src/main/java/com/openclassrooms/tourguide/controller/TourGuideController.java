@@ -2,7 +2,6 @@ package com.openclassrooms.tourguide.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -18,10 +17,12 @@ import tripPricer.Provider;
 @RestController
 @RequestMapping("tourguide")
 public class TourGuideController {
-	@Autowired
-	TourGuideService tourGuideService;
+	private TourGuideService tourGuideService;
 	
-	
+	TourGuideController(TourGuideService tourGuideService){
+		this.tourGuideService= tourGuideService;
+	}
+		
     @GetMapping("/")
     public String index() {
         return "Greetings from TourGuide!";
