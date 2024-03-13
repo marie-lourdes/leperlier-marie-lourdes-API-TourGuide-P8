@@ -12,7 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import com.openclassrooms.tourguide.config.UserDataLoader;
+
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.RewardsService;
@@ -25,17 +25,14 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
 public class PerformanceTest {
-	private UserService userService ;
 	private GpsUtil gpsUtil;
 	private RewardsService rewardsService;
-	private UserDataLoader userDataLoader;
+
 
 	@BeforeEach
 	public void init() throws Exception {
 		gpsUtil = new GpsUtil();
 		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		userDataLoader = new UserDataLoader();
-		userService = new UserService();
 	}
 	/*
 	 * A note on performance improvements:
@@ -61,17 +58,17 @@ public class PerformanceTest {
 	 */
 
 	
-	@Disabled
+	//@Disabled
 	@Test
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
 		InternalTestHelper.setInternalUserNumber(100);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService,userDataLoader);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		List<User> allUsers = new ArrayList<>();
 		
-		allUsers = userService.getAllUsers();
+		allUsers = tourGuideService.getAllUsers();
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		for (User user : allUsers) {
@@ -85,7 +82,7 @@ public class PerformanceTest {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	@Disabled
+	//@Disabled
 	@Test
 	public void testHighVolumeGetRewards()throws Exception  {
 		// Users should be incremented up to 100,000, and test finishes within 20
@@ -93,11 +90,11 @@ public class PerformanceTest {
 		InternalTestHelper.setInternalUserNumber(100);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService,userDataLoader);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		List<User> allUsers = new ArrayList<>();
-		allUsers = userService.getAllUsers();
+		allUsers = tourGuideService.getAllUsers();
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
 
 		allUsers.forEach(u -> rewardsService.calculateRewards(u));

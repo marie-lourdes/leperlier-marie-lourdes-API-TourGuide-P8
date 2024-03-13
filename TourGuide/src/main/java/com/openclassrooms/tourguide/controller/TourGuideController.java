@@ -22,8 +22,6 @@ public class TourGuideController {
 	@Autowired
 	TourGuideService tourGuideService;
 	
-	@Autowired
-	UserService userService ;
 	
     @GetMapping("/")
     public String index() {
@@ -32,7 +30,7 @@ public class TourGuideController {
     
     @GetMapping("/getLocation") 
     public VisitedLocation getLocation(@RequestParam String userName) {
-    	return tourGuideService.getUserLocation(userService.getUser(userName));
+    	return tourGuideService.getUserLocation(tourGuideService.getUser(userName));
     }
     
     //  TODO: Change this method to no longer return a List of Attractions.
@@ -46,18 +44,18 @@ public class TourGuideController {
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @GetMapping("/getNearbyAttractions") 
     public List<RecommendedUserAttractions> getNearbyAttractions(@RequestParam String userName) {
-    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(userService.getUser(userName));	
-    	return tourGuideService.getNearByAttractions(visitedLocation,userService.getUser(userName));
+    	VisitedLocation visitedLocation = tourGuideService.getUserLocation(tourGuideService.getUser(userName));	
+    	return tourGuideService.getNearByAttractions(visitedLocation,tourGuideService.getUser(userName));
     }
     
     @GetMapping("/getRewards") 
     public List<UserReward> getRewards(@RequestParam String userName) {
-    	return tourGuideService.getUserRewards(userService.getUser(userName));
+    	return tourGuideService.getUserRewards(tourGuideService.getUser(userName));
     }
        
     @GetMapping("/getTripDeals")
     public List<Provider> getTripDeals(@RequestParam String userName) {
-    	return tourGuideService.getTripDeals(userService.getUser(userName));
+    	return tourGuideService.getTripDeals(tourGuideService.getUser(userName));
     }
  
 }

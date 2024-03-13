@@ -24,12 +24,12 @@ public class Tracker extends Thread {
 	private static final long trackingPollingInterval = TimeUnit.MINUTES.toSeconds(5);//5 min (converti en secondes)trop long  la mise en attente du thread
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private final TourGuideService tourGuideService;
-	private final UserService userService;
+	//private final UserService userService;
 	private boolean stop = false;// !!!initilisez a true 
 
-	public Tracker(TourGuideService tourGuideService, UserService userService) {
+	public Tracker(TourGuideService tourGuideService) {
 		this.tourGuideService = tourGuideService;
-		this.userService = userService;
+	
 
 		executorService.submit(this);
 	}
@@ -63,7 +63,7 @@ public class Tracker extends Thread {
 					// break;
 				}
 
-				List<User> users = userService.getAllUsers();
+				List<User> users = tourGuideService.getAllUsers();
 				logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 				stopWatch.start();
 				users.forEach(u -> tourGuideService.trackUserLocation(u));

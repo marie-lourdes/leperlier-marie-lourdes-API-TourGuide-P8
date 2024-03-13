@@ -11,7 +11,7 @@ import com.openclassrooms.tourguide.model.User;
 
 @Service
 public class UserService {
-	private final Map<String, User> internalUserMap = new HashMap<>();
+/*	private final Map<String, User> internalUserMap = new HashMap<>();
 	
 	public User getUser(String userName) {
 		return internalUserMap.get(userName);
@@ -25,5 +25,5 @@ public class UserService {
 		if (!internalUserMap.containsKey(user.getUserName())) {
 			internalUserMap.put(user.getUserName(), user);
 		}
-	}
+	}*/
 }

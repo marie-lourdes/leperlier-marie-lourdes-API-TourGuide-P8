@@ -21,7 +21,7 @@ import gpsUtil.location.VisitedLocation;
 
 // Database connection will be used for external users, but for testing purposes
 // internal users are provided and stored in memory
-@Component
+/*@Component
 public class UserDataLoader {
 	private Logger logger = LoggerFactory.getLogger(UserDataLoader.class);
 
@@ -63,4 +63,4 @@ public class UserDataLoader {
 		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));
 		return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
 	}
-}
+}*/

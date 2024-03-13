@@ -8,7 +8,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import com.openclassrooms.tourguide.config.UserDataLoader;
+
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.model.RecommendedUserAttractions;
 import com.openclassrooms.tourguide.model.User;
@@ -19,27 +19,9 @@ import gpsUtil.GpsUtil;
 import gpsUtil.location.VisitedLocation;
 
 @SpringBootApplication
-public class TourGuideApplication implements CommandLineRunner {
-	@Autowired
-	private RewardsService rewardsService;
+public class TourGuideApplication{
 
 	public static void main(String[] args) {
 		SpringApplication.run(TourGuideApplication.class, args);
 	}
-
-	@Override
-	public void run(String... args) {
-		GpsUtil  gpsUtil = new GpsUtil();
-		UserDataLoader userDataLoader = new UserDataLoader();
-		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService, userDataLoader);
-
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
-	
-		List<	RecommendedUserAttractions>  attracUserLocationDistanceSortedCalculated =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location,user);
-		System.out.println(attracUserLocationDistanceSortedCalculated );
-		
-	}
-
 }

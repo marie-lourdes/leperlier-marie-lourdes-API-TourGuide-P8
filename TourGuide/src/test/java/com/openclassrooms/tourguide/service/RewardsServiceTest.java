@@ -10,7 +10,7 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.openclassrooms.tourguide.config.UserDataLoader;
+
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
@@ -23,21 +23,17 @@ import rewardCentral.RewardCentral;
 public class RewardsServiceTest {
 	private GpsUtil gpsUtil;
 	private RewardsService rewardsService;
-	private UserDataLoader userDataLoader;
-	private UserService userService;
-
+	
 	@BeforeEach
 	public void init() throws Exception {
 		gpsUtil = new GpsUtil();
 		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		userService = new UserService();
-		userDataLoader= new UserDataLoader();
 	}
 
 	@Test // A ajouter dans un test de TourGuideService
 	public void testUserGetRewards() {
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService,	userDataLoader);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtil.getAttractions().get(0);
@@ -62,10 +58,10 @@ public class RewardsServiceTest {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 		
 		InternalTestHelper.setInternalUserNumber(1);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService,userDataLoader);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
-		rewardsService.calculateRewards(userService.getAllUsers().get(0));
-		List<UserReward> userRewards = tourGuideService.getUserRewards(userService.getAllUsers().get(0));
+		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
+		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
 		tourGuideService.tracker.stopTracking();
 
 		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
