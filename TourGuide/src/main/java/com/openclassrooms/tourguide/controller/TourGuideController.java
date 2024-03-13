@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 import com.openclassrooms.tourguide.model.RecommendedUserAttractions;
 import com.openclassrooms.tourguide.model.UserReward;
 import com.openclassrooms.tourguide.service.TourGuideService;
-import com.openclassrooms.tourguide.service.UserService;
 
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;

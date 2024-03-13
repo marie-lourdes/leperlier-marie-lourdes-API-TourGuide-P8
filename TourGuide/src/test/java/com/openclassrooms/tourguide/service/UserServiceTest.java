@@ -1,22 +1,6 @@
 package com.openclassrooms.tourguide.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import java.util.List;
-import java.util.UUID;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import com.openclassrooms.tourguide.helper.InternalTestHelper;
-import com.openclassrooms.tourguide.model.User;
-import com.openclassrooms.tourguide.tracker.Tracker;
-
-import gpsUtil.GpsUtil;
-import rewardCentral.RewardCentral;
-
-class UserServiceTest {
+/*class UserServiceTest {
 	private GpsUtil gpsUtil;
 	private RewardsService rewardsService;
 	//private UserDataLoader userDataLoader;
@@ -68,5 +52,5 @@ class UserServiceTest {
 
 		assertTrue(allUsers.contains(user));
 		assertTrue(allUsers.contains(user2));
-	}*/
-}
+	}
+}*/

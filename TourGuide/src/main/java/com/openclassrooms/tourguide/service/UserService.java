@@ -1,13 +1,6 @@
 package com.openclassrooms.tourguide.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
 import org.springframework.stereotype.Service;
-
-import com.openclassrooms.tourguide.model.User;
 
 @Service
 public class UserService {

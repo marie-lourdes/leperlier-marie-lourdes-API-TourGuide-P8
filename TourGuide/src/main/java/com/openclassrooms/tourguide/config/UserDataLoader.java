@@ -1,24 +1,5 @@
 package com.openclassrooms.tourguide.config;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Date;
-import java.util.Random;
-import java.util.UUID;
-import java.util.stream.IntStream;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-
-import com.openclassrooms.tourguide.helper.InternalTestHelper;
-import com.openclassrooms.tourguide.model.User;
-import com.openclassrooms.tourguide.service.UserService;
-
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
-
 // Database connection will be used for external users, but for testing purposes
 // internal users are provided and stored in memory
 /*@Component
