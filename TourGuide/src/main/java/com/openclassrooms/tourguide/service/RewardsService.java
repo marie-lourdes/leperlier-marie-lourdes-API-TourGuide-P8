@@ -53,12 +53,11 @@ public class RewardsService {
 			// et modification lors de l iteration) et userRewards vide
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
 				for (Attraction attraction : attractions) {
-					
-					listUserRewards = user.getUserRewards().stream()
-							.filter(userReward-> userReward.attraction.attractionName.equals(attraction.attractionName));
-							
 
-					if (listUserRewards.count()==0 && isNearAttraction(visitedLocation, attraction)) {
+					listUserRewards = user.getUserRewards().stream().filter(
+							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName));
+
+					if (listUserRewards.count() == 0 && isNearAttraction(visitedLocation, attraction)) {
 						user.addUserReward(
 								new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 
@@ -87,33 +86,37 @@ public class RewardsService {
 	}
 
 	private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
-		// ? methode propre au reward service avec une methode getDistance dinterface à creer																							 
+		// ? methode propre au reward service avec une methode getDistance dinterface à
+		// creer
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}
+
 	public List<RecommendedUserAttractions> getClosestRecommendedUserAttractions(Location userLocation, User user) {
 		List<Attraction> attractions = gpsUtil.getAttractions();
-		int i= 0;
+		int i = 0;
 		for (Attraction attraction : attractions) {
 			double dist = getDistance(attraction, userLocation);
-			int rewardPoint =rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
-		
+			int rewardPoint = rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
+
 			RecommendedUserAttractions fiveClosestAttraction = new RecommendedUserAttractions(attraction.attractionName,
-					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist,rewardPoint );
+					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist,
+					rewardPoint);
 			attracUserLocationDistance.add(fiveClosestAttraction);
 		}
 		Collections.sort(attracUserLocationDistance);
-		
-		System.out.println("all recommended attractionUser"+attracUserLocationDistance);
-		for (RecommendedUserAttractions  attraction :attracUserLocationDistance) {
+
+		System.out.println("all recommended attractionUser" + attracUserLocationDistance);
+		for (RecommendedUserAttractions attraction : attracUserLocationDistance) {
 			i++;
-			if(i<=5) {
+			if (i <= 5) {
 				attracUserLocationDistanceSorted.add(attraction);
 			}
-		
+
 		}
-		
+
 		return attracUserLocationDistanceSorted;
 	}
+
 	private int getRewardPoints(Attraction attraction, User user) {
 		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
