@@ -3,7 +3,7 @@ package com.openclassrooms.tourguide.model;
 import lombok.Data;
 
 @Data
-public class RecommendedUserAttractions implements Comparable<RecommendedUserAttractions> {
+public class RecommendedUserAttraction implements Comparable<RecommendedUserAttraction> {
 	private String attractionName;
 	private double attractionLat;
 	private double attractionLong;
@@ -12,7 +12,7 @@ public class RecommendedUserAttractions implements Comparable<RecommendedUserAtt
 	private Double distance;
 	private int rewardPoints;
 
-	public RecommendedUserAttractions(String attractionName, double attractionLat, double attractionLong,
+	public RecommendedUserAttraction(String attractionName, double attractionLat, double attractionLong,
 			double userLocationLat, double userLocationLong, Double distance,int rewardPoints) {
 		this.attractionName = attractionName;
 		this.attractionLat = attractionLat;
@@ -24,7 +24,7 @@ public class RecommendedUserAttractions implements Comparable<RecommendedUserAtt
 	}
 
 	@Override
-	public int compareTo(RecommendedUserAttractions recommendedAttraction) {
+	public int compareTo(RecommendedUserAttraction recommendedAttraction) {
 		return (int) (this.distance - recommendedAttraction.distance);
 	}
 }

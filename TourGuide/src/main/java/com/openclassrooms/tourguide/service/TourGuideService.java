@@ -18,7 +18,7 @@ import org.springframework.stereotype.Service;
 
 
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
-import com.openclassrooms.tourguide.model.RecommendedUserAttractions;
+import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 import com.openclassrooms.tourguide.tracker.Tracker;
@@ -96,8 +96,8 @@ public class TourGuideService {
 		return visitedLocation;
 	}
 
-	public List<RecommendedUserAttractions>getNearByAttractions(VisitedLocation visitedLocation,User user) {
-		List<RecommendedUserAttractions> attracUserLocationDistanceSorted =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location, user);
+	public List<RecommendedUserAttraction>getNearByAttractions(VisitedLocation visitedLocation,User user) {
+		List<RecommendedUserAttraction> attracUserLocationDistanceSorted =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location, user);
 		return  attracUserLocationDistanceSorted ;
 	}
 

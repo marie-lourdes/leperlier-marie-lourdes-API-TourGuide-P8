@@ -8,7 +8,7 @@ import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.tourguide.model.RecommendedUserAttractions;
+import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 
@@ -28,8 +28,8 @@ public class RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
-	List<RecommendedUserAttractions> attracUserLocationDistance = new ArrayList<>();
-	List<RecommendedUserAttractions> attracUserLocationDistanceSorted = new ArrayList<>();
+	List<RecommendedUserAttraction> attracUserLocationDistance = new ArrayList<>();
+	List<RecommendedUserAttraction> attracUserLocationDistanceSorted = new ArrayList<>();
 
 	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
 		this.gpsUtil = gpsUtil;
@@ -91,14 +91,14 @@ public class RewardsService {
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}
 
-	public List<RecommendedUserAttractions> getClosestRecommendedUserAttractions(Location userLocation, User user) {
+	public List<RecommendedUserAttraction> getClosestRecommendedUserAttractions(Location userLocation, User user) {
 		List<Attraction> attractions = gpsUtil.getAttractions();
 		int i = 0;
 		for (Attraction attraction : attractions) {
 			double dist = getDistance(attraction, userLocation);
 			int rewardPoint = rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 
-			RecommendedUserAttractions fiveClosestAttraction = new RecommendedUserAttractions(attraction.attractionName,
+			RecommendedUserAttraction fiveClosestAttraction = new RecommendedUserAttraction(attraction.attractionName,
 					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist,
 					rewardPoint);
 			attracUserLocationDistance.add(fiveClosestAttraction);
@@ -106,7 +106,7 @@ public class RewardsService {
 		Collections.sort(attracUserLocationDistance);
 
 		System.out.println("all recommended attractionUser" + attracUserLocationDistance);
-		for (RecommendedUserAttractions attraction : attracUserLocationDistance) {
+		for (RecommendedUserAttraction attraction : attracUserLocationDistance) {
 			i++;
 			if (i <= 5) {
 				attracUserLocationDistanceSorted.add(attraction);
