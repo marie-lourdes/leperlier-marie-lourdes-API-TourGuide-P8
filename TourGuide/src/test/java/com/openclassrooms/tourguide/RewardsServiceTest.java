@@ -7,23 +7,23 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
-import rewardCentral.RewardCentral;
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.service.RewardsService;
 import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.user.User;
 import com.openclassrooms.tourguide.user.UserReward;
 
-public class RewardsServiceTest {
+import gpsUtil.GpsUtil;
+import gpsUtil.location.Attraction;
+import gpsUtil.location.VisitedLocation;
+import rewardCentral.RewardCentral;
 
-	@Test
-	public void userGetRewards() {
+public class RewardsServiceTest {
+	
+	@Test // A ajouter dans un test de TourGuideService
+	public void testUserGetRewards() {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 
@@ -40,28 +40,33 @@ public class RewardsServiceTest {
 	}
 
 	@Test
-	public void isWithinAttractionProximity() {
+	public void testIsWithinAttractionProximity() {
 		GpsUtil gpsUtil = new GpsUtil();
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		Attraction attraction = gpsUtil.getAttractions().get(0);
-		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
+		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));//? deuxieme parametre doit etre un type Location et non attraction
 	}
 
-	@Disabled // Needs fixed - can throw ConcurrentModificationException
+	//@Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
-	public void nearAllAttractions() {
+	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException{ //ajouter try/catch ConcurrentModificationException
 		GpsUtil gpsUtil = new GpsUtil();
+		
+		//try {
 		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
 		InternalTestHelper.setInternalUserNumber(1);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
 
-		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
+		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));//?
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
 		tourGuideService.tracker.stopTracking();
+		List<Attraction> attractions = gpsUtil.getAttractions();
 
-		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
+		assertEquals(attractions.size(), userRewards.size());	
+		/*} catch (ConcurrentModificationException e) {
+			System.err.print("Error ConcurrentModificationException " + e.getMessage());
+		}*/
 	}
-
 }

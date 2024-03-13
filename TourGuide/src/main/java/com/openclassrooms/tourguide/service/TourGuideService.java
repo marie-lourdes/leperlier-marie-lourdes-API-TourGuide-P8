@@ -1,10 +1,5 @@
 package com.openclassrooms.tourguide.service;
 
-import com.openclassrooms.tourguide.helper.InternalTestHelper;
-import com.openclassrooms.tourguide.tracker.Tracker;
-import com.openclassrooms.tourguide.user.User;
-import com.openclassrooms.tourguide.user.UserReward;
-
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ArrayList;
@@ -22,11 +17,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.openclassrooms.tourguide.helper.InternalTestHelper;
+import com.openclassrooms.tourguide.tracker.Tracker;
+import com.openclassrooms.tourguide.user.User;
+import com.openclassrooms.tourguide.user.UserReward;
+
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
-
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
@@ -37,7 +36,7 @@ public class TourGuideService {
 	private final RewardsService rewardsService;
 	private final TripPricer tripPricer = new TripPricer();
 	public final Tracker tracker;
-	boolean testMode = true;
+	boolean testMode = true; // fais arreter le thread car reste a true los du debug, stop= true , mais le thread n a pas subit d interruption, un arret volontaire
 
 	public TourGuideService(GpsUtil gpsUtil, RewardsService rewardsService) {
 		this.gpsUtil = gpsUtil;
@@ -59,18 +58,19 @@ public class TourGuideService {
 		return user.getUserRewards();
 	}
 
-	public VisitedLocation getUserLocation(User user) {
+	public VisitedLocation getUserLocation(User user) {//?Renomer methode getUserVisitedLocation
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
 				: trackUserLocation(user);
 		return visitedLocation;
 	}
-
+	
+	// -------------------? à integrer dans un service crud UserService? une seule classe dedié aux method crud des données en BDD------------------------
 	public User getUser(String userName) {
 		return internalUserMap.get(userName);
 	}
 
-	public List<User> getAllUsers() {
-		return internalUserMap.values().stream().collect(Collectors.toList());
+	public List<User> getAllUsers() {// les erreurs de test avec l exception ConcurrentModificationException provient de cette methode
+		return internalUserMap.values().stream().collect(Collectors.toList());	
 	}
 
 	public void addUser(User user) {
@@ -106,10 +106,13 @@ public class TourGuideService {
 		return nearbyAttractions;
 	}
 
-	private void addShutDownHook() {
+	private void addShutDownHook() {//? externaliser cette methode qui ne correspond pas au service  
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			//la methode addShutDownHook attend comme un evenment 
+			//system exit ou un appel de methode qui arrete le programme avec tel que 	
+			//executorService.shutdownNow(de la classTracker);
 			public void run() {
-				tracker.stopTracking();
+				tracker.stopTracking(); 
 			}
 		});
 	}
