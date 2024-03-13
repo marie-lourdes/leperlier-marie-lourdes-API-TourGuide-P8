@@ -2,7 +2,9 @@ package com.openclassrooms.tourguide.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ConcurrentModificationException;
 import java.util.List;
+import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
@@ -42,27 +44,52 @@ public class RewardsService {
 		proximityBuffer = defaultProximityBuffer;
 	}
 
-	public void calculateRewards(User user) {
-		List<VisitedLocation> userLocations = user.getVisitedLocations();
-		List<Attraction> attractions = gpsUtil.getAttractions();
+	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode
+		try {
+			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations();
+			List<Attraction> attractions = gpsUtil.getAttractions();
+			Stream<UserReward> listUserRewards;
+			// boucles imbriquée lance erreur de ConcurrentModificationException (iteration
+			// et modification lors de l iteration) et userRewards vide
+			for (VisitedLocation visitedLocation : userVisitedLocations) {
+				for (Attraction attraction : attractions) {
+					
+					listUserRewards = user.getUserRewards().stream()
+							.filter(userReward-> userReward.attraction.attractionName.equals(attraction.attractionName));
+							
 
-		for (VisitedLocation visitedLocation : userLocations) {
-			for (Attraction attraction : attractions) {
-				if (user.getUserRewards().stream()
-						.filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-					if (nearAttraction(visitedLocation, attraction)) {
+					if (listUserRewards.count()==0 && isNearAttraction(visitedLocation, attraction)) {
 						user.addUserReward(
 								new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+
 					}
+					/*
+					 * if (user.getUserRewards().stream() .filter(r ->
+					 * r.attraction.attractionName.equals(attraction.attractionName)).count() == 0)
+					 * { if (isNearAttraction(visitedLocation, attraction)) { user.addUserReward(
+					 * new UserReward(visitedLocation, attraction, getRewardPoints(attraction,
+					 * user))); } }
+					 */
 				}
 			}
+		} catch (ConcurrentModificationException e) {
+			System.err.print("Error ConcurrentModificationException calculateRewards " + e.getMessage());
 		}
+
 	}
 
+	// ? a implementer dans le tour guideService avec les 5 premier attraction
+	// proche du dernier lieu visité par l user, peur importe la distance et une
+	// methode getDistance d interface
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
+
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}
 
+	private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
+		// ? methode propre au reward service avec une methode getDistance dinterface à creer																							 
+		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
+	}
 	public List<RecommendedUserAttractions> getClosestRecommendedUserAttractions(Location userLocation, User user) {
 		List<Attraction> attractions = gpsUtil.getAttractions();
 		int i= 0;
@@ -87,16 +114,14 @@ public class RewardsService {
 		
 		return attracUserLocationDistanceSorted;
 	}
-
-	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
-		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
-	}
-
 	private int getRewardPoints(Attraction attraction, User user) {
 		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
 
-	public double getDistance(Location loc1, Location loc2) {
+	// ?Utiliser une interface commune DistanceCalculator pour rewardService et
+	// tourguide service avec une methode getDistance()
+	//
+	public double getDistance(Location loc1, Location loc2) {// ? à implementer dans un service GpsUtilService
 		double lat1 = Math.toRadians(loc1.latitude);
 		double lon1 = Math.toRadians(loc1.longitude);
 		double lat2 = Math.toRadians(loc2.latitude);

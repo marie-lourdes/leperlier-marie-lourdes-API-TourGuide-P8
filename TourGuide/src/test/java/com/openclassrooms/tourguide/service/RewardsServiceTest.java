@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.openclassrooms.tourguide.config.UserDataLoader;
@@ -25,17 +24,20 @@ public class RewardsServiceTest {
 	private GpsUtil gpsUtil;
 	private RewardsService rewardsService;
 	private UserDataLoader userDataLoader;
+	private UserService userService;
 
 	@BeforeEach
 	public void init() throws Exception {
 		gpsUtil = new GpsUtil();
 		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
-		userDataLoader = new UserDataLoader();
+		userService = new UserService();
+		userDataLoader= new UserDataLoader();
 	}
-	@Test
-	public void testGetUserRewards() throws Exception {
+
+	@Test // A ajouter dans un test de TourGuideService
+	public void testUserGetRewards() {
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService,userDataLoader);
+		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService,	userDataLoader);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtil.getAttractions().get(0);
@@ -47,24 +49,28 @@ public class RewardsServiceTest {
 	}
 
 	@Test
-	public void testIsWithinAttractionProximity() throws Exception {
+	public void testIsWithinAttractionProximity() {
 		Attraction attraction = gpsUtil.getAttractions().get(0);
-		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
+		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));//? deuxieme parametre doit etre un type Location et non attraction
 	}
 
-	@Disabled // Needs fixed - can throw ConcurrentModificationException
+	//@Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
-	public void testIsNearAttraction_WithAllAttractions_And_UserRewardsCalculated() throws Exception {
+	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException{ //ajouter try/catch ConcurrentModificationException
+	
+		//try {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
-
+		
 		InternalTestHelper.setInternalUserNumber(1);
 		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService,userDataLoader);
-		UserService userService = new UserService();
-		rewardsService.calculateRewards(userService .getAllUsers().get(0));
-		List<UserReward> userRewards = tourGuideService.getUserRewards(userService .getAllUsers().get(0));
+
+		rewardsService.calculateRewards(userService.getAllUsers().get(0));
+		List<UserReward> userRewards = tourGuideService.getUserRewards(userService.getAllUsers().get(0));
 		tourGuideService.tracker.stopTracking();
 
 		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
+		/*} catch (ConcurrentModificationException e) {
+			System.err.print("Error ConcurrentModificationException " + e.getMessage());
+		}*/
 	}
-
 }

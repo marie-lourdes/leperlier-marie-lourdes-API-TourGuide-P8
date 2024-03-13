@@ -38,34 +38,48 @@ public class Tracker extends Thread {
 	 * Assures to shut down the Tracker thread
 	 */
 	public void stopTracking() {
-		stop = true; //!!!reaffectez a false pour stopper le thread  et renommer la varible avec run= false car un while (!stop=false) ne demarre pas la boucle et les instructions mais une valeur true
+		stop = true; // !!!reaffectez a false pour stopper le thread et renommer la varible avec run=
+						// false car un while (!stop=false) ne demarre pas la boucle et les instructions
+						// mais une valeur true
 		executorService.shutdownNow();
 	}
 
 	@Override
 	public void run() {
 		StopWatch stopWatch = new StopWatch();
-		while (true) {//?? provoque boucle infinie si toujours a true*
-			// passez en parametre de la boucle while la variable stop , et a la fin de la method run  pour stopper le thread reafectez la variable a false pour entrer a nouveau dans la boucle
-			if (Thread.currentThread().isInterrupted() || stop) {
-				logger.debug("Tracker stopping");
-				break;
-			}
-
-			List<User> users = userService.getAllUsers();
-			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
-			stopWatch.start();
-			users.forEach(u -> tourGuideService.trackUserLocation(u));
-			stopWatch.stop();
-			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
-			stopWatch.reset();
+		while (stop) {// ?? provoque boucle infinie si toujours a true*
+			// passez en parametre de la boucle while la variable stop , et a la fin de la
+			// method run pour stopper le thread reafectez la variable a false pour entrer a
+			// nouveau dans la boucle
 			try {
-				logger.debug("Tracker sleeping");
-				TimeUnit.SECONDS.sleep(trackingPollingInterval);//?? provoque des erreurs du 2 eme  du 2eme appel de tourGuideService
-			} catch (InterruptedException e) {
-				break;
-			}
-		}
+				if (Thread.currentThread().isInterrupted()) {
+					// testez la condition sans la varinale stop et le placez dans lewhile pour
+					// testerl exception ConccurrentModificationexception
+					// le programme est interrompu si le thread est interrompu mais ne les thread
+					// attribut "interrupted" =false dans le debug donc ne devrait pas stopper le
+					// programme
+					logger.debug("Tracker stopping");
+					stopTracking();
+					// break;
+				}
 
+				List<User> users = userService.getAllUsers();
+				logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
+				stopWatch.start();
+				users.forEach(u -> tourGuideService.trackUserLocation(u));
+				stopWatch.stop();
+				logger.debug(
+						"Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
+				stopWatch.reset();
+
+				logger.debug("Tracker sleeping");
+				TimeUnit.SECONDS.sleep(trackingPollingInterval);// ?? provoque des erreurs du 2 eme du 2eme appel de
+																// tourGuideService
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage());
+				// stopTracking();
+			}
+			break;
+		}
 	}
 }
