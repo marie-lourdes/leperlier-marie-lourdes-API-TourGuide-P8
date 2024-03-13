@@ -28,8 +28,8 @@ public class RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
-	List<RecommendedUserAttraction> attracUserLocationDistance = new ArrayList<>();
-	List<RecommendedUserAttraction> attracUserLocationDistanceSorted = new ArrayList<>();
+	List<RecommendedUserAttraction> attractionUserLocationDistance = new ArrayList<>();
+	List<RecommendedUserAttraction> attractionUserLocationDistanceSorted = new ArrayList<>();
 
 	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
 		this.gpsUtil = gpsUtil;
@@ -101,20 +101,20 @@ public class RewardsService {
 			RecommendedUserAttraction fiveClosestAttraction = new RecommendedUserAttraction(attraction.attractionName,
 					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist,
 					rewardPoint);
-			attracUserLocationDistance.add(fiveClosestAttraction);
+			attractionUserLocationDistance.add(fiveClosestAttraction);
 		}
-		Collections.sort(attracUserLocationDistance);
+		Collections.sort(attractionUserLocationDistance);
 
-		System.out.println("all recommended attractionUser" + attracUserLocationDistance);
-		for (RecommendedUserAttraction attraction : attracUserLocationDistance) {
+		System.out.println("all recommended attractionUser" + attractionUserLocationDistance);
+		for (RecommendedUserAttraction attraction : attractionUserLocationDistance) {
 			i++;
 			if (i <= 5) {
-				attracUserLocationDistanceSorted.add(attraction);
+				attractionUserLocationDistanceSorted.add(attraction);
 			}
 
 		}
 
-		return attracUserLocationDistanceSorted;
+		return attractionUserLocationDistanceSorted;
 	}
 
 	private int getRewardPoints(Attraction attraction, User user) {
