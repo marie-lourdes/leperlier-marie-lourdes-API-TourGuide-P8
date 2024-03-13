@@ -93,7 +93,7 @@ public class RewardsService {
 
 	public List<RecommendedUserAttraction> getClosestRecommendedUserAttractions(Location userLocation, User user) {
 		List<Attraction> attractions = gpsUtil.getAttractions();
-		int i = 0;// for log
+		int i = 0;
 		for (Attraction attraction : attractions) {
 			double dist = this.getDistance(attraction, userLocation);
 			int rewardPoint = rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());

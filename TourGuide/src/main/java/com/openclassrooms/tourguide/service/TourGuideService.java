@@ -97,8 +97,8 @@ public class TourGuideService {
 	}
 
 	public List<RecommendedUserAttraction>getNearByAttractions(VisitedLocation visitedLocation,User user) {
-		List<RecommendedUserAttraction> attracUserLocationDistanceSorted =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location, user);
-		return  attracUserLocationDistanceSorted ;
+		List<RecommendedUserAttraction> attractionsClosestUserVisitedLocation =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location, user);
+		return  attractionsClosestUserVisitedLocation;
 	}
 
 	private void addShutDownHook() {
