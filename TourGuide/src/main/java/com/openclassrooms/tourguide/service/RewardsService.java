@@ -28,8 +28,8 @@ public class RewardsService {
 	private int attractionProximityRange = 200;
 	private final GpsUtil gpsUtil;
 	private final RewardCentral rewardsCentral;
-	List<RecommendedUserAttraction> attractionUserLocationDistance = new ArrayList<>();
-	List<RecommendedUserAttraction> attractionUserLocationDistanceSorted = new ArrayList<>();
+	List<RecommendedUserAttraction> attractionsUserLocationDistance = new ArrayList<>();
+	List<RecommendedUserAttraction> attractionsClosestUserLocationDistanceSorted = new ArrayList<>();
 
 	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
 		this.gpsUtil = gpsUtil;
@@ -93,28 +93,28 @@ public class RewardsService {
 
 	public List<RecommendedUserAttraction> getClosestRecommendedUserAttractions(Location userLocation, User user) {
 		List<Attraction> attractions = gpsUtil.getAttractions();
-		int i = 0;
+		int i = 0;// for log
 		for (Attraction attraction : attractions) {
-			double dist = getDistance(attraction, userLocation);
+			double dist = this.getDistance(attraction, userLocation);
 			int rewardPoint = rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 
-			RecommendedUserAttraction fiveClosestAttraction = new RecommendedUserAttraction(attraction.attractionName,
+			RecommendedUserAttraction closestAttraction = new RecommendedUserAttraction(attraction.attractionName,
 					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist,
 					rewardPoint);
-			attractionUserLocationDistance.add(fiveClosestAttraction);
+			attractionsUserLocationDistance.add(closestAttraction);
 		}
-		Collections.sort(attractionUserLocationDistance);
+		Collections.sort(attractionsUserLocationDistance);
 
-		System.out.println("all recommended attractionUser" + attractionUserLocationDistance);
-		for (RecommendedUserAttraction attraction : attractionUserLocationDistance) {
+		System.out.println("all recommended attractionUser" + attractionsUserLocationDistance);
+		for (RecommendedUserAttraction attraction : attractionsUserLocationDistance) {
 			i++;
 			if (i <= 5) {
-				attractionUserLocationDistanceSorted.add(attraction);
+				attractionsClosestUserLocationDistanceSorted.add(attraction);
 			}
 
 		}
 
-		return attractionUserLocationDistanceSorted;
+		return attractionsClosestUserLocationDistanceSorted;
 	}
 
 	private int getRewardPoints(Attraction attraction, User user) {
