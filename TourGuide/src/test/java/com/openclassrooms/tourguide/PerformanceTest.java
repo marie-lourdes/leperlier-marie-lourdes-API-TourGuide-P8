@@ -70,7 +70,7 @@ public class PerformanceTest {
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		for (User user : allUsers) {
-			tourGuideService.trackUserLocation(user);
+			tourGuideService.trackUserLocation(user);// method qui prend du temps pour retourner les visitedLocation de chaque utilisateur
 		}
 		stopWatch.stop();
 		tourGuideService.tracker.stopTracking();
@@ -95,7 +95,7 @@ public class PerformanceTest {
 		allUsers = tourGuideService.getAllUsers();
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
 
-		allUsers.forEach(u -> rewardsService.calculateRewards(u));
+		allUsers.forEach(u -> rewardsService.calculateRewards(u));// method qui prend du temps pour calculer les rewards  de chaque utilisateur dû a getRewards dans la boucle de la methode
 
 		for (User user : allUsers) {
 			assertTrue(user.getUserRewards().size() > 0);
