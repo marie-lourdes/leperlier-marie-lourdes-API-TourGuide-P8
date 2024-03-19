@@ -15,7 +15,7 @@
 	<name>tourguide</name>
 	<description>Api for TourGuide</description>
 	<properties>
-		<java.version>20</java.version>
+		<java.version>17</java.version>
 		<sonar.organization>marie-lourdes-1</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
