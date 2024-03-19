@@ -52,7 +52,7 @@ public class RewardsService {
 			// boucles imbriquée lance erreur de ConcurrentModificationException (iteration
 			// et modification lors de l iteration) et userRewards vide
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
-				for (Attraction attraction : attractions) {// a debugger avec les point d arrêts conditionnel
+				for (Attraction attraction : attractions) {// a debugger avec les point d arrêts conditionnel et getrewards()
 
 					listUserRewards = user.getUserRewards().stream().filter(
 							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName));
