@@ -21,7 +21,7 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
 public class RewardsServiceTest {
-	private GpsUtil gpsUtil;
+	private GpsUtilService  gpsUtilService;
 	private RewardsService rewardsService;
 	
 	@BeforeEach
@@ -33,7 +33,7 @@ public class RewardsServiceTest {
 	@Test // A ajouter dans un test de UserService
 	public void testUserGetRewards() {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(gpsUtil, rewardsService);
+		UserService userService = new UserService(rewardsService,gpsUtilService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtil.getAttractions().get(0);

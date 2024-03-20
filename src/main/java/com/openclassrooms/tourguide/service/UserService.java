@@ -28,14 +28,14 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class UserService {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
-	private final GpsUtil gpsUtil;
+	private final  GpsUtilService  gpsUtilService ;
 	private final RewardsService rewardsService;
 	public final Tracker tracker;
 	boolean testMode = true;
 
-	public UserService(GpsUtil gpsUtil, RewardsService rewardsService) {
-		this.gpsUtil = gpsUtil;
+	public UserService(RewardsService rewardsService,GpsUtilService  gpsUtilService ) {
 		this.rewardsService = rewardsService;
+		this.gpsUtilService= gpsUtilService;
 		
 		Locale.setDefault(Locale.US);	
 		if (testMode) {
@@ -67,14 +67,14 @@ public class UserService {
 		return user.getUserRewards(); // ajouter rewardsService.calculateRewards(user) avant et creer user service;
 	}
 
-	public VisitedLocation getUserLocation(User user) {
+	public VisitedLocation getUserLocation(User user) throws InterruptedException {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
 				: trackUserLocation(user);
 		return visitedLocation;
 	}// a commenter
 
-	public VisitedLocation trackUserLocation(User user) {
-		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
+	public VisitedLocation trackUserLocation(User user)  throws InterruptedException{
+		VisitedLocation visitedLocation = gpsUtilService.getUserVisitedLocation(user);
 		user.addToVisitedLocations(visitedLocation);
 		return visitedLocation;
 	}
