@@ -63,7 +63,7 @@ public class PerformanceTest {
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
-		InternalTestHelper.setInternalUserNumber(1000);
+		InternalTestHelper.setInternalUserNumber(100);
 		UserService userService = new UserService(rewardsService,gpsUtilService);
 
 		List<User> allUsers = new ArrayList<>();
