@@ -14,6 +14,7 @@ import org.junit.jupiter.api.Test;
 
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.model.User;
+import com.openclassrooms.tourguide.service.GpsUtilService;
 import com.openclassrooms.tourguide.service.RewardsService;
 import com.openclassrooms.tourguide.service.UserService;
 
@@ -23,14 +24,15 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
 public class PerformanceTest {
-	private GpsUtil gpsUtil;
+	private GpsUtilService  gpsUtilService;
 	private RewardsService rewardsService;
 
 
 	@BeforeEach
 	public void init() throws Exception {
-		gpsUtil = new GpsUtil();
-		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		GpsUtil gpsUtil = new GpsUtil();
+		gpsUtilService = new GpsUtilService(gpsUtil);
+		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 	}
 	/*
 	 * A note on performance improvements:
@@ -62,7 +64,7 @@ public class PerformanceTest {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
 		InternalTestHelper.setInternalUserNumber(1000);
-		UserService userService = new UserService(gpsUtil, rewardsService);
+		UserService userService = new UserService(rewardsService,gpsUtilService);
 
 		List<User> allUsers = new ArrayList<>();
 		
@@ -88,9 +90,9 @@ public class PerformanceTest {
 		InternalTestHelper.setInternalUserNumber(100);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		UserService userService = new UserService(gpsUtil, rewardsService);
+		UserService userService = new UserService(rewardsService,gpsUtilService);
 
-		Attraction attraction = gpsUtil.getAttractions().get(0);
+		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		List<User> allUsers = new ArrayList<>();
 		allUsers = userService.getAllUsers();
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));

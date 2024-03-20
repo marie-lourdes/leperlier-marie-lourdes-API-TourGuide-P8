@@ -12,7 +12,6 @@ import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 
-import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
@@ -26,13 +25,13 @@ public class RewardsService {
 	private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
-	private final GpsUtil gpsUtil;
+	private final  GpsUtilService  gpsUtilService ;
 	private final RewardCentral rewardsCentral;
 	List<RecommendedUserAttraction> attractionsUserLocationDistance = new ArrayList<>();
 	List<RecommendedUserAttraction> attractionsClosestUserLocationDistanceSorted = new ArrayList<>();
 
-	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
-		this.gpsUtil = gpsUtil;
+	public RewardsService(GpsUtilService gpsUtilService, RewardCentral rewardCentral) {
+		this.gpsUtilService= gpsUtilService;
 		this.rewardsCentral = rewardCentral;
 	}
 
@@ -43,11 +42,12 @@ public class RewardsService {
 	public void setDefaultProximityBuffer() {
 		proximityBuffer = defaultProximityBuffer;
 	}
-
+	
+	//optimiser boucle avec fonction  native java ou stream
 	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode
 		try {
 			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations();
-			List<Attraction> attractions = gpsUtil.getAttractions();
+			List<Attraction> attractions = gpsUtilService.getAllAttractions();
 			Stream<UserReward> listUserRewards;
 			// boucles imbriquée lance erreur de ConcurrentModificationException (iteration
 			// et modification lors de l iteration) et userRewards vide
@@ -91,8 +91,9 @@ public class RewardsService {
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}
 
+	//optimiser boucle avec fonction  native java ou stream
 	public List<RecommendedUserAttraction> getClosestRecommendedUserAttractions(Location userLocation, User user) {
-		List<Attraction> attractions = gpsUtil.getAttractions();
+		List<Attraction> attractions = gpsUtilService.getAllAttractions();
 		int i = 0;
 		for (Attraction attraction : attractions) {
 			double dist = this.getDistance(attraction, userLocation);

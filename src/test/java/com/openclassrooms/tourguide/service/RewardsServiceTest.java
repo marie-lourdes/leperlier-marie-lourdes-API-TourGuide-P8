@@ -10,7 +10,6 @@ import java.util.UUID;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
@@ -26,8 +25,9 @@ public class RewardsServiceTest {
 	
 	@BeforeEach
 	public void init() throws Exception {
-		gpsUtil = new GpsUtil();
-		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		GpsUtil gpsUtil = new GpsUtil();
+		gpsUtilService = new GpsUtilService(gpsUtil);
+		rewardsService = new RewardsService( gpsUtilService, new RewardCentral());
 	}
 
 	@Test // A ajouter dans un test de UserService

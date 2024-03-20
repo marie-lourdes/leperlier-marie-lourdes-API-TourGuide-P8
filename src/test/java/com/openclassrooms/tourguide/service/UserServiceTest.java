@@ -18,21 +18,21 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
 class UserServiceTest {
-	private GpsUtil gpsUtil;
+	private GpsUtilService  gpsUtilService;
 	private RewardsService rewardsService;
-	//private UserDataLoader userDataLoader;
 	
 	@BeforeEach
 	public void init() throws Exception {
-		gpsUtil = new GpsUtil();
-		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+		GpsUtil gpsUtil = new GpsUtil();
+		gpsUtilService = new GpsUtilService(gpsUtil);
+		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 		
 	}
 	
 	@Test
 	public void testAddUser() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(gpsUtil, rewardsService);
+		UserService userService = new UserService(rewardsService,gpsUtilService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -52,7 +52,7 @@ class UserServiceTest {
 	@Test
 	public void testGetAllUsers() throws Exception {		
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(gpsUtil, rewardsService);
+		UserService userService = new UserService(rewardsService,gpsUtilService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -71,10 +71,8 @@ class UserServiceTest {
 	
 	@Test
 	public void addUser() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(gpsUtil, rewardsService);
+		UserService userService = new UserService(rewardsService,gpsUtilService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -93,11 +91,9 @@ class UserServiceTest {
 	}
 
 	@Test
-	public void getAllUsers() {
-		GpsUtil gpsUtil = new GpsUtil();
-		RewardsService rewardsService = new RewardsService(gpsUtil, new RewardCentral());
+	public void getAllUsers() {	
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(gpsUtil, rewardsService);
+		UserService userService =new UserService(rewardsService,gpsUtilService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -115,7 +111,7 @@ class UserServiceTest {
 	@Test
 	public void testGetUserLocation() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(gpsUtil, rewardsService);
+		UserService userService = new UserService(rewardsService,gpsUtilService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = userService.getUserLocation(user);
@@ -126,7 +122,7 @@ class UserServiceTest {
 	@Test
 	public void testTrackUserLocation() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(gpsUtil, rewardsService);
+		UserService userService = new UserService(rewardsService,gpsUtilService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = userService.trackUserLocation(user);
