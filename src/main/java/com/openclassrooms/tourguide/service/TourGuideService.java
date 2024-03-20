@@ -70,14 +70,14 @@ public class TourGuideService {
 		}
 	}
 	public List<UserReward> getUserRewards(User user) {
-		return user.getUserRewards();
+		return user.getUserRewards(); //ajouter rewardsService.calculateRewards(user) avant et creer user service;
 	}
 
-	public VisitedLocation getUserLocation(User user) {
+public VisitedLocation getUserLocation(User user) {
 		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
 				: trackUserLocation(user);
 		return visitedLocation;
-	}
+	}//a commenter
 
 
 	public List<Provider> getTripDeals(User user) {
@@ -92,7 +92,7 @@ public class TourGuideService {
 	public VisitedLocation trackUserLocation(User user) {
 		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
 		user.addToVisitedLocations(visitedLocation);
-		rewardsService.calculateRewards(user);
+		rewardsService.calculateRewards(user); //method pas util pour renvoyer visitedlocation les rewards ne sont pas indiqué dans cet objet
 		return visitedLocation;
 	}
 

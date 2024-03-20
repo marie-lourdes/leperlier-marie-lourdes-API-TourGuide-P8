@@ -50,7 +50,7 @@ public class TourGuideController {
     
     @GetMapping("/getRewards") 
     public List<UserReward> getRewards(@RequestParam String userName) {
-    	return tourGuideService.getUserRewards(tourGuideService.getUser(userName));
+    	return tourGuideService.getUserRewards(tourGuideService.getUser(userName)); 
     }
        
     @GetMapping("/getTripDeals")
