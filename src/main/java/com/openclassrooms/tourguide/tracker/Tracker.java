@@ -24,14 +24,19 @@ public class Tracker extends Thread {
 	private static final long trackingPollingInterval = TimeUnit.SECONDS.toSeconds(5);//5 min (converti en secondes)trop long  la mise en attente du thread
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private final UserService userService;
-	//private final UserService userService;
+	private final TourGuideService tourGuideService;
 	private boolean stop = false;// !!!initilisez a true 
 
 	public Tracker(UserService userService) {
 		this.userService = userService;
+		this.tourGuideService = null;
 		executorService.submit(this);
 	}
-
+	public Tracker(TourGuideService tourGuideService) {
+		this.userService = null;
+		this.tourGuideService = tourGuideService;
+		executorService.submit(this);
+	}
 	/**
 	 * Assures to shut down the Tracker thread
 	 */

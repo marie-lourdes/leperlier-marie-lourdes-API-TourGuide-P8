@@ -8,20 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.tourguide.model.User;
-import com.openclassrooms.tourguide.service.TourGuideService;
+import com.openclassrooms.tourguide.service.UserService;
 
 @RestController
 @RequestMapping("tourguide/user")
 public class UserController {
-
-
 	@Autowired
-	TourGuideService tourGuideService;
+	UserService userService;
 
 	@PostMapping("/add")
 	public void addUser() {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		tourGuideService.addUser(user);
+		userService.addUser(user);
 
 	}
 }

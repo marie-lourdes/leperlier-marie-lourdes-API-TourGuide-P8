@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test;
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.RewardsService;
-import com.openclassrooms.tourguide.service.TourGuideService;
+import com.openclassrooms.tourguide.service.UserService;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
@@ -62,18 +62,18 @@ public class PerformanceTest {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
 		InternalTestHelper.setInternalUserNumber(100);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+		UserService userService = new UserService(gpsUtil, rewardsService);
 
 		List<User> allUsers = new ArrayList<>();
 		
-		allUsers = tourGuideService.getAllUsers();
+		allUsers = userService.getAllUsers();
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		for (User user : allUsers) {
-			tourGuideService.trackUserLocation(user);// method qui prend du temps pour retourner les visitedLocation de chaque utilisateur
+			userService.trackUserLocation(user);// method qui prend du temps pour retourner les visitedLocation de chaque utilisateur
 		}
 		stopWatch.stop();
-		tourGuideService.tracker.stopTracking();
+		userService.tracker.stopTracking();
 
 		System.out.println("highVolumeTrackLocation: Time Elapsed: "
 				+ TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
@@ -88,11 +88,11 @@ public class PerformanceTest {
 		InternalTestHelper.setInternalUserNumber(100);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+		UserService userService = new UserService(gpsUtil, rewardsService);
 
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		List<User> allUsers = new ArrayList<>();
-		allUsers = tourGuideService.getAllUsers();
+		allUsers = userService.getAllUsers();
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
 
 		allUsers.forEach(u -> rewardsService.calculateRewards(u));// method qui prend du temps pour calculer les rewards  de chaque utilisateur dû a getRewards dans la boucle de la methode
@@ -101,7 +101,7 @@ public class PerformanceTest {
 			assertTrue(user.getUserRewards().size() > 0);
 		}
 		stopWatch.stop();
-		tourGuideService.tracker.stopTracking();
+		userService.tracker.stopTracking();
 
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
 				+ " seconds.");

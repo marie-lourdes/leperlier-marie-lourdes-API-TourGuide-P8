@@ -5,6 +5,7 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
@@ -36,6 +37,7 @@ public class UserService {
 		this.gpsUtil = gpsUtil;
 		this.rewardsService = rewardsService;
 		
+		Locale.setDefault(Locale.US);	
 		if (testMode) {
 			logger.info("TestMode enabled");
 			logger.debug("Initializing users");

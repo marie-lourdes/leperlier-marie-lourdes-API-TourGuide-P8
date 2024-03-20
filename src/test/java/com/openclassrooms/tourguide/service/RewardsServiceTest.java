@@ -30,17 +30,17 @@ public class RewardsServiceTest {
 		rewardsService = new RewardsService(gpsUtil, new RewardCentral());
 	}
 
-	@Test // A ajouter dans un test de TourGuideService
+	@Test // A ajouter dans un test de UserService
 	public void testUserGetRewards() {
 		InternalTestHelper.setInternalUserNumber(0);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+		UserService userService = new UserService(gpsUtil, rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtil.getAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
-		tourGuideService.trackUserLocation(user);
+		userService.trackUserLocation(user);
 		List<UserReward> userRewards = user.getUserRewards();
-		tourGuideService.tracker.stopTracking();
+		userService.tracker.stopTracking();
 		assertTrue(userRewards.size() == 1);
 	}
 
@@ -58,11 +58,11 @@ public class RewardsServiceTest {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 		
 		InternalTestHelper.setInternalUserNumber(1);
-		TourGuideService tourGuideService = new TourGuideService(gpsUtil, rewardsService);
+		UserService userService = new UserService(gpsUtil, rewardsService);
 
-		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
-		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
-		tourGuideService.tracker.stopTracking();
+		rewardsService.calculateRewards(userService.getAllUsers().get(0));
+		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
+		userService.tracker.stopTracking();
 
 		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
 		/*} catch (ConcurrentModificationException e) {
