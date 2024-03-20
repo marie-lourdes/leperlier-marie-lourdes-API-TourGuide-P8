@@ -21,7 +21,6 @@ import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 import com.openclassrooms.tourguide.tracker.Tracker;
 
-import gpsUtil.GpsUtil;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 
@@ -67,15 +66,22 @@ public class UserService {
 		return user.getUserRewards(); // ajouter rewardsService.calculateRewards(user) avant et creer user service;
 	}
 
-	public VisitedLocation getUserLocation(User user) throws InterruptedException {
-		VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
-				: trackUserLocation(user);
+	public VisitedLocation getUserLocation(User user)  {
+		/*VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
+				: trackUserLocation(user);*/
+		VisitedLocation visitedLocation=null;
+		try {
+			visitedLocation = this.trackUserLocation(user);
+		} catch (InterruptedException e) {
+		logger.error(e.getMessage());
+		}
 		return visitedLocation;
 	}// a commenter
 
-	public VisitedLocation trackUserLocation(User user)  throws InterruptedException{
+	public VisitedLocation trackUserLocation(User user) throws InterruptedException {
 		VisitedLocation visitedLocation = gpsUtilService.getUserVisitedLocation(user);
-		user.addToVisitedLocations(visitedLocation);
+			user.addToVisitedLocations(visitedLocation);
+			user.setLastVisitedLocation();
 		return visitedLocation;
 	}
 
