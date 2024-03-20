@@ -11,9 +11,10 @@ import org.slf4j.LoggerFactory;
 
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.TourGuideService;
+import com.openclassrooms.tourguide.service.UserService;
 
 /* Les test appel 4 fois la creation d user avec tours guide service , 4 threads
- * au 1er  l appel de la creation d user de tourGuideService service le tracker demarre 
+ * au 1er  l appel de la creation d user de userService service le tracker demarre 
  * puis mis en attente le 2eme et le 3ème appel le tracker rencontre des erreurs de threads  et de lecture des users apres la 2eme et 3 ème appel de creation d user
  * et stoppe et recommence au dernier appel du TourGuideService pour la creation user
  * Le tout avec un seul thread et pas de pool pour gerer la mise en attente de plusieurs thread
@@ -22,12 +23,12 @@ public class Tracker extends Thread {
 	private Logger logger = LoggerFactory.getLogger(Tracker.class);
 	private static final long trackingPollingInterval = TimeUnit.SECONDS.toSeconds(5);//5 min (converti en secondes)trop long  la mise en attente du thread
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-	private final TourGuideService tourGuideService;
+	private final UserService userService;
 	//private final UserService userService;
 	private boolean stop = false;// !!!initilisez a true 
 
-	public Tracker(TourGuideService tourGuideService) {
-		this.tourGuideService = tourGuideService;
+	public Tracker(UserService userService) {
+		this.userService = userService;
 		executorService.submit(this);
 	}
 
@@ -60,10 +61,10 @@ public class Tracker extends Thread {
 					// break;
 				}
 
-				List<User> users = tourGuideService.getAllUsers();
+				List<User> users = userService.getAllUsers();
 				logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 				stopWatch.start();
-				users.forEach(u -> tourGuideService.trackUserLocation(u));
+				users.forEach(u -> userService.trackUserLocation(u));
 				stopWatch.stop();
 				logger.debug(
 						"Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
@@ -71,7 +72,7 @@ public class Tracker extends Thread {
 
 				logger.debug("Tracker sleeping");
 				TimeUnit.SECONDS.sleep(trackingPollingInterval);// ?? provoque des erreurs du 2 eme du 2eme appel de
-																// tourGuideService
+																// userService
 			} catch (InterruptedException e) {
 				logger.error(e.getMessage());
 				// stopTracking();
