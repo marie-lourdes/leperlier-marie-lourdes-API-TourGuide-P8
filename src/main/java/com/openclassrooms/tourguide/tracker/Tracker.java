@@ -62,8 +62,8 @@ public class Tracker extends Thread {
 					// attribut "interrupted" =false dans le debug donc ne devrait pas stopper le
 					// programme
 					logger.debug("Tracker stopping");
-					stopTracking();
-					// break;
+					//stopTracking();
+					 break;
 				}
 
 				List<User> users = userService.getAllUsers();
