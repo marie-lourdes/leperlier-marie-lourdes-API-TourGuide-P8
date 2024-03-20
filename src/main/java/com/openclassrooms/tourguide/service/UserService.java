@@ -63,6 +63,7 @@ public class UserService {
 	}
 
 	public List<UserReward> getUserRewards(User user) {
+		rewardsService.calculateRewards(user);
 		return user.getUserRewards(); // ajouter rewardsService.calculateRewards(user) avant et creer user service;
 	}
 
@@ -75,8 +76,6 @@ public class UserService {
 	public VisitedLocation trackUserLocation(User user) {
 		VisitedLocation visitedLocation = gpsUtil.getUserLocation(user.getUserId());
 		user.addToVisitedLocations(visitedLocation);
-		rewardsService.calculateRewards(user); // method pas util pour renvoyer visitedlocation les rewards ne sont pas
-												// indiqué dans cet objet
 		return visitedLocation;
 	}
 
