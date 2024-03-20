@@ -36,7 +36,7 @@ public class RewardsServiceTest {
 		UserService userService = new UserService(rewardsService,gpsUtilService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		Attraction attraction = gpsUtil.getAttractions().get(0);
+		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 		userService.getUserRewards(user);
 		List<UserReward> userRewards = user.getUserRewards();
@@ -46,7 +46,7 @@ public class RewardsServiceTest {
 
 	@Test
 	public void testIsWithinAttractionProximity() {
-		Attraction attraction = gpsUtil.getAttractions().get(0);
+		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));//? deuxieme parametre doit etre un type Location et non attraction
 	}
 
@@ -58,13 +58,13 @@ public class RewardsServiceTest {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 		
 		InternalTestHelper.setInternalUserNumber(1);
-		UserService userService = new UserService(gpsUtil, rewardsService);
+		UserService userService = new UserService(rewardsService,gpsUtilService);
 
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
 		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
 		userService.tracker.stopTracking();
 
-		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
+		assertEquals(gpsUtilService.getAllAttractions().size(), userRewards.size());
 		/*} catch (ConcurrentModificationException e) {
 			System.err.print("Error ConcurrentModificationException " + e.getMessage());
 		}*/
