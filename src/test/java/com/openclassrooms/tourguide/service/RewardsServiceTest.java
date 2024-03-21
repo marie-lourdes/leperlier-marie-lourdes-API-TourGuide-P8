@@ -59,7 +59,6 @@ public class RewardsServiceTest {
 		
 		InternalTestHelper.setInternalUserNumber(1);
 		UserService userService = new UserService(rewardsService,gpsUtilService);
-
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
 		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
 		userService.tracker.stopTracking();

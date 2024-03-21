@@ -57,7 +57,7 @@ public class TourGuideServiceTest {
 		List<Provider> providers = tourGuideService.getTripDeals(user);
 		
 		Tracker trackerTourguide = new Tracker(tourGuideService);
-		trackerTourguide.stopTracking();
+		tourGuideService.tracker.stopTracking();
 		
 		assertEquals(10, providers.size());
 	}

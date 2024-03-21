@@ -1,6 +1,8 @@
 package com.openclassrooms.tourguide.tracker;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +29,9 @@ public class Tracker extends Thread {
 	private final UserService userService;
 	private final TourGuideService tourGuideService;
 	private boolean stop = false;// !!!initilisez a true 
-
+	//-------------------------------
+	private final Map<User, Boolean> completedTrackingMap = new HashMap<>();
+	
 	public Tracker(UserService userService) {
 		this.userService = userService;
 		this.tourGuideService = null;
@@ -47,10 +51,61 @@ public class Tracker extends Thread {
 		stop = true; // !!!reaffectez a false pour stopper le thread et renommer la varible avec run=
 						// false car un while (!stop=false) ne demarre pas la boucle et les instructions
 						// mais une valeur true
-		executorService.shutdownNow();
+		//executorService.shutdownNow();
 	}
 
+
 	@Override
+	public void run() {
+		StopWatch stopWatch = new StopWatch();
+		while (stop) {
+			if (Thread.currentThread().isInterrupted() ) {
+				logger.debug("Tracker stopping");
+				break;		
+			}
+			
+			List<User> users = userService.getAllUsers();
+			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
+			stopWatch.start();
+			users.forEach(u ->{
+				try {
+					userService.trackUserLocation(u);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			});
+			//-------------------------
+			boolean notFinished = true;
+			while(notFinished) {
+				try {
+					//logger.debug("Waiting for tracking to finish...");
+					TimeUnit.MILLISECONDS.sleep(100);
+				} catch (InterruptedException e) {
+					break;
+				}
+				
+				if(!completedTrackingMap.containsValue(false)) {
+					notFinished = false;
+				}
+			}
+			
+			completedTrackingMap.clear();
+//------------------------------			
+			stopWatch.stop();
+			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
+			stopWatch.reset();
+			
+			try {
+				logger.debug("Tracker sleeping");
+				TimeUnit.SECONDS.sleep(trackingPollingInterval);
+			} catch (InterruptedException e) {
+				break;
+			}
+		}
+		
+	}
+/*	@Override
 	public void run() {
 		StopWatch stopWatch = new StopWatch();
 		while (stop) {// ?? provoque boucle infinie si toujours a true*
@@ -80,6 +135,7 @@ public class Tracker extends Thread {
 					}
 				});
 				stopWatch.stop();
+					
 				logger.debug(
 						"Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
 				stopWatch.reset();
@@ -93,5 +149,5 @@ public class Tracker extends Thread {
 			}
 			break;
 		}
-	}
+	}*/
 }

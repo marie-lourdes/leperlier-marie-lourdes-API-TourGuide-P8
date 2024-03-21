@@ -2,6 +2,7 @@ package com.openclassrooms.tourguide.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,8 +58,10 @@ public class UserService {
 		return internalUserMap.get(userName);
 	}
 
-	public List<User> getAllUsers() {
+	public List<User> getAllUsers() throws  ConcurrentModificationException{
+		
 		return internalUserMap.values().stream().collect(Collectors.toList());
+
 	}
 
 	public List<UserReward> getUserRewards(User user) {
