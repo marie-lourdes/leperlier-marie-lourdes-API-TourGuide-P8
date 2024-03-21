@@ -67,11 +67,11 @@ public class UserService {
 	}
 
 	public VisitedLocation getUserLocation(User user)  {
-		/*VisitedLocation visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
-				: trackUserLocation(user);*/
-		VisitedLocation visitedLocation=null;
+		VisitedLocation visitedLocation= null;
+		
 		try {
-			visitedLocation = this.trackUserLocation(user);
+			visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
+					: trackUserLocation(user);
 		} catch (InterruptedException e) {
 		logger.error(e.getMessage());
 		}

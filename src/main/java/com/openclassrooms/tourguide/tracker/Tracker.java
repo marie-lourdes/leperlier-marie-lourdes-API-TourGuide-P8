@@ -20,7 +20,8 @@ import com.openclassrooms.tourguide.service.UserService;
  * Le tout avec un seul thread et pas de pool pour gerer la mise en attente de plusieurs thread
  */
 public class Tracker extends Thread {
-	private Logger logger = LoggerFactory.getLogger(Tracker.class);
+	private final Logger logger = LoggerFactory.getLogger(Tracker.class);
+	//private Logger logger;
 	private static final long trackingPollingInterval = TimeUnit.SECONDS.toSeconds(5);//5 min (converti en secondes)trop long  la mise en attente du thread
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private final UserService userService;
@@ -30,11 +31,13 @@ public class Tracker extends Thread {
 	public Tracker(UserService userService) {
 		this.userService = userService;
 		this.tourGuideService = null;
+	//	this.logger = LoggerFactory.getLogger(Tracker.class);
 		executorService.submit(this);
 	}
 	public Tracker(TourGuideService tourGuideService) {
 		this.userService = null;
 		this.tourGuideService = tourGuideService;
+		
 		executorService.submit(this);
 	}
 	/**
