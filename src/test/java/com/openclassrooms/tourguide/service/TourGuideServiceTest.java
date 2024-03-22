@@ -18,28 +18,28 @@ import rewardCentral.RewardCentral;
 import tripPricer.Provider;
 
 public class TourGuideServiceTest {
-	private GpsUtilService  gpsUtilService;
+	private GpsUtilService gpsUtilService;
 	private RewardsService rewardsService;
 
 	@BeforeEach
 	public void init() throws Exception {
+		UserService userService = new UserService(rewardsService, gpsUtilService);
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 	}
 
-
 	// @Disabled // Not yet implemented
 	@Test
 	public void testGetNearbyAttractions() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
-		 UserService userService = new UserService(rewardsService,gpsUtilService);
-		 TourGuideService tourGuideService = new TourGuideService( rewardsService);
+		UserService userService = new UserService(rewardsService, gpsUtilService);
+		TourGuideService tourGuideService = new TourGuideService(rewardsService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = userService.trackUserLocation(user);
+		VisitedLocation visitedLocation = gpsUtilService.trackUserLocation(user,userService );
 
 		List<RecommendedUserAttraction> attractions = tourGuideService.getNearByAttractions(visitedLocation, user);
-	
+
 		userService.tracker.stopTracking();
 		tourGuideService.tracker.stopTracking();
 
@@ -48,14 +48,14 @@ public class TourGuideServiceTest {
 
 	public void testGetTripDeals() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
-	 TourGuideService tourGuideService = new TourGuideService( rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
 		List<Provider> providers = tourGuideService.getTripDeals(user);
-		
+
 		tourGuideService.tracker.stopTracking();
-		
+
 		assertEquals(10, providers.size());
 	}
 

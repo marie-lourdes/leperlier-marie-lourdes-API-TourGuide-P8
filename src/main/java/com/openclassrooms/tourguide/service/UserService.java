@@ -10,6 +10,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -75,22 +76,18 @@ public class UserService {
 		tracker.finalizeTrackUser(user);
 	}
 
-	public VisitedLocation getUserLocation(User user) {
+	public VisitedLocation getUserLocation(User user){
 		VisitedLocation visitedLocation = null;
 
 		try {
-			visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
-					: trackUserLocation(user);
-		} catch (InterruptedException e) {
+			if(user.getVisitedLocations().size() > 0){
+				user.getLastVisitedLocation();
+			}else {
+				gpsUtilService.trackUserLocation(user,this);
+			}
+		} catch (InterruptedException | ExecutionException e) {
 			logger.error(e.getMessage());
 		}
-		return visitedLocation;
-	}
-
-	public VisitedLocation trackUserLocation(User user) throws InterruptedException {
-		VisitedLocation visitedLocation = gpsUtilService.getUserVisitedLocation(user);
-		this.addUserLocation(user, visitedLocation);
-
 		return visitedLocation;
 	}
 

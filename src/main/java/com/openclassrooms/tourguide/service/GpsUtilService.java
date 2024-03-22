@@ -1,7 +1,11 @@
 package com.openclassrooms.tourguide.service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.User;
@@ -12,16 +16,24 @@ import gpsUtil.location.VisitedLocation;
 
 @Service
 public class GpsUtilService {
-	private final UserService userService;
+	private Logger logger = LoggerFactory.getLogger(UserService.class);
 	private final GpsUtil gpsUtil;
 
-	public GpsUtilService(GpsUtil gpsUtil,UserService userService) {
+	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
-		this.userService=userService;
 	}
 
-	public VisitedLocation getUserVisitedLocation(User user) {
-		return gpsUtil.getUserLocation(user.getUserId());
+
+	public VisitedLocation trackUserLocation(User user, UserService userService) throws InterruptedException, ExecutionException {
+		CompletableFuture<VisitedLocation> future =CompletableFuture.supplyAsync(() -> 
+	     gpsUtil.getUserLocation(user.getUserId())
+	);
+		
+		future.thenAccept(visitedLocation -> { userService.addUserLocation(user, visitedLocation); })
+		.thenRun(()-> logger.debug("Getting UserLocation completed"));
+		return future.get();
+		//return gpsUtil.getUserLocation(user.getUserId());
+		
 	}
 
 	public List<Attraction> getAllAttractions() {
@@ -33,10 +45,4 @@ public class GpsUtilService {
 				.findFirst().orElseThrow(() -> new NullPointerException("Attraction not found"));
 	}
 
-	public VisitedLocation trackUserLocation(User user) throws InterruptedException {
-		VisitedLocation visitedLocation = this.getUserVisitedLocation(user);
-		userService.addUserLocation(user, visitedLocation);
-
-		return visitedLocation;
-	}
 }

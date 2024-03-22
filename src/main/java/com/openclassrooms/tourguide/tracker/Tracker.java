@@ -3,6 +3,7 @@ package com.openclassrooms.tourguide.tracker;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -12,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.openclassrooms.tourguide.model.User;
+import com.openclassrooms.tourguide.service.GpsUtilService;
 import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.service.UserService;
 
@@ -26,22 +28,25 @@ public class Tracker extends Thread {
 	//private Logger logger;
 	private static final long trackingPollingInterval = TimeUnit.SECONDS.toSeconds(5);//5 min (converti en secondes)trop long  la mise en attente du thread
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
-	private final UserService userService;
-	private final TourGuideService tourGuideService;
+	private  UserService userService;
+	private  TourGuideService tourGuideService;
+	private GpsUtilService gpsUtilService;
 	private boolean stop = false;// !!!initilisez a true 
 	//-------------------------------
 	private final Map<User, Boolean> completedTrackingUsersMap = new HashMap<>();
 	
 	public Tracker(UserService userService) {
 		this.userService = userService;
-		this.tourGuideService = null;
 	//	this.logger = LoggerFactory.getLogger(Tracker.class);
 		executorService.submit(this);
 	}
 	public Tracker(TourGuideService tourGuideService) {
-		this.userService = null;
-		this.tourGuideService = tourGuideService;
-		
+		this.tourGuideService = tourGuideService;	
+		executorService.submit(this);
+	}
+	
+	public Tracker(GpsUtilService gpsUtilService) {
+		this.gpsUtilService = gpsUtilService;		
 		executorService.submit(this);
 	}
 	/**
@@ -70,8 +75,8 @@ public class Tracker extends Thread {
 			stopWatch.start();
 			users.forEach(user ->{
 				try {
-					userService.trackUserLocation(user);
-				} catch (InterruptedException e) {
+					gpsUtilService.trackUserLocation(user, userService);
+				} catch (InterruptedException | ExecutionException e) {
 					logger.error(e.getMessage());
 				}
 			});

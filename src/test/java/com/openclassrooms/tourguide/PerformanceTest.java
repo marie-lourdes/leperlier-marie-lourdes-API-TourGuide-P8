@@ -24,12 +24,12 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
 public class PerformanceTest {
-	private GpsUtilService  gpsUtilService;
+	private GpsUtilService gpsUtilService;
 	private RewardsService rewardsService;
-
 
 	@BeforeEach
 	public void init() throws Exception {
+		UserService userService = new UserService(rewardsService, gpsUtilService);
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
@@ -57,22 +57,22 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	
-	//@Disabled
+	// @Disabled
 	@Test
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
 		InternalTestHelper.setInternalUserNumber(100);
-		UserService userService = new UserService(rewardsService,gpsUtilService);
+		UserService userService = new UserService(rewardsService, gpsUtilService);
 
 		List<User> allUsers = new ArrayList<>();
-		
+
 		allUsers = userService.getAllUsers();
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		for (User user : allUsers) {
-			userService.trackUserLocation(user);// method qui prend du temps pour retourner les visitedLocation de chaque utilisateur
+			gpsUtilService.trackUserLocation(user,userService );// method qui prend du temps pour retourner les visitedLocation de
+													// chaque utilisateur
 		}
 		stopWatch.stop();
 		userService.tracker.stopTracking();
@@ -84,20 +84,22 @@ public class PerformanceTest {
 
 	@Disabled
 	@Test
-	public void testHighVolumeGetRewards()throws Exception  {
+	public void testHighVolumeGetRewards() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 20
 		// minutes
 		InternalTestHelper.setInternalUserNumber(100);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		UserService userService = new UserService(rewardsService,gpsUtilService);
+		UserService userService = new UserService(rewardsService, gpsUtilService);
 
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		List<User> allUsers = new ArrayList<>();
 		allUsers = userService.getAllUsers();
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
 
-		allUsers.forEach(u -> rewardsService.calculateRewards(u));// method qui prend du temps pour calculer les rewards  de chaque utilisateur dû a getRewards dans la boucle de la methode
+		allUsers.forEach(u -> rewardsService.calculateRewards(u));// method qui prend du temps pour calculer les rewards
+																	// de chaque utilisateur dû a getRewards dans la
+																	// boucle de la methode
 
 		for (User user : allUsers) {
 			assertTrue(user.getUserRewards().size() > 0);

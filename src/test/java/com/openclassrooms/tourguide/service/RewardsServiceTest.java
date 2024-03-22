@@ -20,20 +20,20 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
 public class RewardsServiceTest {
-	private GpsUtilService  gpsUtilService;
+	private GpsUtilService gpsUtilService;
 	private RewardsService rewardsService;
-	
+
 	@BeforeEach
 	public void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
-		rewardsService = new RewardsService( gpsUtilService, new RewardCentral());
+		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 	}
 
 	@Test // A ajouter dans un test de UserService
 	public void testUserGetRewards() {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(rewardsService,gpsUtilService);
+		UserService userService = new UserService(rewardsService, gpsUtilService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
@@ -47,25 +47,31 @@ public class RewardsServiceTest {
 	@Test
 	public void testIsWithinAttractionProximity() {
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
-		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));//? deuxieme parametre doit etre un type Location et non attraction
+		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));// ? deuxieme parametre doit etre
+																						// un type Location et non
+																						// attraction
 	}
 
-	//@Disabled // Needs fixed - can throw ConcurrentModificationException
+	// @Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
-	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException{ //ajouter try/catch ConcurrentModificationException
-	
-		//try {
+	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException { // ajouter
+																												// try/catch
+																												// ConcurrentModificationException
+
+		// try {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
-		
+
 		InternalTestHelper.setInternalUserNumber(1);
-		UserService userService = new UserService(rewardsService,gpsUtilService);
+		UserService userService = new UserService(rewardsService, gpsUtilService);
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
 		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
 		userService.tracker.stopTracking();
 
 		assertEquals(gpsUtilService.getAllAttractions().size(), userRewards.size());
-		/*} catch (ConcurrentModificationException e) {
-			System.err.print("Error ConcurrentModificationException " + e.getMessage());
-		}*/
+		/*
+		 * } catch (ConcurrentModificationException e) {
+		 * System.err.print("Error ConcurrentModificationException " + e.getMessage());
+		 * }
+		 */
 	}
 }
