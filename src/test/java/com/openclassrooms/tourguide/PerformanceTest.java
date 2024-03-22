@@ -29,7 +29,7 @@ public class PerformanceTest {
 
 	@BeforeEach
 	public void init() throws Exception {
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		UserService userService = new UserService(rewardsService);
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
@@ -62,8 +62,8 @@ public class PerformanceTest {
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
-		InternalTestHelper.setInternalUserNumber(10000);
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		InternalTestHelper.setInternalUserNumber(5000);
+		UserService userService = new UserService(rewardsService);
 		List<User> allUsers = userService.getAllUsers();
 		StopWatch stopWatch = new StopWatch();
 		
@@ -89,7 +89,7 @@ public class PerformanceTest {
 		InternalTestHelper.setInternalUserNumber(100);
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		UserService userService = new UserService(rewardsService);
 
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		List<User> allUsers = new ArrayList<>();

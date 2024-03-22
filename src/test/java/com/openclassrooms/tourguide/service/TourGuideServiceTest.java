@@ -23,7 +23,7 @@ public class TourGuideServiceTest {
 
 	@BeforeEach
 	public void init() throws Exception {
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		UserService userService = new UserService(rewardsService);
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
@@ -33,7 +33,7 @@ public class TourGuideServiceTest {
 	@Test
 	public void testGetNearbyAttractions() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		UserService userService = new UserService(rewardsService);
 		TourGuideService tourGuideService = new TourGuideService(rewardsService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = gpsUtilService.trackUserLocation(user,userService );

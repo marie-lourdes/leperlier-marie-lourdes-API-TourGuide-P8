@@ -29,15 +29,14 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class UserService {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
-
 	private final RewardsService rewardsService;
+
 	public final Tracker tracker;
 	boolean testMode = true;
 
-	public UserService(RewardsService rewardsService, GpsUtilService gpsUtilService) {
+	public UserService(RewardsService rewardsService) {
 		this.rewardsService = rewardsService;
-		this.gpsUtilService = gpsUtilService;
-
+		
 		Locale.setDefault(Locale.US);
 		if (testMode) {
 			logger.info("TestMode enabled");

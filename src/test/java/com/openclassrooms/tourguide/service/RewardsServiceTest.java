@@ -33,7 +33,7 @@ public class RewardsServiceTest {
 	@Test // A ajouter dans un test de UserService
 	public void testUserGetRewards() {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		UserService userService = new UserService(rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
@@ -62,7 +62,7 @@ public class RewardsServiceTest {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
 		InternalTestHelper.setInternalUserNumber(1);
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		UserService userService = new UserService(rewardsService);
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
 		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
 		userService.tracker.stopTracking();

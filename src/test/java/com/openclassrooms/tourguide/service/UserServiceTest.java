@@ -31,7 +31,7 @@ class UserServiceTest {
 	@Test
 	public void testAddUser() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		UserService userService = new UserService(rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -51,7 +51,7 @@ class UserServiceTest {
 	@Test
 	public void testGetAllUsers() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		UserService userService = new UserService(rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
@@ -73,7 +73,7 @@ class UserServiceTest {
 	@Test
 	public void testGetUserLocation() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		UserService userService = new UserService(rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = userService.getUserLocation(user);
@@ -84,7 +84,7 @@ class UserServiceTest {
 	@Test
 	public void testTrackUserLocation() throws Exception {
 		InternalTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(rewardsService, gpsUtilService);
+		UserService userService = new UserService(rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		VisitedLocation visitedLocation = gpsUtilService.trackUserLocation(user,userService);
