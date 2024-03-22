@@ -30,7 +30,7 @@ public class Tracker extends Thread {
 	private final TourGuideService tourGuideService;
 	private boolean stop = false;// !!!initilisez a true 
 	//-------------------------------
-	private final Map<User, Boolean> completedTrackingMap = new HashMap<>();
+	private final Map<User, Boolean> completedTrackingUserMap = new HashMap<>();
 	
 	public Tracker(UserService userService) {
 		this.userService = userService;
@@ -85,12 +85,12 @@ public class Tracker extends Thread {
 					break;
 				}
 				
-				if(!completedTrackingMap.containsValue(false)) {
+				if(!completedTrackingUserMap.containsValue(false)) {
 					notFinished = false;
 				}
 			}
 			
-			completedTrackingMap.clear();
+			completedTrackingUserMap.clear();
 //------------------------------			
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
@@ -105,8 +105,8 @@ public class Tracker extends Thread {
 		}
 		
 	}
-	public synchronized void finalizeTrackUserLocation(User user) {
-		completedTrackingMap.put(user, true);
+	public synchronized void finalizeTrackUser(User user) {
+		completedTrackingUserMap.put(user, true);
 	}
 /*	@Override
 	public void run() {

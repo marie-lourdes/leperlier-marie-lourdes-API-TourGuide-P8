@@ -40,10 +40,9 @@ public class TourGuideServiceTest {
 		VisitedLocation visitedLocation = userService.trackUserLocation(user);
 
 		List<RecommendedUserAttraction> attractions = tourGuideService.getNearByAttractions(visitedLocation, user);
-		Tracker trackerUser = new Tracker(userService);
-		Tracker trackerTourguide = new Tracker(tourGuideService);
-		 trackerUser.stopTracking();
-		trackerTourguide.stopTracking();
+	
+		userService.tracker.stopTracking();
+		tourGuideService.tracker.stopTracking();
 
 		assertEquals(5, attractions.size());
 	}
@@ -56,7 +55,6 @@ public class TourGuideServiceTest {
 
 		List<Provider> providers = tourGuideService.getTripDeals(user);
 		
-		Tracker trackerTourguide = new Tracker(tourGuideService);
 		tourGuideService.tracker.stopTracking();
 		
 		assertEquals(10, providers.size());

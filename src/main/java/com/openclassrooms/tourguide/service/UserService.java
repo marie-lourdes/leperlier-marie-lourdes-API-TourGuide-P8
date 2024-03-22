@@ -85,7 +85,7 @@ public class UserService {
 		VisitedLocation visitedLocation = gpsUtilService.getUserVisitedLocation(user);
 		user.addToVisitedLocations(visitedLocation);
 		user.setLastVisitedLocation();
-		tracker.finalizeTrackUserLocation(user);		
+		tracker.finalizeTrackUser(user);		
 		return visitedLocation;
 	}
 
