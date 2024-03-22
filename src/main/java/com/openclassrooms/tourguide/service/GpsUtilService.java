@@ -12,10 +12,12 @@ import gpsUtil.location.VisitedLocation;
 
 @Service
 public class GpsUtilService {
+	private final UserService userService;
 	private final GpsUtil gpsUtil;
 
-	public GpsUtilService(GpsUtil gpsUtil) {
+	public GpsUtilService(GpsUtil gpsUtil,UserService userService) {
 		this.gpsUtil = gpsUtil;
+		this.userService=userService;
 	}
 
 	public VisitedLocation getUserVisitedLocation(User user) {
@@ -29,5 +31,12 @@ public class GpsUtilService {
 	public Attraction getOneAttraction(String attractionName) {
 		return gpsUtil.getAttractions().stream().filter(element -> element.attractionName.equals(attractionName))
 				.findFirst().orElseThrow(() -> new NullPointerException("Attraction not found"));
+	}
+
+	public VisitedLocation trackUserLocation(User user) throws InterruptedException {
+		VisitedLocation visitedLocation = this.getUserVisitedLocation(user);
+		userService.addUserLocation(user, visitedLocation);
+
+		return visitedLocation;
 	}
 }

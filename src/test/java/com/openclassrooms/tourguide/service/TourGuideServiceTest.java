@@ -11,7 +11,6 @@ import org.junit.jupiter.api.Test;
 import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
-import com.openclassrooms.tourguide.tracker.Tracker;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.VisitedLocation;

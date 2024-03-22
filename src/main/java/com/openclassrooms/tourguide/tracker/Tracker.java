@@ -30,7 +30,7 @@ public class Tracker extends Thread {
 	private final TourGuideService tourGuideService;
 	private boolean stop = false;// !!!initilisez a true 
 	//-------------------------------
-	private final Map<User, Boolean> completedTrackingUserMap = new HashMap<>();
+	private final Map<User, Boolean> completedTrackingUsersMap = new HashMap<>();
 	
 	public Tracker(UserService userService) {
 		this.userService = userService;
@@ -65,14 +65,14 @@ public class Tracker extends Thread {
 			}
 			
 			List<User> users = userService.getAllUsers();
+			users.forEach(user -> completedTrackingUsersMap.put(user, false));
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 			stopWatch.start();
-			users.forEach(u ->{
+			users.forEach(user ->{
 				try {
-					userService.trackUserLocation(u);
+					userService.trackUserLocation(user);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					logger.error(e.getMessage());
 				}
 			});
 			//-------------------------
@@ -85,12 +85,12 @@ public class Tracker extends Thread {
 					break;
 				}
 				
-				if(!completedTrackingUserMap.containsValue(false)) {
+				if(!completedTrackingUsersMap.containsValue(false)) {
 					notFinished = false;
 				}
 			}
 			
-			completedTrackingUserMap.clear();
+			completedTrackingUsersMap.clear();
 //------------------------------			
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
@@ -106,7 +106,7 @@ public class Tracker extends Thread {
 		
 	}
 	public synchronized void finalizeTrackUser(User user) {
-		completedTrackingUserMap.put(user, true);
+		completedTrackingUsersMap.put(user, true);
 	}
 /*	@Override
 	public void run() {

@@ -28,16 +28,16 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class UserService {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
-	private final  GpsUtilService  gpsUtilService ;
+	private final GpsUtilService gpsUtilService;
 	private final RewardsService rewardsService;
 	public final Tracker tracker;
 	boolean testMode = true;
 
-	public UserService(RewardsService rewardsService,GpsUtilService  gpsUtilService ) {
+	public UserService(RewardsService rewardsService, GpsUtilService gpsUtilService) {
 		this.rewardsService = rewardsService;
-		this.gpsUtilService= gpsUtilService;
-		
-		Locale.setDefault(Locale.US);	
+		this.gpsUtilService = gpsUtilService;
+
+		Locale.setDefault(Locale.US);
 		if (testMode) {
 			logger.info("TestMode enabled");
 			logger.debug("Initializing users");
@@ -58,8 +58,8 @@ public class UserService {
 		return internalUserMap.get(userName);
 	}
 
-	public List<User> getAllUsers() throws  ConcurrentModificationException{
-		
+	public List<User> getAllUsers() throws ConcurrentModificationException {
+
 		return internalUserMap.values().stream().collect(Collectors.toList());
 
 	}
@@ -69,23 +69,28 @@ public class UserService {
 		return user.getUserRewards(); // ajouter rewardsService.calculateRewards(user) avant et creer user service;
 	}
 
-	public VisitedLocation getUserLocation(User user)  {
-		VisitedLocation visitedLocation= null;
-		
+	public void addUserLocation(User user, VisitedLocation visitedLocation) {
+		user.addToVisitedLocations(visitedLocation);
+		user.setLastVisitedLocation();
+		tracker.finalizeTrackUser(user);
+	}
+
+	public VisitedLocation getUserLocation(User user) {
+		VisitedLocation visitedLocation = null;
+
 		try {
 			visitedLocation = (user.getVisitedLocations().size() > 0) ? user.getLastVisitedLocation()
 					: trackUserLocation(user);
 		} catch (InterruptedException e) {
-		logger.error(e.getMessage());
+			logger.error(e.getMessage());
 		}
 		return visitedLocation;
 	}
 
 	public VisitedLocation trackUserLocation(User user) throws InterruptedException {
 		VisitedLocation visitedLocation = gpsUtilService.getUserVisitedLocation(user);
-		user.addToVisitedLocations(visitedLocation);
-		user.setLastVisitedLocation();
-		tracker.finalizeTrackUser(user);		
+		this.addUserLocation(user, visitedLocation);
+
 		return visitedLocation;
 	}
 
