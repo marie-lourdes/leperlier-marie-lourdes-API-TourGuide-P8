@@ -1,14 +1,19 @@
 package com.openclassrooms.tourguide.controller;
 
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
+import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
+import com.openclassrooms.tourguide.service.GpsUtilService;
 import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.service.UserService;
 
@@ -18,12 +23,16 @@ import tripPricer.Provider;
 @RestController
 @RequestMapping("tourguide")
 public class TourGuideController {
+	private Logger logger = LoggerFactory.getLogger(TourGuideController .class);
+	
 	private TourGuideService tourGuideService;
 	private UserService userService;
+	private final GpsUtilService gpsUtilService;
 	
-	public TourGuideController(TourGuideService tourGuideService, UserService userService) {
+	public TourGuideController(TourGuideService tourGuideService, UserService userService,GpsUtilService gpsUtilService) {
 		this.tourGuideService= tourGuideService;
 		this.userService=  userService;
+		this.gpsUtilService= gpsUtilService;
 	}
 		
     @GetMapping("/")
@@ -33,6 +42,17 @@ public class TourGuideController {
     
     @GetMapping("/getLocation") 
     public VisitedLocation getLocation(@RequestParam String userName) {
+    	User userFoundByName = userService.getUser(userName);
+    	try {
+			if(userFoundByName.getVisitedLocations().size() == 0){
+				gpsUtilService.trackUserLocation(userFoundByName,userService);
+			
+			}
+			 userService.getUserLocation(userFoundByName);
+			
+		} catch (InterruptedException | ExecutionException e) {
+			logger.error(e.getMessage());
+		}
     	return userService.getUserLocation(userService.getUser(userName));
     }
     

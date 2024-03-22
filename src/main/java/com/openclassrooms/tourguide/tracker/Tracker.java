@@ -63,8 +63,8 @@ public class Tracker extends Thread {
 	@Override
 	public void run() {
 		StopWatch stopWatch = new StopWatch();
-		while (stop) {
-			if (Thread.currentThread().isInterrupted() ) {
+		while (true) {
+			if (Thread.currentThread().isInterrupted() || stop) {
 				logger.debug("Tracker stopping");
 				break;		
 			}
@@ -75,7 +75,7 @@ public class Tracker extends Thread {
 			stopWatch.start();
 			users.forEach(user ->{
 				try {
-					gpsUtilService.trackUserLocation(user, userService);
+					 gpsUtilService.trackUserLocation(user, userService);
 				} catch (InterruptedException | ExecutionException e) {
 					logger.error(e.getMessage());
 				}

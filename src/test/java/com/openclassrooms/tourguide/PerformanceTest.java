@@ -62,20 +62,19 @@ public class PerformanceTest {
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
-		InternalTestHelper.setInternalUserNumber(100);
+		InternalTestHelper.setInternalUserNumber(10000);
 		UserService userService = new UserService(rewardsService, gpsUtilService);
-
-		List<User> allUsers = new ArrayList<>();
-
-		allUsers = userService.getAllUsers();
+		List<User> allUsers = userService.getAllUsers();
 		StopWatch stopWatch = new StopWatch();
+		
 		stopWatch.start();
 		for (User user : allUsers) {
 			gpsUtilService.trackUserLocation(user,userService );// method qui prend du temps pour retourner les visitedLocation de
 													// chaque utilisateur
 		}
-		stopWatch.stop();
 		userService.tracker.stopTracking();
+		stopWatch.stop();
+		
 
 		System.out.println("highVolumeTrackLocation: Time Elapsed: "
 				+ TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
@@ -104,8 +103,9 @@ public class PerformanceTest {
 		for (User user : allUsers) {
 			assertTrue(user.getUserRewards().size() > 0);
 		}
-		stopWatch.stop();
 		userService.tracker.stopTracking();
+		stopWatch.stop();
+	
 
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
 				+ " seconds.");

@@ -3,6 +3,8 @@ package com.openclassrooms.tourguide.service;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,14 +21,15 @@ public class GpsUtilService {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
 	private final GpsUtil gpsUtil;
 
+	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
 	}
 
-
 	public VisitedLocation trackUserLocation(User user, UserService userService) throws InterruptedException, ExecutionException {
 		CompletableFuture<VisitedLocation> future =CompletableFuture.supplyAsync(() -> 
-	     gpsUtil.getUserLocation(user.getUserId())
+	     gpsUtil.getUserLocation(user.getUserId()),
+	     executor 
 	);
 		
 		future.thenAccept(visitedLocation -> { userService.addUserLocation(user, visitedLocation); })

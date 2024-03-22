@@ -29,7 +29,7 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class UserService {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
-	private final GpsUtilService gpsUtilService;
+
 	private final RewardsService rewardsService;
 	public final Tracker tracker;
 	boolean testMode = true;
@@ -76,19 +76,8 @@ public class UserService {
 		tracker.finalizeTrackUser(user);
 	}
 
-	public VisitedLocation getUserLocation(User user){
-		VisitedLocation visitedLocation = null;
-
-		try {
-			if(user.getVisitedLocations().size() > 0){
-				user.getLastVisitedLocation();
-			}else {
-				gpsUtilService.trackUserLocation(user,this);
-			}
-		} catch (InterruptedException | ExecutionException e) {
-			logger.error(e.getMessage());
-		}
-		return visitedLocation;
+	public VisitedLocation getUserLocation(User user){	
+		return user.getVisitedLocations().get(0);
 	}
 
 	private void addShutDownHook() {
