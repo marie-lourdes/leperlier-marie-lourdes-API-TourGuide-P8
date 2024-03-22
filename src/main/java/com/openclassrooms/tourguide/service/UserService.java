@@ -79,14 +79,13 @@ public class UserService {
 		logger.error(e.getMessage());
 		}
 		return visitedLocation;
-	}// a commenter
+	}
 
 	public VisitedLocation trackUserLocation(User user) throws InterruptedException {
 		VisitedLocation visitedLocation = gpsUtilService.getUserVisitedLocation(user);
 		user.addToVisitedLocations(visitedLocation);
 		user.setLastVisitedLocation();
-		tracker.finalizeTrackUserLocation(user);
-			
+		tracker.finalizeTrackUserLocation(user);		
 		return visitedLocation;
 	}
 
