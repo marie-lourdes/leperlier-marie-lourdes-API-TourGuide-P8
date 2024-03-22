@@ -51,7 +51,7 @@ public class Tracker extends Thread {
 		stop = true; // !!!reaffectez a false pour stopper le thread et renommer la varible avec run=
 						// false car un while (!stop=false) ne demarre pas la boucle et les instructions
 						// mais une valeur true
-		//executorService.shutdownNow();
+		executorService.shutdownNow();
 	}
 
 
@@ -104,6 +104,9 @@ public class Tracker extends Thread {
 			}
 		}
 		
+	}
+	public synchronized void finalizeTrackUserLocation(User user) {
+		completedTrackingMap.put(user, true);
 	}
 /*	@Override
 	public void run() {
