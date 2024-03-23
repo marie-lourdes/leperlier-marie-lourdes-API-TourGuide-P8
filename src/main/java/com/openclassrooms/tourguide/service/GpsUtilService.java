@@ -25,9 +25,9 @@ public class GpsUtilService {
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
 		tracker = new Tracker(this);
-		if(executor.isTerminated()) {
+		
 			addShutDownHook();
-		}
+		
 	}
 
 	public VisitedLocation trackUserLocation(User user, UserService userService) throws ConcurrentModificationException,InterruptedException, ExecutionException {

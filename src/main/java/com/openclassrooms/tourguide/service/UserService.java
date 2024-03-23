@@ -51,9 +51,9 @@ public class UserService {
 			logger.debug("Finished initializing users");
 		}
 		tracker = new Tracker(this);
-		if(executor.isTerminated()) {
+
 			addShutDownHook();
-		}
+		
 		
 	}
 
@@ -100,6 +100,7 @@ public class UserService {
 	private void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
+				System.out.println("Shutdown UserService");
 				tracker.stopTracking();
 			}
 		});
