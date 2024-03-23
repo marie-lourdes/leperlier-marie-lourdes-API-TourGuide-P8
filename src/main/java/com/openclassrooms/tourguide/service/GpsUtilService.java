@@ -21,7 +21,7 @@ public class GpsUtilService {
 	private Logger logger = LoggerFactory.getLogger(GpsUtilService.class);
 	private final GpsUtil gpsUtil;
 
-	private ExecutorService executor = Executors.newFixedThreadPool(10000);
+	private ExecutorService executor = Executors.newFixedThreadPool(100);
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
 	}
@@ -32,11 +32,8 @@ public class GpsUtilService {
 	     executor 
 	);
 		
-		future.thenAccept(visitedLocation -> { userService.addUserLocation(user, visitedLocation); })
-		.thenRun(()-> logger.debug("Getting UserLocation completed"));
-		return future.get();
-		//return gpsUtil.getUserLocation(user.getUserId());
-		
+		future.thenAccept(visitedLocation -> { userService.addUserLocation(user, visitedLocation); });
+		return future.get();	
 	}
 
 	public List<Attraction> getAllAttractions() {
