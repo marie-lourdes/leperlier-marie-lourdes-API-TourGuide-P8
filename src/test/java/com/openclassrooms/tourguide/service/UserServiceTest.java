@@ -76,6 +76,7 @@ class UserServiceTest {
 		UserService userService = new UserService(rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		gpsUtilService.trackUserLocation(user, userService);
 		VisitedLocation visitedLocation = userService.getUserLocation(user);
 		userService.tracker.stopTracking();
 		assertTrue(visitedLocation.userId.equals(user.getUserId()));

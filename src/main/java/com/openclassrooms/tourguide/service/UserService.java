@@ -4,13 +4,14 @@ import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.ConcurrentModificationException;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -30,6 +31,7 @@ import gpsUtil.location.VisitedLocation;
 public class UserService {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
 	private final RewardsService rewardsService;
+	ExecutorService executor = Executors.newFixedThreadPool(1000);
 
 	public final Tracker tracker;
 	boolean testMode = true;
@@ -59,9 +61,7 @@ public class UserService {
 	}
 
 	public List<User> getAllUsers() throws ConcurrentModificationException {
-
 		return internalUserMap.values().stream().collect(Collectors.toList());
-
 	}
 
 	public List<UserReward> getUserRewards(User user) {
@@ -94,7 +94,7 @@ public class UserService {
 	 **********************************************************************************/
 	// Database connection will be used for external users, but for testing purposes
 	// internal users are provided and stored in memory
-	private final Map<String, User> internalUserMap = new HashMap<>();
+	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
 
 	private void initializeInternalUsers() {
 		IntStream.range(0, InternalTestHelper.getInternalUserNumber()).forEach(i -> {

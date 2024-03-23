@@ -23,7 +23,6 @@ public class TourGuideServiceTest {
 
 	@BeforeEach
 	public void init() throws Exception {
-		UserService userService = new UserService(rewardsService);
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());

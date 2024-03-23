@@ -84,7 +84,7 @@ public class Tracker extends Thread {
 			boolean notFinished = true;
 			while(notFinished) {
 				try {
-					//logger.debug("Waiting for tracking to finish...");
+					logger.debug("Waiting for tracking to finish...");
 					TimeUnit.MILLISECONDS.sleep(100);
 				} catch (InterruptedException e) {
 					break;

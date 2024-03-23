@@ -18,10 +18,10 @@ import gpsUtil.location.VisitedLocation;
 
 @Service
 public class GpsUtilService {
-	private Logger logger = LoggerFactory.getLogger(UserService.class);
+	private Logger logger = LoggerFactory.getLogger(GpsUtilService.class);
 	private final GpsUtil gpsUtil;
 
-	private ExecutorService executor = Executors.newFixedThreadPool(5000);
+	private ExecutorService executor = Executors.newFixedThreadPool(10000);
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
 	}
