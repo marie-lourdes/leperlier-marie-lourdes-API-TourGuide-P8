@@ -46,14 +46,12 @@ public class TourGuideController {
     	try {
 			if(userFoundByName.getVisitedLocations().size() == 0){
 				gpsUtilService.trackUserLocation(userFoundByName,userService);
-			
 			}
-			 userService.getUserLocation(userFoundByName);
-			
+					
 		} catch (InterruptedException | ExecutionException e) {
 			logger.error(e.getMessage());
 		}
-    	return userService.getUserLocation(userService.getUser(userName));
+    	return  userService.getUserLocation(userFoundByName);
     }
     
     //  TODO: Change this method to no longer return a List of Attractions.
@@ -67,7 +65,16 @@ public class TourGuideController {
         //    Note: Attraction reward points can be gathered from RewardsCentral
     @GetMapping("/getNearbyAttractions") 
     public List<RecommendedUserAttraction> getNearbyAttractions(@RequestParam String userName) {
-    	VisitedLocation visitedLocation = userService.getUserLocation(userService.getUser(userName));	
+      	User userFoundByName = userService.getUser(userName);
+    	try {
+			if(null ==userFoundByName.getLastVisitedLocation()){
+				gpsUtilService.trackUserLocation(userFoundByName,userService);
+			}
+					
+		} catch (InterruptedException | ExecutionException e) {
+			logger.error(e.getMessage());
+		}
+    	VisitedLocation visitedLocation = userService.getLastUserLocation(userFoundByName);	
     	return tourGuideService.getNearByAttractions(visitedLocation,userService.getUser(userName));
     }
     

@@ -78,7 +78,11 @@ public class UserService {
 	public VisitedLocation getUserLocation(User user){	
 		return user.getVisitedLocations().get(0);
 	}
-
+	
+	public VisitedLocation getLastUserLocation(User user){	
+		return user.getLastVisitedLocation();
+	}
+	
 	private void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {

@@ -21,7 +21,7 @@ public class GpsUtilService {
 	private Logger logger = LoggerFactory.getLogger(GpsUtilService.class);
 	private final GpsUtil gpsUtil;
 
-	private ExecutorService executor = Executors.newFixedThreadPool(100);
+	private ExecutorService executor = Executors.newFixedThreadPool(5000);
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
 	}

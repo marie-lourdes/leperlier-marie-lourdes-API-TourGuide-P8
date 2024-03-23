@@ -31,13 +31,13 @@ public class TourGuideServiceTest {
 	// @Disabled // Not yet implemented
 	@Test
 	public void testGetNearbyAttractions() throws Exception {
-		InternalTestHelper.setInternalUserNumber(0);
 		UserService userService = new UserService(rewardsService);
 		TourGuideService tourGuideService = new TourGuideService(rewardsService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		VisitedLocation visitedLocation = gpsUtilService.trackUserLocation(user,userService );
+		gpsUtilService.trackUserLocation(user, userService);
+		VisitedLocation lastVisitedLocation = user.getLastVisitedLocation();
 
-		List<RecommendedUserAttraction> attractions = tourGuideService.getNearByAttractions(visitedLocation, user);
+		List<RecommendedUserAttraction> attractions = tourGuideService.getNearByAttractions(lastVisitedLocation, user);
 
 		userService.tracker.stopTracking();
 		tourGuideService.tracker.stopTracking();
@@ -46,9 +46,7 @@ public class TourGuideServiceTest {
 	}
 
 	public void testGetTripDeals() throws Exception {
-		InternalTestHelper.setInternalUserNumber(0);
 		TourGuideService tourGuideService = new TourGuideService(rewardsService);
-
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
 		List<Provider> providers = tourGuideService.getTripDeals(user);

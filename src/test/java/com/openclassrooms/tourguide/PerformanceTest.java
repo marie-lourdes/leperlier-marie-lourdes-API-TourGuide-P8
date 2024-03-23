@@ -26,13 +26,16 @@ import rewardCentral.RewardCentral;
 public class PerformanceTest {
 	private GpsUtilService gpsUtilService;
 	private RewardsService rewardsService;
+	private UserService userService ;
+	private List<User> allUsers;
 
 	@BeforeEach
 	public void init() throws Exception {
-		UserService userService = new UserService(rewardsService);
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
+		userService = new UserService(rewardsService);
+		allUsers = userService.getAllUsers();
 	}
 	/*
 	 * A note on performance improvements:
@@ -61,11 +64,7 @@ public class PerformanceTest {
 	@Test
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
-		// minutes
-		
-		//InternalTestHelper.setInternalUserNumber(5000);
-		UserService userService = new UserService(rewardsService);
-		List<User> allUsers = userService.getAllUsers();
+		// minutes	
 		StopWatch stopWatch = new StopWatch();
 		
 		stopWatch.start();
@@ -73,10 +72,23 @@ public class PerformanceTest {
 			gpsUtilService.trackUserLocation(user,userService );// method qui prend du temps pour retourner les visitedLocation de
 													// chaque utilisateur
 		}
+
+		for(User user : allUsers) {
+			while(user.getVisitedLocations().size() < 4) {
+				try {
+					TimeUnit.MILLISECONDS.sleep(100);
+				} catch (InterruptedException e) {
+				}
+			}
+		}
+		
+		for(User user: allUsers) {
+			VisitedLocation visitedLocation = user.getVisitedLocations().get(3);
+			assertTrue(visitedLocation != null);
+		}
 		userService.tracker.stopTracking();
 		stopWatch.stop();
 		
-
 		System.out.println("highVolumeTrackLocation: Time Elapsed: "
 				+ TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
@@ -87,28 +99,21 @@ public class PerformanceTest {
 	public void testHighVolumeGetRewards() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 20
 		// minutes
-		
-		//InternalTestHelper.setInternalUserNumber(100);
+	
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		UserService userService = new UserService(rewardsService);
-
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
-		List<User> allUsers = new ArrayList<>();
-		allUsers = userService.getAllUsers();
 		allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
 
 		allUsers.forEach(u -> rewardsService.calculateRewards(u));// method qui prend du temps pour calculer les rewards
 																	// de chaque utilisateur dû a getRewards dans la
 																	// boucle de la methode
-
 		for (User user : allUsers) {
 			assertTrue(user.getUserRewards().size() > 0);
 		}
 		userService.tracker.stopTracking();
 		stopWatch.stop();
 	
-
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
 				+ " seconds.");
 		assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
