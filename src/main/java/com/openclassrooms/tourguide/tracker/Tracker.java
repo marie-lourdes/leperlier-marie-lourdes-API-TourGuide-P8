@@ -69,7 +69,13 @@ public class Tracker extends Thread {
 				break;		
 			}
 			
-			List<User> users = userService.getAllUsers();
+			List<User> users=null;
+			try {
+				users = userService.getAllUsers();
+			}catch (InterruptedException | ExecutionException e) {
+				logger.error(e.getMessage());
+			}
+			
 			users.forEach(user -> completedTrackingUsersMap.put(user, false));
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 			stopWatch.start();
@@ -80,6 +86,7 @@ public class Tracker extends Thread {
 					logger.error(e.getMessage());
 				}
 			});
+			
 			//-------------------------
 			boolean notFinished = true;
 			while(notFinished) {
@@ -103,7 +110,7 @@ public class Tracker extends Thread {
 			
 			try {
 				logger.debug("Tracker sleeping");
-				TimeUnit.SECONDS.sleep(trackingPollingInterval);
+			TimeUnit.SECONDS.sleep(trackingPollingInterval);
 			} catch (InterruptedException e) {
 				break;
 			}

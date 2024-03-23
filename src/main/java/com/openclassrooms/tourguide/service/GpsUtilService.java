@@ -1,5 +1,6 @@
 package com.openclassrooms.tourguide.service;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
@@ -9,6 +10,7 @@ import java.util.concurrent.Executors;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.User;
+import com.openclassrooms.tourguide.tracker.Tracker;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
@@ -18,13 +20,17 @@ import gpsUtil.location.VisitedLocation;
 public class GpsUtilService {
 	//private Logger logger = LoggerFactory.getLogger(GpsUtilService.class);
 	private final GpsUtil gpsUtil;
-
-	private ExecutorService executor = Executors.newFixedThreadPool(5000);
+	public final Tracker tracker;
+	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
+		tracker = new Tracker(this);
+		if(executor.isTerminated()) {
+			addShutDownHook();
+		}
 	}
 
-	public VisitedLocation trackUserLocation(User user, UserService userService) throws InterruptedException, ExecutionException {
+	public VisitedLocation trackUserLocation(User user, UserService userService) throws ConcurrentModificationException,InterruptedException, ExecutionException {
 		CompletableFuture<VisitedLocation> future =CompletableFuture.supplyAsync(() -> 
 	     gpsUtil.getUserLocation(user.getUserId()),
 	     executor 
@@ -43,4 +49,12 @@ public class GpsUtilService {
 				.findFirst().orElseThrow(() -> new NullPointerException("Attraction not found"));
 	}
 
+	private void addShutDownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread() { 
+		      public void run() {
+		        System.out.println("Shutdown GpsUtilService");
+		        tracker.stopTracking();
+		      } 
+		    }); 
+	}
 }

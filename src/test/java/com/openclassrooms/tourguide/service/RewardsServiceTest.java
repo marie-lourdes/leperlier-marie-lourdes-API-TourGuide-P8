@@ -6,6 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ExecutionException;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,7 +55,7 @@ public class RewardsServiceTest {
 
 	// @Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
-	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException { // ajouter
+	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException, ExecutionException { // ajouter
 																												// try/catch
 																												// ConcurrentModificationException
 
