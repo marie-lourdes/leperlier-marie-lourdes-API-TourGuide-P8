@@ -6,8 +6,6 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.User;
@@ -18,7 +16,7 @@ import gpsUtil.location.VisitedLocation;
 
 @Service
 public class GpsUtilService {
-	private Logger logger = LoggerFactory.getLogger(GpsUtilService.class);
+	//private Logger logger = LoggerFactory.getLogger(GpsUtilService.class);
 	private final GpsUtil gpsUtil;
 
 	private ExecutorService executor = Executors.newFixedThreadPool(5000);

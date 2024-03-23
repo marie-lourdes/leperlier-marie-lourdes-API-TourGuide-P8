@@ -25,14 +25,11 @@ class UserServiceTest {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
-
 	}
 
 	@Test
 	public void testAddUser() throws Exception {
-		InternalTestHelper.setInternalUserNumber(0);
 		UserService userService = new UserService(rewardsService);
-
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
 
@@ -41,7 +38,7 @@ class UserServiceTest {
 
 		User retrivedUser = userService.getUser(user.getUserName());
 		User retrivedUser2 = userService.getUser(user2.getUserName());
-		// Tracker tracker= new Tracker(userService);
+	
 		userService.tracker.stopTracking();
 
 		assertEquals(user, retrivedUser);
@@ -50,20 +47,13 @@ class UserServiceTest {
 
 	@Test
 	public void testGetAllUsers() throws Exception {
-		InternalTestHelper.setInternalUserNumber(0);
 		UserService userService = new UserService(rewardsService);
-
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
-
 		userService.addUser(user);
 		userService.addUser(user2);
 
 		List<User> allUsers = userService.getAllUsers();
-
-		/*
-		 * Tracker tracker= new Tracker( userService); tracker.stopTracking();
-		 */
 		userService.tracker.stopTracking();
 
 		assertTrue(allUsers.contains(user));
@@ -72,24 +62,22 @@ class UserServiceTest {
 
 	@Test
 	public void testGetUserLocation() throws Exception {
-		InternalTestHelper.setInternalUserNumber(0);
 		UserService userService = new UserService(rewardsService);
-
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		gpsUtilService.trackUserLocation(user, userService);
+		
 		VisitedLocation visitedLocation = userService.getUserLocation(user);
 		userService.tracker.stopTracking();
+		
 		assertTrue(visitedLocation.userId.equals(user.getUserId()));
 	}
 
 	@Test
 	public void testTrackUserLocation() throws Exception {
-		InternalTestHelper.setInternalUserNumber(0);
 		UserService userService = new UserService(rewardsService);
-
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		
 		VisitedLocation visitedLocation = gpsUtilService.trackUserLocation(user,userService);
-
 		userService.tracker.stopTracking();
 
 		assertEquals(user.getUserId(), visitedLocation.userId);
