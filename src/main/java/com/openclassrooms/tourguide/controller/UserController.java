@@ -17,9 +17,10 @@ public class UserController {
 	UserService userService;
 
 	@PostMapping("/add")
-	public void addUser() {
+	public String addUser() {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		userService.addUser(user);
+		return"user added";
 
 	}
 }
