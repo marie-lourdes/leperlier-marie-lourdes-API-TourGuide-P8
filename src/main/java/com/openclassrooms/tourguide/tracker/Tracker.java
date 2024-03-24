@@ -1,5 +1,6 @@
 package com.openclassrooms.tourguide.tracker;
 
+import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +15,6 @@ import org.slf4j.LoggerFactory;
 
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.GpsUtilService;
-import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.service.UserService;
 
 /* Les test appel 4 fois la creation d user avec tours guide service , 4 threads
@@ -29,7 +29,7 @@ public class Tracker extends Thread {
 	private static final long trackingPollingInterval = TimeUnit.SECONDS.toSeconds(5);//5 min (converti en secondes)trop long  la mise en attente du thread
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private  UserService userService;
-	private  TourGuideService tourGuideService;
+	//private  TourGuideService tourGuideService;
 	private GpsUtilService gpsUtilService;
 	private boolean stop = false;// !!!initilisez a true 
 	//-------------------------------
@@ -40,15 +40,16 @@ public class Tracker extends Thread {
 	//	this.logger = LoggerFactory.getLogger(Tracker.class);
 		executorService.submit(this);
 	}
-	public Tracker(TourGuideService tourGuideService) {
+	/*public Tracker(TourGuideService tourGuideService) {
 		this.tourGuideService = tourGuideService;	
 		executorService.submit(this);
-	}
+	}*/
 	
 	public Tracker(GpsUtilService gpsUtilService) {
 		this.gpsUtilService = gpsUtilService;		
 		executorService.submit(this);
 	}
+	
 	/**
 	 * Assures to shut down the Tracker thread
 	 */
@@ -81,9 +82,16 @@ public class Tracker extends Thread {
 			stopWatch.start();
 			users.forEach(user ->{
 				try {
-					 gpsUtilService.trackUserLocation(user, userService);
-				} catch (InterruptedException | ExecutionException e) {
-					logger.error(e.getMessage());
+					gpsUtilService.trackUserLocation(user,userService);
+				} catch (ConcurrentModificationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ExecutionException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			});
 			

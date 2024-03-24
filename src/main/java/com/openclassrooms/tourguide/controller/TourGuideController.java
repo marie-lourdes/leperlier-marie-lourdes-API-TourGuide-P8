@@ -46,6 +46,7 @@ public class TourGuideController {
     	try {
 			if(userFoundByName.getVisitedLocations().size() == 0){
 				gpsUtilService.trackUserLocation(userFoundByName,userService);
+				return userService.getUserLocation(userFoundByName);
 			}
 					
 		} catch (InterruptedException | ExecutionException e) {

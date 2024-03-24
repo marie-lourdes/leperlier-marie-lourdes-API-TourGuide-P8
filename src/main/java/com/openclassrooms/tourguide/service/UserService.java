@@ -2,7 +2,6 @@ package com.openclassrooms.tourguide.service;
 
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
-import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -10,12 +9,10 @@ import java.util.Map;
 import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -35,7 +32,7 @@ import gpsUtil.location.VisitedLocation;
 public class UserService {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
 	private final RewardsService rewardsService;
-	ExecutorService executor = Executors.newFixedThreadPool(100000);
+	ExecutorService executor = Executors.newFixedThreadPool(1000);
 
 	public final Tracker tracker;
 	boolean testMode = true;
@@ -51,10 +48,7 @@ public class UserService {
 			logger.debug("Finished initializing users");
 		}
 		tracker = new Tracker(this);
-
-			addShutDownHook();
-		
-		
+		addShutDownHook();
 	}
 
 	public void addUser(User user) {
@@ -68,14 +62,12 @@ public class UserService {
 	}
 
 	public List<User> getAllUsers() throws InterruptedException, ExecutionException {
-		CompletableFuture<List<User>> future = new CompletableFuture<>() ;
-		
-		future =CompletableFuture.supplyAsync(() -> 
-		internalUserMap.values().stream().collect(Collectors.toList()),
-	     executor     
-	);
-		return future.get();	
-		//return internalUserMap.values().stream().collect(Collectors.toList());
+		CompletableFuture<List<User>> future = new CompletableFuture<>();
+
+		future = CompletableFuture.supplyAsync(() -> internalUserMap.values().stream().collect(Collectors.toList()),
+				executor);
+		return future.get();
+		// return internalUserMap.values().stream().collect(Collectors.toList());
 	}
 
 	public List<UserReward> getUserRewards(User user) {
@@ -89,14 +81,14 @@ public class UserService {
 		tracker.finalizeTrackUser(user);
 	}
 
-	public VisitedLocation getUserLocation(User user){	
+	public VisitedLocation getUserLocation(User user) {
 		return user.getVisitedLocations().get(0);
 	}
-	
-	public VisitedLocation getLastUserLocation(User user){	
+
+	public VisitedLocation getLastUserLocation(User user) {
 		return user.getLastVisitedLocation();
 	}
-	
+
 	private void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
