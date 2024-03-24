@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
-import com.openclassrooms.tourguide.tracker.Tracker;
 
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
@@ -21,12 +20,10 @@ public class TourGuideService {
 	
 	private final RewardsService rewardsService;
 	private final TripPricer tripPricer = new TripPricer();
-//	public final Tracker tracker;
+
 	public TourGuideService(RewardsService  rewardsService) {
 		this.rewardsService = rewardsService;			
 		Locale.setDefault(Locale.US);	
-		/*tracker = new Tracker(this);
-		addShutDownHook();*/
 	}
 	
 	public List<Provider> getTripDeals(User user) {
@@ -43,13 +40,6 @@ public class TourGuideService {
 		return  attractionsClosestUserVisitedLocation;
 	}
 
-	/*private void addShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				tracker.stopTracking();
-			}
-		});
-	}*/
 	/**********************************************************************************
 	 * 
 	 * Methods Below: For Internal Testing

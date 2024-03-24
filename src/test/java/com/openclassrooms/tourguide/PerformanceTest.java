@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
+import com.openclassrooms.tourguide.helper.InternalTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.GpsUtilService;
 import com.openclassrooms.tourguide.service.RewardsService;
@@ -64,13 +65,14 @@ public class PerformanceTest {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes	
 		StopWatch stopWatch = new StopWatch();
-		
-		stopWatch.start();
+	/*	InternalTestHelper.setInternalUserNumber(1000);
+		allUsers = userService.getAllUsers();*/
+		stopWatch.start();	
 		for (User user : allUsers) {
 			gpsUtilService.trackUserLocation(user,userService );// method qui prend du temps pour retourner les visitedLocation de
 													// chaque utilisateur
 		}
-
+	
 		for(User user : allUsers) {
 			while(user.getVisitedLocations().size() < 4) {
 				try {
@@ -85,6 +87,7 @@ public class PerformanceTest {
 			assertTrue(visitedLocation != null);
 		}
 		userService.tracker.stopTracking();
+		gpsUtilService.tracker.stopTracking();
 		stopWatch.stop();
 		
 		System.out.println("highVolumeTrackLocation: Time Elapsed: "

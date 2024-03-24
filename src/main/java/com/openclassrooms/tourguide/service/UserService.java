@@ -32,7 +32,7 @@ import gpsUtil.location.VisitedLocation;
 public class UserService {
 	private Logger logger = LoggerFactory.getLogger(UserService.class);
 	private final RewardsService rewardsService;
-	ExecutorService executor = Executors.newFixedThreadPool(1000);
+	ExecutorService executor = Executors.newFixedThreadPool(100000);
 
 	public final Tracker tracker;
 	boolean testMode = true;
@@ -67,7 +67,6 @@ public class UserService {
 		future = CompletableFuture.supplyAsync(() -> internalUserMap.values().stream().collect(Collectors.toList()),
 				executor);
 		return future.get();
-		// return internalUserMap.values().stream().collect(Collectors.toList());
 	}
 
 	public List<UserReward> getUserRewards(User user) {
