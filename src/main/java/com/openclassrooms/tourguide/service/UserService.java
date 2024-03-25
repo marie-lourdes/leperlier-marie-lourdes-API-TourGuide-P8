@@ -1,12 +1,8 @@
 package com.openclassrooms.tourguide.service;
 
-import java.time.LocalDateTime;
-import java.time.ZoneOffset;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
@@ -16,30 +12,30 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.openclassrooms.tourguide.helper.InternalUserHistoryLocationTestHelper;
 import com.openclassrooms.tourguide.helper.InternalUserTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 import com.openclassrooms.tourguide.tracker.Tracker;
 
-import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 
 @Service
 public class UserService {
-	private Logger logger = LoggerFactory.getLogger(UserService.class);
+	 private static final Logger logger = LogManager.getLogger(UserService.class);
+	 
 	private final RewardsService rewardsService;
-	ExecutorService executor = Executors.newFixedThreadPool(100000);
-
+	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;
 	boolean testMode = true;
 
 	public UserService(RewardsService rewardsService) {
 		this.rewardsService = rewardsService;
-		
+
 		Locale.setDefault(Locale.US);
 		if (testMode) {
 			logger.info("TestMode enabled");
@@ -47,7 +43,7 @@ public class UserService {
 			initializeInternalUsers();
 			logger.debug("Finished initializing users");
 		}
-		tracker = new Tracker(this,"Thread-1");
+		tracker = new Tracker(this, "Thread-1");
 		addShutDownHook();
 	}
 
@@ -112,18 +108,10 @@ public class UserService {
 			String phone = "000";
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
-			generateUserLocationHistory(user);
+			InternalUserHistoryLocationTestHelper.setUserHistoryLocation(user);
 
 			internalUserMap.put(userName, user);
 		});
 		logger.debug("Created " + InternalUserTestHelper.getInternalUserNumber() + " internal test users.");
 	}
-
-	private void generateUserLocationHistory(User user) {
-		IntStream.range(0, 3).forEach(i -> {
-			user.addToVisitedLocations(new VisitedLocation(user.getUserId(),
-					new Location(generateRandomLatitude(), generateRandomLongitude()), getRandomTime()));
-		});
-	}
-
 }

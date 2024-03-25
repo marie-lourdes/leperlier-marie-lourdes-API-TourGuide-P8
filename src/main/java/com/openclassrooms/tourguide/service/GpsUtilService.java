@@ -17,10 +17,10 @@ import gpsUtil.location.Attraction;
 
 @Service
 public class GpsUtilService {
-	// private Logger logger = LoggerFactory.getLogger(GpsUtilService.class);
+	// private static final Logger logger = LogManager.getLogger(GpsUtilService.class);
 	private final GpsUtil gpsUtil;
-	public final Tracker tracker;
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
+	public final Tracker tracker;
 
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
