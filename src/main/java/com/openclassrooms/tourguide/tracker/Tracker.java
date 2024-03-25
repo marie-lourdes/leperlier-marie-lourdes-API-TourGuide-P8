@@ -89,7 +89,7 @@ public class Tracker extends Thread {
 				} catch (InterruptedException e) {
 					logger.error("Tracker interrupted");
 					e.printStackTrace();
-				} catch (Exception e) {
+				} catch (ExecutionException e) {
 					logger.error(e.getMessage());
 				}
 			});
