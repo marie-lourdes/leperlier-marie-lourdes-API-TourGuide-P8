@@ -32,15 +32,15 @@ public class RewardsServiceTest {
 	}
 
 	@Test // A ajouter dans un test de UserService
-	public void testUserGetRewards() {
-		InternalUserTestHelper.setInternalUserNumber(0);
+	public void testUserGetRewards() throws InterruptedException, ExecutionException{
+		//InternalUserTestHelper.setInternalUserNumber(0);
 		UserService userService = new UserService(rewardsService);
-
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
-		userService.getUserRewards(user);
-		List<UserReward> userRewards = user.getUserRewards();
+		
+		List<UserReward> userRewards = userService.getUserRewards(user);
+		
 		userService.tracker.stopTracking();
 		assertTrue(userRewards.size() == 1);
 	}

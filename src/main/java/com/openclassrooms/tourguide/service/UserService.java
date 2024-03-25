@@ -29,7 +29,7 @@ public class UserService {
 	 private static final Logger logger = LogManager.getLogger(UserService.class);
 	 
 	private final RewardsService rewardsService;
-	private ExecutorService executor = Executors.newFixedThreadPool(100);
+	private ExecutorService executor = Executors.newFixedThreadPool(1000);
 	public final Tracker tracker;
 	boolean testMode = true;
 
@@ -66,8 +66,7 @@ public class UserService {
 		return future.get();
 	}
 
-	public List<UserReward> getUserRewards(User user) {
-		rewardsService.calculateRewards(user);
+	public List<UserReward> getUserRewards(User user) {	
 		return user.getUserRewards(); // ajouter rewardsService.calculateRewards(user) avant et creer user service;
 	}
 

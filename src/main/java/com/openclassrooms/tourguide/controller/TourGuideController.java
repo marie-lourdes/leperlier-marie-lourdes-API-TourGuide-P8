@@ -14,6 +14,7 @@ import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 import com.openclassrooms.tourguide.service.GpsUtilService;
+import com.openclassrooms.tourguide.service.RewardsService;
 import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.service.UserService;
 
@@ -27,12 +28,14 @@ public class TourGuideController {
 	
 	private TourGuideService tourGuideService;
 	private UserService userService;
-	private final GpsUtilService gpsUtilService;
+	private GpsUtilService gpsUtilService;
+	private  RewardsService rewardsService; 
 	
-	public TourGuideController(TourGuideService tourGuideService, UserService userService,GpsUtilService gpsUtilService) {
+	public TourGuideController(TourGuideService tourGuideService, UserService userService,GpsUtilService gpsUtilService,RewardsService rewardsService) {
 		this.tourGuideService= tourGuideService;
 		this.userService=  userService;
 		this.gpsUtilService= gpsUtilService;
+		this.rewardsService= rewardsService;
 	}
 		
     @GetMapping("/")
@@ -81,6 +84,7 @@ public class TourGuideController {
     
     @GetMapping("/getRewards") 
     public List<UserReward> getRewards(@RequestParam String userName) {
+    	rewardsService.calculateRewards(userService.getUser(userName));
     	return userService.getUserRewards(userService.getUser(userName)); 
     }
        
