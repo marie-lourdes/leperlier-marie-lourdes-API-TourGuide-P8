@@ -87,11 +87,10 @@ public class Tracker extends Thread {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
+					logger.error("Tracker interrupted");
 					e.printStackTrace();
-				} catch (ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				} catch (Exception e) {
+					logger.error(e.getMessage());
 				}
 			});
 			
@@ -102,6 +101,7 @@ public class Tracker extends Thread {
 					logger.debug("Waiting for tracking to finish...");
 					TimeUnit.MILLISECONDS.sleep(100);
 				} catch (InterruptedException e) {
+					logger.error("Tracker interrupted");
 					break;
 				}
 				
