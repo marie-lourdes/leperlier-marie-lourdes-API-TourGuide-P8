@@ -29,7 +29,7 @@ public class UserService {
 	 private static final Logger logger = LogManager.getLogger(UserService.class);
 	 
 	private final RewardsService rewardsService;
-	private ExecutorService executor = Executors.newFixedThreadPool(100000);
+	private ExecutorService executor = Executors.newFixedThreadPool(100);
 	public final Tracker tracker;
 	boolean testMode = true;
 
@@ -43,7 +43,8 @@ public class UserService {
 			initializeInternalUsers();
 			logger.debug("Finished initializing users");
 		}
-		tracker = new Tracker(this, "Thread-1");
+		tracker = new Tracker("Thread-1-UserService");
+		tracker.startTracking();
 		addShutDownHook();
 	}
 
