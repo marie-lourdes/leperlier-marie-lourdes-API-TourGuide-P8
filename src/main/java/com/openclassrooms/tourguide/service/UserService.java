@@ -47,7 +47,7 @@ public class UserService {
 			initializeInternalUsers();
 			logger.debug("Finished initializing users");
 		}
-		tracker = new Tracker(this);
+		tracker = new Tracker(this,"Thread-1");
 		addShutDownHook();
 	}
 

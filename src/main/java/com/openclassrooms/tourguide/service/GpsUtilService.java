@@ -24,7 +24,7 @@ public class GpsUtilService {
 
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
-		tracker = new Tracker(this);
+		tracker = new Tracker(this,"Thread-2");
 		addShutDownHook();
 	}
 

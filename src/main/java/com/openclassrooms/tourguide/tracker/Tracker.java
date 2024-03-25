@@ -29,14 +29,15 @@ public class Tracker extends Thread {
 	private static final long trackingPollingInterval = TimeUnit.SECONDS.toSeconds(5);//5 min (converti en secondes)trop long  la mise en attente du thread
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private  UserService userService;
-	//private  TourGuideService tourGuideService;
 	private GpsUtilService gpsUtilService;
+	 private String threadName;
 	private boolean stop = false;// !!!initilisez a true 
 	//-------------------------------
 	private final Map<User, Boolean> completedTrackingUsersMap = new HashMap<>();
 	
-	public Tracker(UserService userService) {
+	public Tracker(UserService userService,String threadName) {
 		this.userService = userService;
+		this.threadName = threadName;
 	//	this.logger = LoggerFactory.getLogger(Tracker.class);
 		executorService.submit(this);
 	}
@@ -45,8 +46,9 @@ public class Tracker extends Thread {
 		executorService.submit(this);
 	}*/
 	
-	public Tracker(GpsUtilService gpsUtilService) {
-		this.gpsUtilService = gpsUtilService;		
+	public Tracker(GpsUtilService gpsUtilService,String threadName) {
+		this.gpsUtilService = gpsUtilService;	
+		this.threadName = threadName;
 		executorService.submit(this);
 	}
 	
@@ -66,7 +68,7 @@ public class Tracker extends Thread {
 		StopWatch stopWatch = new StopWatch();
 		while (true) {
 			if (Thread.currentThread().isInterrupted() || stop) {
-				logger.debug("Tracker stopping");
+				logger.debug("Tracker stopping {}" +threadName);
 				break;		
 			}
 			
@@ -78,7 +80,7 @@ public class Tracker extends Thread {
 			}
 			
 			users.forEach(user -> completedTrackingUsersMap.put(user, false));
-			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
+			logger.debug("Begin Tracker. Tracking {} {}  users. " + threadName + users.size() );
 			stopWatch.start();
 			users.forEach(user ->{
 				try {
@@ -87,7 +89,7 @@ public class Tracker extends Thread {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				} catch (InterruptedException e) {
-					logger.error("Tracker interrupted");
+					logger.error("Tracker interrupted {}", threadName);
 					e.printStackTrace();
 				} catch (ExecutionException e) {
 					logger.error(e.getMessage());
@@ -98,10 +100,10 @@ public class Tracker extends Thread {
 			boolean notFinished = true;
 			while(notFinished) {
 				try {
-					logger.debug("Waiting for tracking to finish...");
+					logger.debug("Waiting for tracking to finish...: {} ",threadName );
 					TimeUnit.MILLISECONDS.sleep(100);
 				} catch (InterruptedException e) {
-					logger.error("Tracker interrupted");
+					logger.error("Tracker interrupted, {} ",threadName );
 					break;
 				}
 				
@@ -113,11 +115,11 @@ public class Tracker extends Thread {
 			completedTrackingUsersMap.clear();
 //------------------------------			
 			stopWatch.stop();
-			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
+			logger.debug("Tracker {} Time Elapsed: {}  seconds.", threadName,TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 			stopWatch.reset();
 			
 			try {
-				logger.debug("Tracker sleeping");
+				logger.debug("Tracker sleeping {} ",threadName);
 			TimeUnit.SECONDS.sleep(trackingPollingInterval);
 			} catch (InterruptedException e) {
 				break;

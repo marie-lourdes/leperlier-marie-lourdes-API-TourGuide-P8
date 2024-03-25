@@ -65,8 +65,6 @@ public class PerformanceTest {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes	
 		StopWatch stopWatch = new StopWatch();
-	/*	InternalTestHelper.setInternalUserNumber(1000);
-		allUsers = userService.getAllUsers();*/
 		stopWatch.start();	
 		for (User user : allUsers) {
 			gpsUtilService.trackUserLocation(user,userService );// method qui prend du temps pour retourner les visitedLocation de
