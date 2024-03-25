@@ -32,7 +32,7 @@ public class TourGuideServiceTest {
 	// @Disabled // Not yet implemented
 	@Test
 	public void testGetNearbyAttractions() throws Exception {
-		UserService userService = new UserService(rewardsService);
+		UserService userService = new UserService();
 		tourGuideService = new TourGuideService(rewardsService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		gpsUtilService.trackUserLocation(user, userService);

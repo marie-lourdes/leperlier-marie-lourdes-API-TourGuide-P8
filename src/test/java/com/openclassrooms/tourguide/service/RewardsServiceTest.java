@@ -34,11 +34,11 @@ public class RewardsServiceTest {
 	@Test // A ajouter dans un test de UserService
 	public void testUserGetRewards() throws InterruptedException, ExecutionException{
 		//InternalUserTestHelper.setInternalUserNumber(0);
-		UserService userService = new UserService(rewardsService);
+		UserService userService = new UserService();
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
-		
+		rewardsService.calculateRewards(user);
 		List<UserReward> userRewards = userService.getUserRewards(user);
 		
 		userService.tracker.stopTracking();
@@ -63,7 +63,7 @@ public class RewardsServiceTest {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
 		InternalUserTestHelper.setInternalUserNumber(1);
-		UserService userService = new UserService(rewardsService);
+		UserService userService = new UserService();
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
 		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
 		userService.tracker.stopTracking();

@@ -48,13 +48,12 @@ public class RewardsService {
 		try {
 			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations();
 			List<Attraction> attractions = gpsUtilService.getAllAttractions();
-			Stream<UserReward> listUserRewards;
 			// boucles imbriquée lance erreur de ConcurrentModificationException (iteration
 			// et modification lors de l iteration) et userRewards vide
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
 				for (Attraction attraction : attractions) {// a debugger avec les point d arrêts conditionnel et getrewards()
 
-					listUserRewards = user.getUserRewards().stream().filter(
+					Stream<UserReward>listUserRewards = user.getUserRewards().stream().filter(
 							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName));
 
 					if (listUserRewards.count() == 0 && isNearAttraction(visitedLocation, attraction)) {

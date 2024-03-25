@@ -19,13 +19,12 @@ import gpsUtil.location.Attraction;
 public class GpsUtilService {
 	// private static final Logger logger = LogManager.getLogger(GpsUtilService.class);
 	private final GpsUtil gpsUtil;
-	private ExecutorService executor = Executors.newFixedThreadPool(1000);
+	private ExecutorService executor = Executors.newFixedThreadPool(100);
 	public final Tracker tracker;
 
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
 		tracker = new Tracker("Thread-2-GpsUtilService");
-		tracker.startTracking();
 		addShutDownHook();
 	}
 

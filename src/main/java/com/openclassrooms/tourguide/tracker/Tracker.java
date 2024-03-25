@@ -29,6 +29,7 @@ public class Tracker extends Thread {
 
 	public Tracker(String threadName) {
 		this.threadName = threadName;
+		 startTracking(threadName);
 	}
 	
 /*	public Tracker(UserService userService,String threadName) {
@@ -113,7 +114,7 @@ public synchronized void finalizeTrackUser(User user) {
 	completedTrackingUsersMap.put(user, true);
 }
 
-public void startTracking() {
+public void startTracking(String threadName) {
 	logger.debug("Starting {}", threadName);
 	executorService.submit(this);
 }

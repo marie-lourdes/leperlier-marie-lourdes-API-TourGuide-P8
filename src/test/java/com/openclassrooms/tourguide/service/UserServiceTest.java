@@ -13,19 +13,16 @@ import org.junit.jupiter.api.Test;
 import com.openclassrooms.tourguide.model.User;
 
 import gpsUtil.GpsUtil;
-import rewardCentral.RewardCentral;
 
 class UserServiceTest {
 	private GpsUtilService gpsUtilService;
-	private RewardsService rewardsService;
 	private UserService userService;
 
 	@BeforeEach
 	public void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
-		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
-		userService = new UserService(rewardsService);
+		userService = new UserService();
 	}
 
 	@Test

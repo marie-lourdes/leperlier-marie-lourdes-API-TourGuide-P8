@@ -27,15 +27,11 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class UserService {
 	 private static final Logger logger = LogManager.getLogger(UserService.class);
-	 
-	private final RewardsService rewardsService;
-	private ExecutorService executor = Executors.newFixedThreadPool(1000);
+	private ExecutorService executor = Executors.newFixedThreadPool(100);
 	public final Tracker tracker;
 	boolean testMode = true;
 
-	public UserService(RewardsService rewardsService) {
-		this.rewardsService = rewardsService;
-
+	public UserService() {
 		Locale.setDefault(Locale.US);
 		if (testMode) {
 			logger.info("TestMode enabled");
@@ -44,7 +40,6 @@ public class UserService {
 			logger.debug("Finished initializing users");
 		}
 		tracker = new Tracker("Thread-1-UserService");
-		tracker.startTracking();
 		addShutDownHook();
 	}
 
