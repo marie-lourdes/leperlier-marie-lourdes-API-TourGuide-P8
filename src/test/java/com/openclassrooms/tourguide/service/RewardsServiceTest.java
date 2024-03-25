@@ -11,7 +11,7 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.openclassrooms.tourguide.helper.InternalTestHelper;
+import com.openclassrooms.tourguide.helper.InternalUserTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 
@@ -33,7 +33,7 @@ public class RewardsServiceTest {
 
 	@Test // A ajouter dans un test de UserService
 	public void testUserGetRewards() {
-		InternalTestHelper.setInternalUserNumber(0);
+		InternalUserTestHelper.setInternalUserNumber(0);
 		UserService userService = new UserService(rewardsService);
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
@@ -61,7 +61,7 @@ public class RewardsServiceTest {
 		// try {
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
-		InternalTestHelper.setInternalUserNumber(1);
+		InternalUserTestHelper.setInternalUserNumber(1);
 		UserService userService = new UserService(rewardsService);
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
 		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
