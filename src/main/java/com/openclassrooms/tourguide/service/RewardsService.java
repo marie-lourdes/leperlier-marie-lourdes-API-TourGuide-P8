@@ -24,7 +24,7 @@ public class RewardsService {
 	// proximity in miles
 	private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
-	private int attractionProximityRange = 200;
+	//private int attractionProximityRange = 200;
 	private final  GpsUtilService  gpsUtilService ;
 	private final RewardCentral rewardsCentral;
 	List<RecommendedUserAttraction> attractionsUserLocationDistance = new ArrayList<>();
@@ -70,13 +70,13 @@ public class RewardsService {
 
 	}
 
-	// ? a implementer dans le tour guideService avec les 5 premier attraction
-	// proche du dernier lieu visité par l user, peur importe la distance et une
-	// methode getDistance d interface
+	/*
+	// a implementer dans le tour guideService avec les 5 premier attraction proche 
+	 du dernier lieu visité par l user, peur importe la distance et une methode getDistance d interface
+	
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
-
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
-	}
+	}*/
 
 	private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
 		// ? methode propre au reward service avec une methode getDistance dinterface à
