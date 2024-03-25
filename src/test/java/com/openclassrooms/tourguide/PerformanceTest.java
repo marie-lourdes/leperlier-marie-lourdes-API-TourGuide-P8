@@ -121,8 +121,9 @@ public class PerformanceTest {
 		}
 		
 		for (User user : allUsers) {
-			assertTrue(user.getUserRewards().size() > 0);
+			assertTrue(user.getUserRewards().size() >= 1);
 		}
+		
 		userService.tracker.stopTracking();
 		gpsUtilService.tracker.stopTracking();
 		stopWatch.stop();
