@@ -126,20 +126,4 @@ public class UserService {
 		});
 	}
 
-	private double generateRandomLongitude() {
-		double leftLimit = -180;
-		double rightLimit = 180;
-		return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);
-	}
-
-	private double generateRandomLatitude() {
-		double leftLimit = -85.05112878;
-		double rightLimit = 85.05112878;
-		return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);
-	}
-
-	private Date getRandomTime() {
-		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));
-		return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
-	}
 }
