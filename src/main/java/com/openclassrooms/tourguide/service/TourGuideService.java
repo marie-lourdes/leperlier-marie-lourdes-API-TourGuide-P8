@@ -16,7 +16,7 @@ import tripPricer.TripPricer;
 
 @Service
 public class TourGuideService {
-	 private static final Logger logger = LogManager.getLogger( TourGuideService.class);
+	// private static final Logger logger = LogManager.getLogger( TourGuideService.class);
 	
 	private final RewardsService rewardsService;
 	private final TripPricer tripPricer = new TripPricer();
