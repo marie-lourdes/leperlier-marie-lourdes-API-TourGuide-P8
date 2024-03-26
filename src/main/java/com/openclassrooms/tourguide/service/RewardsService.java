@@ -1,6 +1,7 @@
 package com.openclassrooms.tourguide.service;
 
 import java.util.ArrayList;
+
 import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
@@ -15,8 +16,10 @@ import com.openclassrooms.tourguide.model.UserReward;
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
+import lombok.Data;
 import rewardCentral.RewardCentral;
 
+@Data
 @Service
 public class RewardsService {
 	private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
@@ -35,14 +38,6 @@ public class RewardsService {
 		this.rewardsCentral = rewardCentral;
 	}
 
-	public void setProximityBuffer(int proximityBuffer) {
-		this.proximityBuffer = proximityBuffer;
-	}
-
-	public void setDefaultProximityBuffer() {
-		proximityBuffer = defaultProximityBuffer;
-	}
-	
 	//optimiser boucle avec fonction  native java ou stream
 	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode
 		try {
