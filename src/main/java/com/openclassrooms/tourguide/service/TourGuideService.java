@@ -1,5 +1,7 @@
 package com.openclassrooms.tourguide.service;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -8,22 +10,29 @@ import org.springframework.stereotype.Service;
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
 
+import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
 import gpsUtil.location.VisitedLocation;
 import tripPricer.Provider;
 import tripPricer.TripPricer;
 
 @Service
 public class TourGuideService {
-	// private static final Logger logger = LogManager.getLogger( TourGuideService.class);
-	
-	private final RewardsService rewardsService;
-	private final TripPricer tripPricer = new TripPricer();
+	// private static final Logger logger = LogManager.getLogger(
+	// TourGuideService.class);
 
-	public TourGuideService(RewardsService  rewardsService) {
-		this.rewardsService = rewardsService;			
-		Locale.setDefault(Locale.US);	
+	private final RewardsService rewardsService;
+	private final GpsUtilService gpsUtilService;
+	private final TripPricer tripPricer = new TripPricer();
+	private List<RecommendedUserAttraction> attractionsUserLocationDistance = new ArrayList<>();
+	private List<RecommendedUserAttraction> attractionsClosestUserLocationDistanceSorted = new ArrayList<>();
+
+	public TourGuideService(RewardsService rewardsService, GpsUtilService gpsUtilService) {
+		this.rewardsService = rewardsService;
+		this.gpsUtilService = gpsUtilService;
+		Locale.setDefault(Locale.US);
 	}
-	
+
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(),
@@ -33,9 +42,30 @@ public class TourGuideService {
 		return providers;
 	}
 
-	public List<RecommendedUserAttraction>getNearByAttractions(VisitedLocation visitedLocation,User user) {
-		List<RecommendedUserAttraction> attractionsClosestUserVisitedLocation =rewardsService.getClosestRecommendedUserAttractions(visitedLocation.location, user);
-		return  attractionsClosestUserVisitedLocation;
+	public List<RecommendedUserAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
+		List<Attraction> attractions = gpsUtilService.getAllAttractions();
+		int i = 0;
+		Location userLocation = visitedLocation.location;
+		for (Attraction attraction : attractions) {
+			double dist = gpsUtilService.calculateDistance(attraction, userLocation);
+			int rewardPoint = rewardsService.getRewardPoints(attraction, user);
+
+			RecommendedUserAttraction closestAttraction = new RecommendedUserAttraction(attraction.attractionName,
+					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist,
+					rewardPoint);
+			attractionsUserLocationDistance.add(closestAttraction);
+		}
+		Collections.sort(attractionsUserLocationDistance);
+
+		System.out.println("all recommended attractionUser" + attractionsUserLocationDistance);
+		for (RecommendedUserAttraction attraction : attractionsUserLocationDistance) {
+			i++;
+			if (i <= 5) {
+				attractionsClosestUserLocationDistanceSorted.add(attraction);
+			}
+
+		}
+		return attractionsClosestUserLocationDistanceSorted;
 	}
 
 	/**********************************************************************************
@@ -46,4 +76,3 @@ public class TourGuideService {
 	private static final String tripPricerApiKey = "test-server-api-key";
 
 }
-

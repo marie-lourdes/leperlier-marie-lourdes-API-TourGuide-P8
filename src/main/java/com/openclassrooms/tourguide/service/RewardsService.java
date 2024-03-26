@@ -1,15 +1,11 @@
 package com.openclassrooms.tourguide.service;
 
-import java.util.ArrayList;
-
-import java.util.Collections;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.stream.Stream;
 
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 
@@ -30,12 +26,13 @@ public class RewardsService {
 	//private int attractionProximityRange = 200;
 	private final  GpsUtilService  gpsUtilService ;
 	private final RewardCentral rewardsCentral;
-	List<RecommendedUserAttraction> attractionsUserLocationDistance = new ArrayList<>();
-	List<RecommendedUserAttraction> attractionsClosestUserLocationDistanceSorted = new ArrayList<>();
+	private final  UserService userService ;
+	
 
-	public RewardsService(GpsUtilService gpsUtilService, RewardCentral rewardCentral) {
+	public RewardsService(GpsUtilService gpsUtilService, RewardCentral rewardCentral, UserService userService) {
 		this.gpsUtilService= gpsUtilService;
 		this.rewardsCentral = rewardCentral;
+		this.userService= userService;
 	}
 
 	//optimiser boucle avec fonction  native java ou stream
@@ -48,7 +45,7 @@ public class RewardsService {
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
 				for (Attraction attraction : attractions) {// a debugger avec les point d arrêts conditionnel et getrewards()
 
-					Stream<UserReward>listUserRewards = user.getUserRewards().stream().filter(
+					Stream<UserReward>listUserRewards = userService.getUserRewards(user).stream().filter(
 							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName));
 
 					if (listUserRewards.count() == 0 && isNearAttraction(visitedLocation, attraction)) {
@@ -63,7 +60,7 @@ public class RewardsService {
 		}
 
 	}
-
+	
 	/*
 	// a implementer dans le tour guideService avec les 5 premier attraction proche 
 	 du dernier lieu visité par l user, peur importe la distance et une methode getDistance d interface
@@ -78,34 +75,7 @@ public class RewardsService {
 		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
 	}
 
-	//optimiser boucle avec fonction  native java ou stream
-	public List<RecommendedUserAttraction> getClosestRecommendedUserAttractions(Location userLocation, User user) {
-		List<Attraction> attractions = gpsUtilService.getAllAttractions();
-		int i = 0;
-		for (Attraction attraction : attractions) {
-			double dist = this.getDistance(attraction, userLocation);
-			int rewardPoint = rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
-
-			RecommendedUserAttraction closestAttraction = new RecommendedUserAttraction(attraction.attractionName,
-					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist,
-					rewardPoint);
-			attractionsUserLocationDistance.add(closestAttraction);
-		}
-		Collections.sort(attractionsUserLocationDistance);
-
-		System.out.println("all recommended attractionUser" + attractionsUserLocationDistance);
-		for (RecommendedUserAttraction attraction : attractionsUserLocationDistance) {
-			i++;
-			if (i <= 5) {
-				attractionsClosestUserLocationDistanceSorted.add(attraction);
-			}
-
-		}
-
-		return attractionsClosestUserLocationDistanceSorted;
-	}
-
-	private int getRewardPoints(Attraction attraction, User user) {
+	public int getRewardPoints(Attraction attraction, User user) {
 		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
 

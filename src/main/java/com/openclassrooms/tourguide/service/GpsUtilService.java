@@ -11,13 +11,16 @@ import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.tracker.Tracker;
+import com.openclassrooms.tourguide.utils.ICalculatorDistance;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
+import gpsUtil.location.Location;
 
 @Service
-public class GpsUtilService {
+public class GpsUtilService implements ICalculatorDistance{
 	// private static final Logger logger = LogManager.getLogger(GpsUtilService.class);
+	private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 	private final GpsUtil gpsUtil;
 	private ExecutorService executor = Executors.newFixedThreadPool(100);
 	public final Tracker tracker;
@@ -52,5 +55,10 @@ public class GpsUtilService {
 				tracker.stopTracking();
 			}
 		});
+	}
+
+	
+	public double calculateDistance(Location loc1, Location loc2) {
+		return calculateDistance( loc1, loc2);
 	}
 }
