@@ -33,7 +33,7 @@ public class TourGuideServiceTest {
 	@Test
 	public void testGetNearbyAttractions() throws Exception {
 		UserService userService = new UserService();
-		tourGuideService = new TourGuideService(rewardsService);
+		tourGuideService = new TourGuideService(rewardsService,gpsUtilService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		gpsUtilService.trackUserLocation(user, userService);
 		while(null== user.getLastVisitedLocation()) {
@@ -52,7 +52,7 @@ public class TourGuideServiceTest {
 	}
 
 	public void testGetTripDeals() throws Exception {
-		tourGuideService = new TourGuideService(rewardsService);
+		tourGuideService = new TourGuideService(rewardsService, gpsUtilService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
 		List<Provider> providers = tourGuideService.getTripDeals(user);
