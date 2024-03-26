@@ -49,7 +49,7 @@ public class TourGuideService implements ICalculatorDistance{
 		Location userLocation = visitedLocation.location;
 		for (Attraction attraction : attractions) {
 			double dist = calculateDistance(attraction, userLocation);
-			int rewardPoint = rewardsService.getRewardPoints(attraction, user);
+			int rewardPoint = rewardsService.getAttractionRewardPoints(attraction, user);
 
 			RecommendedUserAttraction closestAttraction = new RecommendedUserAttraction(attraction.attractionName,
 					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist,

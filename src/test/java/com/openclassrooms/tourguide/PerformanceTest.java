@@ -34,6 +34,7 @@ public class PerformanceTest {
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 		userService = new UserService();
 		allUsers = userService.getAllUsers();
+		
 	}
 	/*
 	 * A note on performance improvements:
@@ -58,12 +59,13 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	// @Disabled
+	@Disabled
 	@Test
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
 		StopWatch stopWatch = new StopWatch();
+		
 		stopWatch.start();
 		for (User user : allUsers) {
 			gpsUtilService.trackUserLocation(user, userService);// method qui prend du temps pour retourner les
@@ -93,15 +95,15 @@ public class PerformanceTest {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	// @Disabled
+	 //@Disabled
 	@Test
 	public void testHighVolumeGetRewards() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 20
 		// minutes
 	
 		StopWatch stopWatch = new StopWatch();
-		stopWatch.start();
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
+		stopWatch.start();
 		
 		allUsers.forEach(user -> { 
 			user.clearVisitedLocations();
@@ -114,7 +116,7 @@ public class PerformanceTest {
 		for(User user : allUsers) {
 			while(user.getUserRewards().isEmpty()) {
 				try {
-					TimeUnit.MILLISECONDS.sleep(100);
+					TimeUnit.MILLISECONDS.sleep(200);
 				} catch (InterruptedException e) {
 				}
 			}

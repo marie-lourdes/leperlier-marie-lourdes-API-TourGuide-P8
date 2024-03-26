@@ -55,7 +55,7 @@ public class RewardsServiceTest {
 	@Test
 	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException, ExecutionException { // ajouter
 																												// try/catch																										// ConcurrentModificationException
-		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
+		rewardsService.setDefaultProximityBuffer(Integer.MAX_VALUE);
 
 		UserService userService = new UserService();
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
