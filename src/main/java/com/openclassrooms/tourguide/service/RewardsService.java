@@ -30,7 +30,7 @@ public class RewardsService implements ICalculatorDistance {
 	private UserService userService;
 	private double distance;
 
-	private ExecutorService executor = Executors.newFixedThreadPool(1000);
+	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 
 	public RewardsService(GpsUtilService gpsUtilService, RewardCentral rewardCentral) {
 		this.gpsUtilService = gpsUtilService;
@@ -90,24 +90,12 @@ public class RewardsService implements ICalculatorDistance {
 			return rewardCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 		}, executor).thenAccept(points -> {
 			userReward.setRewardPoints(points);
-
 		});
 		return userReward.getRewardPoints();
-		// return rewardCentral.getAttractionRewardPoints(attraction.attractionId,
-		// user.getUserId());
+		
 	}
 
 	public int getAttractionRewardPoints(Attraction attraction, User user) {
 		return rewardCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
-	/*
-	 * // a implementer dans le tour guideService avec les 5 premier attraction
-	 * proche du dernier lieu visité par l user, peur importe la distance et une
-	 * methode getDistance d interface
-	 * 
-	 * public boolean isWithinAttractionProximity(Attraction attraction, Location
-	 * location) { return getDistance(attraction, location) >
-	 * attractionProximityRange ? false : true; }
-	 */
-
 }

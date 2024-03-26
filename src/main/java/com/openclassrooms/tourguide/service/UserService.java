@@ -27,7 +27,7 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class UserService {
 	 private static final Logger logger = LogManager.getLogger(UserService.class);
-	private ExecutorService executor = Executors.newFixedThreadPool(1000);
+	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;
 	boolean testMode = true;
 
