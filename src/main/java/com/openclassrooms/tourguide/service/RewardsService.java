@@ -17,7 +17,7 @@ import rewardCentral.RewardCentral;
 
 @Data
 @Service
-public class RewardsService {
+public class RewardsService  {
 	private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 
 	// proximity in miles
@@ -26,6 +26,7 @@ public class RewardsService {
 	//private int attractionProximityRange = 200;
 	private final  GpsUtilService  gpsUtilService ;
 	private final RewardCentral rewardsCentral;
+	private ICalculatorRewardPoint calculatorRewardPoint; 
 	private final  UserService userService ;
 	
 
@@ -33,6 +34,7 @@ public class RewardsService {
 		this.gpsUtilService= gpsUtilService;
 		this.rewardsCentral = rewardCentral;
 		this.userService= userService;
+		this.calculatorRewardPoint=new CalculatorRewardPointImpl(gpsUtilService,userService,rewardsCentral );
 	}
 
 	//optimiser boucle avec fonction  native java ou stream
@@ -40,6 +42,8 @@ public class RewardsService {
 		try {
 			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations();
 			List<Attraction> attractions = gpsUtilService.getAllAttractions();
+			//calculatorRewardPoint = ;
+		
 			// boucles imbriquée lance erreur de ConcurrentModificationException (iteration
 			// et modification lors de l iteration) et userRewards vide
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
@@ -47,12 +51,16 @@ public class RewardsService {
 
 					Stream<UserReward>listUserRewards = userService.getUserRewards(user).stream().filter(
 							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName));
-
-					if (listUserRewards.count() == 0 && isNearAttraction(visitedLocation, attraction)) {
+							
+					if (listUserRewards.count() == 0) {
+						calculatorRewardPoint.calculateUserRewardsPoints(visitedLocation, attraction, user,calculatorRewardPoint.getRewardPoints( attraction,user));
+					}
+					
+				/*	if (listUserRewards.count() == 0 && isNearAttraction(visitedLocation, attraction)) {
 						user.addUserReward(
 								new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 
-					}
+					}*/
 				}
 			}
 		} catch (ConcurrentModificationException e) {
@@ -69,31 +77,6 @@ public class RewardsService {
 		return getDistance(attraction, location) > attractionProximityRange ? false : true;
 	}*/
 
-	private boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
-		// ? methode propre au reward service avec une methode getDistance dinterface à
-		// creer
-		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
-	}
 
-	public int getRewardPoints(Attraction attraction, User user) {
-		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
-	}
-
-	// ?Utiliser une interface commune DistanceCalculator pour rewardService et
-	// tourguide service avec une methode getDistance()
-	//
-	public double getDistance(Location loc1, Location loc2) {// ? à implementer dans un service GpsUtilService
-		double lat1 = Math.toRadians(loc1.latitude);
-		double lon1 = Math.toRadians(loc1.longitude);
-		double lat2 = Math.toRadians(loc2.latitude);
-		double lon2 = Math.toRadians(loc2.longitude);
-
-		double angle = Math
-				.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2));
-
-		double nauticalMiles = 60 * Math.toDegrees(angle);
-		double statuteMiles = STATUTE_MILES_PER_NAUTICAL_MILE * nauticalMiles;
-		return statuteMiles;
-	}
 
 }
