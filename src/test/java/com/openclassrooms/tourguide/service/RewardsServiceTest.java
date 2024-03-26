@@ -11,7 +11,6 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.openclassrooms.tourguide.helper.InternalUserTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 
@@ -33,7 +32,6 @@ public class RewardsServiceTest {
 
 	@Test // A ajouter dans un test de UserService
 	public void testUserGetRewards() throws InterruptedException, ExecutionException{
-		//InternalUserTestHelper.setInternalUserNumber(0);
 		UserService userService = new UserService();
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
@@ -45,7 +43,6 @@ public class RewardsServiceTest {
 		assertTrue(userRewards.size() == 1);
 	}
 	
-
 	/*@Test
 	public void testIsWithinAttractionProximity() {
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
@@ -57,22 +54,15 @@ public class RewardsServiceTest {
 	// @Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
 	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException, ExecutionException { // ajouter
-																												// try/catch
-																												// ConcurrentModificationException
-		// try {
+																												// try/catch																										// ConcurrentModificationException
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 
-		InternalUserTestHelper.setInternalUserNumber(1);
 		UserService userService = new UserService();
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
 		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
 		userService.tracker.stopTracking();
 
 		assertEquals(gpsUtilService.getAllAttractions().size(), userRewards.size());
-		/*
-		 * } catch (ConcurrentModificationException e) {
-		 * System.err.print("Error ConcurrentModificationException " + e.getMessage());
-		 * }
-		 */
+		
 	}
 }

@@ -4,7 +4,7 @@ import gpsUtil.location.Location;
 
 public interface ICalculatorDistance {
 	 public default double calculateDistance(Location loc1, Location loc2) {
-			    final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
+			    double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 				double lat1 = Math.toRadians(loc1.latitude);
 				double lon1 = Math.toRadians(loc1.longitude);
 				double lat2 = Math.toRadians(loc2.latitude);

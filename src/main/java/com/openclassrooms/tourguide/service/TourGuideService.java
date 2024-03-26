@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
+import com.openclassrooms.tourguide.utils.ICalculatorDistance;
 
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
@@ -17,7 +18,7 @@ import tripPricer.Provider;
 import tripPricer.TripPricer;
 
 @Service
-public class TourGuideService {
+public class TourGuideService implements ICalculatorDistance{
 	// private static final Logger logger = LogManager.getLogger(
 	// TourGuideService.class);
 
@@ -47,7 +48,7 @@ public class TourGuideService {
 		int i = 0;
 		Location userLocation = visitedLocation.location;
 		for (Attraction attraction : attractions) {
-			double dist = gpsUtilService.calculateDistance(attraction, userLocation);
+			double dist = calculateDistance(attraction, userLocation);
 			int rewardPoint = rewardsService.getRewardPoints(attraction, user);
 
 			RecommendedUserAttraction closestAttraction = new RecommendedUserAttraction(attraction.attractionName,

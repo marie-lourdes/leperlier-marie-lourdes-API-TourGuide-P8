@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
+import com.openclassrooms.tourguide.utils.ICalculatorDistance;
 
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
@@ -17,53 +18,41 @@ import rewardCentral.RewardCentral;
 
 @Data
 @Service
-public class RewardsService  {
-	private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
+public class RewardsService implements ICalculatorDistance {
 
 	// proximity in miles
 	private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
-	//private int attractionProximityRange = 200;
-	private final  GpsUtilService  gpsUtilService ;
-	private final RewardCentral rewardsCentral;
-	private ICalculatorRewardPoint calculatorRewardPoint; 
-	private   UserService userService ;
-	
-	
+	private final GpsUtilService gpsUtilService;
+	private final RewardCentral rewardCentral;
+	private UserService userService;
+	private double distance;
+	private int rewardPoints;
 
 	public RewardsService(GpsUtilService gpsUtilService, RewardCentral rewardCentral) {
-		this.gpsUtilService= gpsUtilService;
-		this.rewardsCentral = rewardCentral;
-		
+		this.gpsUtilService = gpsUtilService;
+		this.rewardCentral = rewardCentral;
+
 	}
 
-	//optimiser boucle avec fonction  native java ou stream
+	// optimiser boucle avec fonction native java ou stream
 	public void calculateRewards(User user) {// erreur de ConcurrentModificationException lors de l appel de la methode
 		try {
 			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations();
 			List<Attraction> attractions = gpsUtilService.getAllAttractions();
-			calculatorRewardPoint=new CalculatorRewardPointImpl(gpsUtilService,rewardsCentral );
-			 int rewardsPoints=0;
-			//calculatorRewardPoint = ;
-		
+
 			// boucles imbriquée lance erreur de ConcurrentModificationException (iteration
 			// et modification lors de l iteration) et userRewards vide
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
-				for (Attraction attraction : attractions) {// a debugger avec les point d arrêts conditionnel et getrewards()
-					 
-					Stream<UserReward>listUserRewards = user.getUserRewards().stream().filter(
-							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName));
-							
-					if (listUserRewards.count() == 0) {
-						 rewardsPoints=getRewardPoints( attraction, user);
-						calculatorRewardPoint.calculateUserRewardsPoints(visitedLocation, attraction, user,rewardsPoints);
-					}
-					
-				/*	if (listUserRewards.count() == 0 && isNearAttraction(visitedLocation, attraction)) {
-						user.addUserReward(
-								new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+				for (Attraction attraction : attractions) {// a debugger avec les point d arrêts conditionnel et
+															// getrewards()
 
-					}*/
+					Stream<UserReward> listUserRewards = user.getUserRewards().stream().filter(
+							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName));
+
+					if (listUserRewards.count() == 0) {
+						this.calculateUserRewardsPoints(visitedLocation, attraction, user);
+					}
 				}
 			}
 		} catch (ConcurrentModificationException e) {
@@ -71,19 +60,36 @@ public class RewardsService  {
 		}
 
 	}
-	
-	
-	public int getRewardPoints(Attraction attraction, User user) {
-		return  calculatorRewardPoint.getRewardPoints( attraction,user);
+
+	public void calculateUserRewardsPoints(VisitedLocation visitedLocation, Attraction attraction, User user) {
+		rewardPoints = 0;
+		if (isNearAttraction(visitedLocation, attraction)) {
+			user.addUserReward(new UserReward(visitedLocation, attraction, rewardPoints));
+		}
 	}
+
+	public boolean isNearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
+		this.setDistanceAttractionAndVisitedLocation(visitedLocation, attraction);
+		return distance > proximityBuffer ? false : true;
+	}
+
+	public double setDistanceAttractionAndVisitedLocation(VisitedLocation visitedLocation, Attraction attraction) {
+		return this.distance = calculateDistance(visitedLocation.location, attraction);
+
+	}
+
+	public int getRewardPoints(Attraction attraction, User user) {
+		return rewardCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
+	}
+
 	/*
-	// a implementer dans le tour guideService avec les 5 premier attraction proche 
-	 du dernier lieu visité par l user, peur importe la distance et une methode getDistance d interface
-	
-	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
-		return getDistance(attraction, location) > attractionProximityRange ? false : true;
-	}*/
-
-
+	 * // a implementer dans le tour guideService avec les 5 premier attraction
+	 * proche du dernier lieu visité par l user, peur importe la distance et une
+	 * methode getDistance d interface
+	 * 
+	 * public boolean isWithinAttractionProximity(Attraction attraction, Location
+	 * location) { return getDistance(attraction, location) >
+	 * attractionProximityRange ? false : true; }
+	 */
 
 }

@@ -18,9 +18,9 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
 
 @Service
-public class GpsUtilService implements ICalculatorDistance{
+public class GpsUtilService{
 	// private static final Logger logger = LogManager.getLogger(GpsUtilService.class);
-	private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
+	//private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
 	private final GpsUtil gpsUtil;
 	private ExecutorService executor = Executors.newFixedThreadPool(100);
 	public final Tracker tracker;
@@ -58,7 +58,4 @@ public class GpsUtilService implements ICalculatorDistance{
 	}
 
 	
-	public double calculateDistance(Location loc1, Location loc2) {
-		return calculateDistance( loc1, loc2);
-	}
 }
