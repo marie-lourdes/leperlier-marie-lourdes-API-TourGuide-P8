@@ -16,11 +16,9 @@ public class CalculatorRewardPointImpl implements ICalculatorRewardPoint {
 	private double distance;
 	private final GpsUtilService gpsUtilService;
 	private final RewardCentral rewardCentral;
-	private final UserService userService;
 
-	public CalculatorRewardPointImpl(GpsUtilService gpsUtilService, UserService userService,RewardCentral rewardCentral) {
+	public CalculatorRewardPointImpl(GpsUtilService gpsUtilService, RewardCentral rewardCentral) {
 		this.gpsUtilService = gpsUtilService;
-		this.userService = userService;
 		this.rewardCentral = rewardCentral;
 	}
 

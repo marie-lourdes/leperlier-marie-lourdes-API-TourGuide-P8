@@ -27,14 +27,14 @@ public class RewardsService  {
 	private final  GpsUtilService  gpsUtilService ;
 	private final RewardCentral rewardsCentral;
 	private ICalculatorRewardPoint calculatorRewardPoint; 
-	private final  UserService userService ;
+	private   UserService userService ;
+	
 	
 
-	public RewardsService(GpsUtilService gpsUtilService, RewardCentral rewardCentral, UserService userService) {
+	public RewardsService(GpsUtilService gpsUtilService, RewardCentral rewardCentral) {
 		this.gpsUtilService= gpsUtilService;
 		this.rewardsCentral = rewardCentral;
-		this.userService= userService;
-		this.calculatorRewardPoint=new CalculatorRewardPointImpl(gpsUtilService,userService,rewardsCentral );
+		
 	}
 
 	//optimiser boucle avec fonction  native java ou stream
@@ -42,18 +42,21 @@ public class RewardsService  {
 		try {
 			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations();
 			List<Attraction> attractions = gpsUtilService.getAllAttractions();
+			calculatorRewardPoint=new CalculatorRewardPointImpl(gpsUtilService,rewardsCentral );
+			 int rewardsPoints=0;
 			//calculatorRewardPoint = ;
 		
 			// boucles imbriquée lance erreur de ConcurrentModificationException (iteration
 			// et modification lors de l iteration) et userRewards vide
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
 				for (Attraction attraction : attractions) {// a debugger avec les point d arrêts conditionnel et getrewards()
-
-					Stream<UserReward>listUserRewards = userService.getUserRewards(user).stream().filter(
+					 
+					Stream<UserReward>listUserRewards = user.getUserRewards().stream().filter(
 							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName));
 							
 					if (listUserRewards.count() == 0) {
-						calculatorRewardPoint.calculateUserRewardsPoints(visitedLocation, attraction, user,calculatorRewardPoint.getRewardPoints( attraction,user));
+						 rewardsPoints=getRewardPoints( attraction, user);
+						calculatorRewardPoint.calculateUserRewardsPoints(visitedLocation, attraction, user,rewardsPoints);
 					}
 					
 				/*	if (listUserRewards.count() == 0 && isNearAttraction(visitedLocation, attraction)) {
@@ -69,6 +72,10 @@ public class RewardsService  {
 
 	}
 	
+	
+	public int getRewardPoints(Attraction attraction, User user) {
+		return  calculatorRewardPoint.getRewardPoints( attraction,user);
+	}
 	/*
 	// a implementer dans le tour guideService avec les 5 premier attraction proche 
 	 du dernier lieu visité par l user, peur importe la distance et une methode getDistance d interface
