@@ -26,7 +26,7 @@ import gpsUtil.location.VisitedLocation;
 
 @Service
 public class UserService {
-	 private static final Logger logger = LogManager.getLogger(UserService.class);
+	private static final Logger logger = LogManager.getLogger(UserService.class);
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;
 	boolean testMode = true;
@@ -61,8 +61,8 @@ public class UserService {
 		return future.get();
 	}
 
-	public List<UserReward> getUserRewards(User user) {	
-		return user.getUserRewards(); // ajouter rewardsService.calculateRewards(user) avant et creer user service;
+	public List<UserReward> getUserRewards(User user) {
+		return user.getUserRewards();
 	}
 
 	public void addUserLocation(User user, VisitedLocation visitedLocation) {

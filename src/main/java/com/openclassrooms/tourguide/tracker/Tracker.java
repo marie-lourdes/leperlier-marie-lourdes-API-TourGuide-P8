@@ -54,6 +54,7 @@ public void run() {
 	while (true) {
 		if (Thread.currentThread().isInterrupted() || stop) {
 			logger.debug("Tracker stopping {}", threadName);
+			this.stopTracking();
 			break;
 		}
 
@@ -61,7 +62,9 @@ public void run() {
 		try {
 			users = userService.getAllUsers();
 		} catch (InterruptedException | ExecutionException e) {
+			this.stopTracking();
 			logger.error(e.getMessage());
+			break;
 		}
 
 		users.forEach(user -> completedTrackingUsersMap.put(user, false));
@@ -74,6 +77,7 @@ public void run() {
 				logger.error(e.getMessage());
 			} catch (InterruptedException e) {
 				logger.error("Tracker interrupted {}", threadName);
+				this.stopTracking();
 			} catch (ExecutionException e) {
 				logger.error(e.getMessage());
 			}
@@ -86,6 +90,7 @@ public void run() {
 				TimeUnit.MILLISECONDS.sleep(100);
 			} catch (InterruptedException e) {
 				logger.error("Tracker interrupted, {} ", threadName);
+				this.stopTracking();
 				break;
 			}
 
@@ -105,6 +110,7 @@ public void run() {
 			logger.debug("Tracker sleeping {} ", threadName);
 			TimeUnit.SECONDS.sleep(trackingPollingInterval);
 		} catch (InterruptedException e) {
+			this.stopTracking();
 			break;
 		}
 	}
