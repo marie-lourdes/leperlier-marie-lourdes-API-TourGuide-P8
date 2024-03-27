@@ -77,7 +77,6 @@ public class PerformanceTest {
 		});
 
 		for (User user : allUsers) {
-			// gpsUtilService.trackUserLocation(user, userService);
 			while (user.getVisitedLocations().size() < 4) {
 				try {
 					TimeUnit.MILLISECONDS.sleep(100);
@@ -87,11 +86,16 @@ public class PerformanceTest {
 				}
 			}
 		}
-
-		for (User user : allUsers) {
+		
+		allUsers.forEach(user -> {
 			VisitedLocation visitedLocation = user.getVisitedLocations().get(3);
 			assertTrue(visitedLocation != null);
-		}
+		});
+		
+		/*for (User user : allUsers) {
+			VisitedLocation visitedLocation = user.getVisitedLocations().get(3);
+			assertTrue(visitedLocation != null);
+		}*/
 
 		userService.tracker.stopTracking();
 		gpsUtilService.tracker.stopTracking();
@@ -108,17 +112,18 @@ public class PerformanceTest {
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		StopWatch stopWatch = new StopWatch();
+		
 		stopWatch.start();
-
 		allUsers.forEach(user -> {
 			user.clearVisitedLocations();
 			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 		});
+		
 		allUsers.parallelStream().forEach(user -> rewardsService.calculateRewards(user));
 
 		allUsers.forEach(user -> assertTrue(user.getUserRewards().size() > 0));
-
 		stopWatch.stop();
+		
 		userService.tracker.stopTracking();
 		rewardsService.tracker.stopTracking();
 
