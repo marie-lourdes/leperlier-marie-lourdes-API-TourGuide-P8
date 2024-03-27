@@ -60,27 +60,24 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	//@Disabled
+	// @Disabled
 	@Test
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
 		StopWatch stopWatch = new StopWatch();
-		
+
 		stopWatch.start();
-		//for (User user : allUsers) {
-			allUsers.parallelStream().forEach(user->{
-				try {
-					gpsUtilService.trackUserLocation(user, userService);
-				} catch (ConcurrentModificationException | InterruptedException | ExecutionException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-			});
-		//}
+		allUsers.parallelStream().forEach(user -> {
+			try {
+				gpsUtilService.trackUserLocation(user, userService);
+			} catch (ConcurrentModificationException | InterruptedException | ExecutionException e) {
+				gpsUtilService.tracker.stopTracking();
+			}
+		});
 
 		for (User user : allUsers) {
-			//gpsUtilService.trackUserLocation(user, userService);
+			// gpsUtilService.trackUserLocation(user, userService);
 			while (user.getVisitedLocations().size() < 4) {
 				try {
 					TimeUnit.MILLISECONDS.sleep(100);
@@ -95,7 +92,7 @@ public class PerformanceTest {
 			VisitedLocation visitedLocation = user.getVisitedLocations().get(3);
 			assertTrue(visitedLocation != null);
 		}
-		
+
 		userService.tracker.stopTracking();
 		gpsUtilService.tracker.stopTracking();
 		stopWatch.stop();
@@ -105,37 +102,30 @@ public class PerformanceTest {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	//@Disabled
+	// @Disabled
 	@Test
 	public void testHighVolumeGetRewards() throws Exception {
-		// Arrange.
-		        rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
+		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
+		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
+		StopWatch stopWatch = new StopWatch();
+		stopWatch.start();
 
-				StopWatch stopWatch = new StopWatch();
-				stopWatch.start();
-				
-				Attraction attraction = gpsUtilService.getAllAttractions().get(0);
-				List<User> allUsers = new ArrayList<>();
-				allUsers = userService.getAllUsers();
+		allUsers.forEach(user -> {
+			user.clearVisitedLocations();
+			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
+		});
+		allUsers.parallelStream().forEach(user -> rewardsService.calculateRewards(user));
 
-				// Act.
-				allUsers.forEach(u -> u.addToVisitedLocations(new VisitedLocation(u.getUserId(), attraction, new Date())));
-				allUsers.parallelStream().forEach(u -> rewardsService.calculateRewards(u));
+		allUsers.forEach(user -> assertTrue(user.getUserRewards().size() > 0));
 
-				for (User user : allUsers) {
-					// Pré-Assertion.
-					assertTrue(user.getUserRewards().size() > 0);
-				}
-				
-				stopWatch.stop();
-				userService.tracker.stopTracking();
-				rewardsService.tracker.stopTracking();
+		stopWatch.stop();
+		userService.tracker.stopTracking();
+		rewardsService.tracker.stopTracking();
 
-				System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
-				
-				// Assert.
-				assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
-		
+		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
+				+ " seconds.");
+		assertTrue(TimeUnit.MINUTES.toSeconds(20) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
+
 	/*	// Users should be incremented up to 100,000, and test finishes within 20
 		// minutes
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
