@@ -63,14 +63,14 @@ public class PerformanceTest {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
 		StopWatch stopWatch = new StopWatch();
-
+		
 		stopWatch.start();
-	/*	for (User user : allUsers) {
-			gpsUtilService.trackUserLocation(user, userService);
-		}*/
-
 		for (User user : allUsers) {
 			gpsUtilService.trackUserLocation(user, userService);
+		}
+
+		for (User user : allUsers) {
+			//gpsUtilService.trackUserLocation(user, userService);
 			while (user.getVisitedLocations().size() < 4) {
 				try {
 					TimeUnit.MILLISECONDS.sleep(100);
@@ -79,14 +79,13 @@ public class PerformanceTest {
 					break;
 				}
 			}
+		}
+
+		for (User user : allUsers) {
 			VisitedLocation visitedLocation = user.getVisitedLocations().get(3);
 			assertTrue(visitedLocation != null);
 		}
-
-		/*for (User user : allUsers) {
-			VisitedLocation visitedLocation = user.getVisitedLocations().get(3);
-			assertTrue(visitedLocation != null);
-		}*/
+		
 		userService.tracker.stopTracking();
 		gpsUtilService.tracker.stopTracking();
 		stopWatch.stop();
@@ -96,7 +95,7 @@ public class PerformanceTest {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	// @Disabled
+	//@Disabled
 	@Test
 	public void testHighVolumeGetRewards() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 20
@@ -104,8 +103,9 @@ public class PerformanceTest {
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 		StopWatch stopWatch = new StopWatch();
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
-
+		
 		stopWatch.start();
+
 		allUsers.forEach(user -> {
 			user.clearVisitedLocations();
 			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
@@ -119,14 +119,13 @@ public class PerformanceTest {
 					break;
 				}
 			}
-			assertTrue(user.getUserRewards().size() >= 1);
-
 		});
 
 		userService.tracker.stopTracking();
 		rewardsService.tracker.stopTracking();
 		stopWatch.stop();
-
+	
+	   allUsers.forEach(user -> {assertTrue(user.getUserRewards().size() >= 1);});
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
 				+ " seconds.");
 		assertTrue(TimeUnit.MINUTES.toSeconds(30) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
