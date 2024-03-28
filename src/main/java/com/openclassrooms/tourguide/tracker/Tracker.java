@@ -1,6 +1,5 @@
 package com.openclassrooms.tourguide.tracker;
 
-import java.util.ConcurrentModificationException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

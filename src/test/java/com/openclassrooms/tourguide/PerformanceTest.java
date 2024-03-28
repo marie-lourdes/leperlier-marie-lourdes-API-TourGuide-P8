@@ -3,7 +3,6 @@ package com.openclassrooms.tourguide;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import java.util.ConcurrentModificationException;
 import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -27,7 +26,7 @@ import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
 public class PerformanceTest {
-	private static final Logger logger = LogManager.getLogger(PerformanceTest.class);
+
 	private GpsUtilService gpsUtilService;
 	private RewardsService rewardsService;
 	private UserService userService;
@@ -64,7 +63,7 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	//@Disabled
+	@Disabled
 	@Test
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
@@ -76,9 +75,9 @@ public class PerformanceTest {
 			try {
 				gpsUtilService.trackUserLocation(user, userService);
 			} catch (InterruptedException e) {
-				logger.error(e.getMessage());
+				
 			} catch (ExecutionException e) {
-				logger.error(e.getMessage());
+				
 			}
 		});
 
@@ -102,7 +101,7 @@ public class PerformanceTest {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	@Disabled
+	//@Disabled
 	@Test
 	public void testHighVolumeGetRewards() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
