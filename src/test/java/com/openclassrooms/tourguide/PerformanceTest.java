@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
 import com.openclassrooms.tourguide.model.User;
@@ -27,13 +28,14 @@ public class PerformanceTest {
 	private GpsUtilService gpsUtilService;
 	private RewardsService rewardsService;
 	private UserService userService;
+	private List<User> allUsers ;
 
 	@BeforeEach
 	public void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		userService = new UserService();
-		
+		allUsers =userService.getAllUsers();
 	}
 
 	/*
@@ -59,16 +61,14 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	// @Disabled
+	//@Disabled
 	@Test
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
 		// minutes
-		List<User> allUsers= userService.getAllUsers();
 		StopWatch stopWatch = new StopWatch();
 
 		stopWatch.start();
-
 		allUsers.parallelStream().forEach(user -> {
 			try {
 				gpsUtilService.trackUserLocation(user, userService);
@@ -85,13 +85,21 @@ public class PerformanceTest {
 		});
 
 		allUsers.forEach(user ->{
+			while (user.getVisitedLocations().size() < 4) {
+				try {
+					TimeUnit.MILLISECONDS.sleep(100);
+				} catch (InterruptedException e) {
+					gpsUtilService.tracker.stopTracking();
+					break;
+				}
+			}
 			assertNotNull(user.getVisitedLocations().get(3));
 		});
 
-
+		stopWatch.stop();
 		userService.tracker.stopTracking();
 		gpsUtilService.tracker.stopTracking();
-		stopWatch.stop();
+		
 
 		System.out.println("highVolumeTrackLocation: Time Elapsed: "
 				+ TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
@@ -102,7 +110,6 @@ public class PerformanceTest {
 	@Test
 	public void testHighVolumeGetRewards() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
-		List<User> allUsers= userService.getAllUsers();
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		StopWatch stopWatch = new StopWatch();
@@ -115,12 +122,23 @@ public class PerformanceTest {
 		
 		allUsers.parallelStream().forEach(user -> rewardsService.calculateRewards(user));
 		
-		allUsers.forEach(user -> assertTrue(user.getUserRewards().size() > 0));
+		allUsers.forEach(user -> { 
+			while (user.getUserRewards().isEmpty()) {
+				try {
+					TimeUnit.MILLISECONDS.sleep(100);
+				} catch (InterruptedException e) {
+					gpsUtilService.tracker.stopTracking();
+					break;
+				}
+			}
+			assertTrue(user.getUserRewards().size() > 0);
+			});
 		
+		stopWatch.stop();	
 		userService.tracker.stopTracking();
 		gpsUtilService.tracker.stopTracking();
 		rewardsService.tracker.stopTracking();
-		stopWatch.stop();	
+		
 		
 		System.out.println("highVolumeGetRewards: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime())
 				+ " seconds.");
