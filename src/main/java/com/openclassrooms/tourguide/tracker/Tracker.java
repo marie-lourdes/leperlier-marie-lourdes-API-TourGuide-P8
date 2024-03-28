@@ -32,23 +32,6 @@ public class Tracker extends Thread {
 		startTracking(threadName);
 	}
 
-	/*
-	 * public Tracker(UserService userService,String threadName) { this.userService
-	 * = userService; this.threadName = threadName; executorService.submit(this); }
-	 */
-
-	/*
-	 * public Tracker(TourGuideService tourGuideService) { this.tourGuideService =
-	 * tourGuideService; executorService.submit(this); }
-	 */
-
-	/*
-	 * public Tracker(GpsUtilService gpsUtilService,String threadName) {
-	 * this.gpsUtilService = gpsUtilService;
-	 * 
-	 * }
-	 */
-
 	@Override
 	public void run() {
 		StopWatch stopWatch = new StopWatch();
@@ -74,8 +57,6 @@ public class Tracker extends Thread {
 			users.forEach(user -> {
 				try {
 					gpsUtilService.trackUserLocation(user, userService);
-				} catch (ConcurrentModificationException e) {
-					logger.error(e.getMessage());
 				} catch (InterruptedException e) {
 					logger.error("Tracker interrupted {}", threadName);
 					this.stopTracking();

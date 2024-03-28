@@ -1,5 +1,6 @@
 package com.openclassrooms.tourguide.service;
 
+import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -55,9 +56,12 @@ public class UserService {
 
 	public List<User> getAllUsers() throws InterruptedException, ExecutionException {
 		CompletableFuture<List<User>> future = new CompletableFuture<>();
-
-		future = CompletableFuture.supplyAsync(() -> internalUserMap.values().stream().collect(Collectors.toList()),
-				executor);
+		try {
+			future = CompletableFuture.supplyAsync(() -> internalUserMap.values().stream().collect(Collectors.toList()),
+					executor);
+		} catch (ConcurrentModificationException e) {
+			logger.error(e.getMessage());
+		}
 		return future.get();
 	}
 
