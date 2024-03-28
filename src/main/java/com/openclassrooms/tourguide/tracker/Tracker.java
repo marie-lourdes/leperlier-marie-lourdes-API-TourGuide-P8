@@ -29,107 +29,108 @@ public class Tracker extends Thread {
 
 	public Tracker(String threadName) {
 		this.threadName = threadName;
-		 startTracking(threadName);
+		startTracking(threadName);
 	}
-	
-/*	public Tracker(UserService userService,String threadName) {
-		this.userService = userService;
-		this.threadName = threadName;
-		executorService.submit(this);
-	}*/
-	
-	/*public Tracker(TourGuideService tourGuideService) {
-		this.tourGuideService = tourGuideService;	
-		executorService.submit(this);
-	}*/
-	
-/*	public Tracker(GpsUtilService gpsUtilService,String threadName) {
-		this.gpsUtilService = gpsUtilService;	
-	
-	}*/
-	
-@Override
-public void run() {
-	StopWatch stopWatch = new StopWatch();
-	while (true) {
-		if (Thread.currentThread().isInterrupted() || stop) {
-			logger.debug("Tracker stopping {}", threadName);
-			this.stopTracking();
-			break;
-		}
 
-		List<User> users = null;
-		try {
-			users = userService.getAllUsers();
-		} catch (InterruptedException | ExecutionException e) {
-			this.stopTracking();
-			logger.error(e.getMessage());
-			break;
-		}
+	/*
+	 * public Tracker(UserService userService,String threadName) { this.userService
+	 * = userService; this.threadName = threadName; executorService.submit(this); }
+	 */
 
-		users.forEach(user -> completedTrackingUsersMap.put(user, false));
-		logger.debug("Begin Tracker. Tracking {}, with {}  users. ", threadName, users.size());
-		stopWatch.start();
-		users.forEach(user -> {
-			try {
-				gpsUtilService.trackUserLocation(user, userService);
-			} catch (ConcurrentModificationException e) {
-				logger.error(e.getMessage());
-			} catch (InterruptedException e) {
-				logger.error("Tracker interrupted {}", threadName);
-				this.stopTracking();
-			} catch (ExecutionException e) {
-				logger.error(e.getMessage());
-			}
-		});
+	/*
+	 * public Tracker(TourGuideService tourGuideService) { this.tourGuideService =
+	 * tourGuideService; executorService.submit(this); }
+	 */
 
-		boolean notFinished = true;
-		while (notFinished) {
-			try {
-				logger.debug("Waiting for tracking to finish...: {} ", threadName);
-				TimeUnit.MILLISECONDS.sleep(100);
-			} catch (InterruptedException e) {
-				logger.error("Tracker interrupted, {} ", threadName);
+	/*
+	 * public Tracker(GpsUtilService gpsUtilService,String threadName) {
+	 * this.gpsUtilService = gpsUtilService;
+	 * 
+	 * }
+	 */
+
+	@Override
+	public void run() {
+		StopWatch stopWatch = new StopWatch();
+		while (true) {
+			if (Thread.currentThread().isInterrupted() || stop) {
+				logger.debug("Tracker stopping {}", threadName);
 				this.stopTracking();
 				break;
 			}
 
-			if (!completedTrackingUsersMap.containsValue(false)) {
-				notFinished = false;
+			List<User> users = null;
+			try {
+				users = userService.getAllUsers();
+			} catch (InterruptedException | ExecutionException e) {
+				this.stopTracking();
+				logger.error(e.getMessage());
+				break;
+			}
+
+			users.forEach(user -> completedTrackingUsersMap.put(user, false));
+			logger.debug("Begin Tracker. Tracking {}, with {}  users. ", threadName, users.size());
+			stopWatch.start();
+			users.forEach(user -> {
+				try {
+					gpsUtilService.trackUserLocation(user, userService);
+				} catch (ConcurrentModificationException e) {
+					logger.error(e.getMessage());
+				} catch (InterruptedException e) {
+					logger.error("Tracker interrupted {}", threadName);
+					this.stopTracking();
+				} catch (ExecutionException e) {
+					logger.error(e.getMessage());
+				}
+			});
+
+			boolean notFinished = true;
+			while (notFinished) {
+				try {
+					logger.debug("Waiting for tracking to finish...: {} ", threadName);
+					TimeUnit.MILLISECONDS.sleep(100);
+				} catch (InterruptedException e) {
+					logger.error("Tracker interrupted, {} ", threadName);
+					this.stopTracking();
+					break;
+				}
+
+				if (!completedTrackingUsersMap.containsValue(false)) {
+					notFinished = false;
+				}
+			}
+
+			completedTrackingUsersMap.clear();
+
+			stopWatch.stop();
+			logger.debug("Tracker {} Time Elapsed: {}  seconds.", threadName,
+					TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
+			stopWatch.reset();
+
+			try {
+				logger.debug("Tracker sleeping {} ", threadName);
+				TimeUnit.SECONDS.sleep(trackingPollingInterval);
+			} catch (InterruptedException e) {
+				this.stopTracking();
+				break;
 			}
 		}
-
-		completedTrackingUsersMap.clear();
-
-		stopWatch.stop();
-		logger.debug("Tracker {} Time Elapsed: {}  seconds.", threadName,
-				TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
-		stopWatch.reset();
-
-		try {
-			logger.debug("Tracker sleeping {} ", threadName);
-			TimeUnit.SECONDS.sleep(trackingPollingInterval);
-		} catch (InterruptedException e) {
-			this.stopTracking();
-			break;
-		}
 	}
-}
 
-public synchronized void finalizeTrackUser(User user) {
-	completedTrackingUsersMap.put(user, true);
-}
+	public synchronized void finalizeTrackUser(User user) {
+		completedTrackingUsersMap.put(user, true);
+	}
 
-public void startTracking(String threadName) {
-	logger.debug("Starting {}", threadName);
-	executorService.submit(this);
-}
+	public void startTracking(String threadName) {
+		logger.debug("Starting {}", threadName);
+		executorService.submit(this);
+	}
 
-/**
- * Assures to shut down the Tracker thread
- */
-public void stopTracking() {
-	stop = true;
-	executorService.shutdownNow();
-}
+	/**
+	 * Assures to shut down the Tracker thread
+	 */
+	public void stopTracking() {
+		stop = true;
+		executorService.shutdownNow();
+	}
 }
