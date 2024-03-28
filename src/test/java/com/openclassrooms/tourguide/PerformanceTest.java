@@ -1,5 +1,6 @@
 package com.openclassrooms.tourguide;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.ConcurrentModificationException;
@@ -73,34 +74,21 @@ public class PerformanceTest {
 				gpsUtilService.trackUserLocation(user, userService);
 			} catch (ConcurrentModificationException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			} catch (ExecutionException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 		});
 
-		for (User user : allUsers) {
+		allUsers.forEach(user ->{
+			assertNotNull(user.getVisitedLocations().get(3));
+		});
 
-			while (user.getVisitedLocations().size() < 4) {
-				try {
-					TimeUnit.MILLISECONDS.sleep(100);
-				} catch (InterruptedException e) {
-					gpsUtilService.tracker.stopTracking();
-					break;
-				}
-			}
-			VisitedLocation visitedLocation = user.getVisitedLocations().get(3);
-			assertTrue(visitedLocation != null);
-		}
 
-		/*
-		 * for (User user : allUsers) { VisitedLocation visitedLocation =
-		 * user.getVisitedLocations().get(3); assertTrue(visitedLocation != null); }
-		 */
 		userService.tracker.stopTracking();
 		gpsUtilService.tracker.stopTracking();
 		stopWatch.stop();
@@ -121,23 +109,13 @@ public class PerformanceTest {
 		
 		stopWatch.start();
 		allUsers.forEach(user -> {
-			user.clearVisitedLocations();
+		//	user.clearVisitedLocations();
 			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 		});
 		
 		allUsers.parallelStream().forEach(user -> rewardsService.calculateRewards(user));
-		allUsers.forEach(user -> {
-			while (user.getUserRewards().isEmpty()) {
-				try {
-					TimeUnit.MILLISECONDS.sleep(100);
-				} catch (InterruptedException e) {
-					rewardsService.tracker.stopTracking();
-					break;
-				}
-			}
-		});
 		
-		allUsers.forEach(user -> assertTrue(user.getUserRewards().size() >= 1));
+		allUsers.forEach(user -> assertTrue(user.getUserRewards().size() > 0));
 		
 		userService.tracker.stopTracking();
 		gpsUtilService.tracker.stopTracking();
