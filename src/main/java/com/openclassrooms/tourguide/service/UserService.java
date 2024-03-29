@@ -41,7 +41,8 @@ public class UserService {
 			logger.debug("Finished initializing users");
 		}
 		tracker = new Tracker("Thread-1-UserService");
-		addShutDownHook();
+		tracker.addShutDownHook();
+		logger.debug("Shutdown UserService");
 	}
 
 	public void addUser(User user) {
@@ -83,14 +84,14 @@ public class UserService {
 		return user.getLastVisitedLocation();
 	}
 
-	private void addShutDownHook() {
+	/*private void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				System.out.println("Shutdown UserService");
 				tracker.stopTracking();
 			}
 		});
-	}
+	}*/
 
 	/**********************************************************************************
 	 * 

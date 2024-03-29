@@ -27,7 +27,8 @@ public class GpsUtilService{
 	public GpsUtilService(GpsUtil gpsUtil) {
 		this.gpsUtil = gpsUtil;
 		tracker = new Tracker("Thread-2-GpsUtilService");
-		addShutDownHook();
+		tracker.addShutDownHook();
+		logger.debug("Shutdown GpsUtilService");
 	}
 
 	public void trackUserLocation(User user, UserService userService) throws InterruptedException, ExecutionException {
@@ -50,12 +51,12 @@ public class GpsUtilService{
 				.findFirst().orElseThrow(() -> new NullPointerException("Attraction not found"));
 	}
 
-	private void addShutDownHook() {
+	/*private void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				System.out.println("Shutdown GpsUtilService");
 				tracker.stopTracking();
 			}
 		});
-	}	
+	}	*/
 }

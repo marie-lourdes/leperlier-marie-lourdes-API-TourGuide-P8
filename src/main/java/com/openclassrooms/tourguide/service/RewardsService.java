@@ -8,6 +8,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.User;
@@ -23,7 +25,7 @@ import rewardCentral.RewardCentral;
 @Data
 @Service
 public class RewardsService implements ICalculatorDistance {
-
+	private static final Logger logger = LogManager.getLogger(RewardsService.class);
 	// proximity in miles
 	private int defaultProximityBuffer = 10;
 	private final GpsUtilService gpsUtilService;
@@ -35,7 +37,8 @@ public class RewardsService implements ICalculatorDistance {
 		this.gpsUtilService = gpsUtilService;
 		this.rewardCentral = rewardCentral;
 		tracker = new Tracker("Thread-3-RewardsService");
-		addShutDownHook();
+		tracker.addShutDownHook();
+		logger.debug("Shutdown RewardsService");
 
 	}
 
@@ -82,12 +85,12 @@ public class RewardsService implements ICalculatorDistance {
 		return rewardCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
 	
-	private void addShutDownHook() {
+	/*private void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
 			public void run() {
 				System.out.println("Shutdown UserService");
 				tracker.stopTracking();
 			}
 		});
-	}
+	}*/
 }

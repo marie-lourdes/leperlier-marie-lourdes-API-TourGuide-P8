@@ -113,4 +113,12 @@ public class Tracker extends Thread {
 		stop = true;
 		executorService.shutdownNow();
 	}
+	
+	public void addShutDownHook() {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			public void run() {		
+				stopTracking();
+			}
+		});
+	}
 }
