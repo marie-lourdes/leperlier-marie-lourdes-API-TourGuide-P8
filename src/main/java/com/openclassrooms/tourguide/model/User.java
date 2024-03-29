@@ -19,7 +19,7 @@ public class User {
 	private VisitedLocation lastVisitedLocation;
 	private List<VisitedLocation> visitedLocations = new ArrayList<>();
 	private List<UserReward> userRewards = new ArrayList<>();
-	private UserPreferences userPreferences = new UserPreferences();
+	private UserPreference userPreferences = new UserPreference();
 	private List<Provider> tripDeals = new ArrayList<>();
 	
 	public User(UUID userId, String userName, String phoneNumber, String emailAddress) {
@@ -81,11 +81,11 @@ public class User {
 		return userRewards;
 	}
 	
-	public UserPreferences getUserPreferences() {
+	public UserPreference getUserPreferences() {
 		return userPreferences;
 	}
 	
-	public void setUserPreferences(UserPreferences userPreferences) {
+	public void setUserPreferences(UserPreference userPreferences) {
 		this.userPreferences = userPreferences;
 	}
 

@@ -18,6 +18,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.helper.InternalUserHistoryLocationTestHelper;
+import com.openclassrooms.tourguide.helper.InternalUserPreferenceTestHelper;
 import com.openclassrooms.tourguide.helper.InternalUserTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
@@ -109,6 +110,7 @@ public class UserService {
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
 			InternalUserHistoryLocationTestHelper.setUserHistoryLocation(user);
+			InternalUserPreferenceTestHelper.setUserPreference(user);
 
 			internalUserMap.put(userName, user);
 		});

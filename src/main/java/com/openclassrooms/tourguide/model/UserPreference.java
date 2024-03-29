@@ -7,13 +7,13 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 @Data
-public class UserPreferences {
+public class UserPreference {
 	
 	private int attractionProximity = Integer.MAX_VALUE;
-	private int tripDuration = 1;
-	private int ticketQuantity = 1;
-	private int numberOfAdults = 1;
-	private int numberOfChildren = 0;
+	private int tripDuration;
+	private int ticketQuantity;
+	private int numberOfAdults;
+	private int numberOfChildren ;
 	
 	
 	public void setAttractionProximity(int attractionProximity) {
