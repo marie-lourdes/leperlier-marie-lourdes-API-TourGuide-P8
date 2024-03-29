@@ -22,25 +22,25 @@ public class UserService {
 	private static final Logger logger = LogManager.getLogger(UserService.class);
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;
-	private IUserDao userDaoImpltest;
+	private IUserDao userDaoImplTest;
 	
 	public UserService( ) {
-		this.userDaoImpltest= new UserDaoImpl();
+		this.userDaoImplTest= new UserDaoImpl();
 		tracker = new Tracker("Thread-1-UserService");
 		tracker.addShutDownHook();
 		logger.debug("Shutdown UserService");
 	}
 
 	public void addUser(User user) {
-		userDaoImpltest.addUser(user);
+		userDaoImplTest.addUser(user);
 	}
 
 	public User getUser(String userName) {
-		return userDaoImpltest.getUser(userName);
+		return userDaoImplTest.getUser(userName);
 	}
 
 	public List<User> getAllUsers() throws InterruptedException, ExecutionException {
-		return userDaoImpltest.getAllUsers(executor);
+		return userDaoImplTest.getAllUsers(executor);
 	}
 
 	public List<UserReward> getUserRewards(User user) {
