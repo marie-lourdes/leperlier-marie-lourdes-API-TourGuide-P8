@@ -6,8 +6,10 @@ import java.util.List;
 import java.util.UUID;
 
 import gpsUtil.location.VisitedLocation;
+import lombok.Data;
 import tripPricer.Provider;
 
+@Data
 public class User {
 	private final UUID userId;
 	private final String userName;

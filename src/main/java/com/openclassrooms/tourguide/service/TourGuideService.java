@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
+import com.openclassrooms.tourguide.utils.ConstantTest;
 import com.openclassrooms.tourguide.utils.ICalculatorDistance;
 
 import gpsUtil.location.Attraction;
@@ -18,13 +19,14 @@ import tripPricer.Provider;
 import tripPricer.TripPricer;
 
 @Service
-public class TourGuideService implements ICalculatorDistance{
+public class TourGuideService implements ICalculatorDistance {
 	// private static final Logger logger = LogManager.getLogger(
 	// TourGuideService.class);
 
 	private final RewardsService rewardsService;
 	private final GpsUtilService gpsUtilService;
 	private final TripPricer tripPricer = new TripPricer();
+	private String tripPricerApiKey;
 	private List<RecommendedUserAttraction> attractionsUserLocationDistance = new ArrayList<>();
 	private List<RecommendedUserAttraction> attractionsClosestUserLocationDistanceSorted = new ArrayList<>();
 
@@ -36,7 +38,7 @@ public class TourGuideService implements ICalculatorDistance{
 
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
-		List<Provider> providers = tripPricer.getPrice(tripPricerApiKey, user.getUserId(),
+		List<Provider> providers = tripPricer.getPrice(generateTripPricerApiKey(user), user.getUserId(),
 				user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(),
 				user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
 		user.setTripDeals(providers);
@@ -69,11 +71,19 @@ public class TourGuideService implements ICalculatorDistance{
 		return attractionsClosestUserLocationDistanceSorted;
 	}
 
+	private String generateTripPricerApiKey(User user) {
+
+		if (null != user.getUserId()) {
+			tripPricerApiKey = ConstantTest.LONG_SECRET_STRING_ENCODE_API_KEY + user.getUserId().toString();
+		}
+
+		return tripPricerApiKey;
+	}
+
 	/**********************************************************************************
 	 * 
 	 * Methods Below: For Internal Testing
 	 * 
 	 **********************************************************************************/
-	private static final String tripPricerApiKey = "test-server-api-key";
 
 }

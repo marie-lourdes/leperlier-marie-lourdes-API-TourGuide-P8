@@ -1,7 +1,7 @@
 package com.openclassrooms.tourguide.utils;
 
 public class ConstantTest {
-	public static final String TRIP_PRICER_API_KEY = "test-server-api-key";
+	public static final String LONG_SECRET_STRING_ENCODE_API_KEY = "long&-secret&-string&-for-generat-api-&key";
 	
 	private ConstantTest (){
 		
