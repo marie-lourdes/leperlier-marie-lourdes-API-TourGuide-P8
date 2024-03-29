@@ -13,24 +13,20 @@ import java.util.stream.IntStream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.stereotype.Component;
 
 import com.openclassrooms.tourguide.helper.InternalUserHistoryLocationTestHelper;
 import com.openclassrooms.tourguide.helper.InternalUserPreferenceTestHelper;
 import com.openclassrooms.tourguide.helper.InternalUserTestHelper;
 import com.openclassrooms.tourguide.model.User;
+import com.openclassrooms.tourguide.model.UserReward;
 
+import gpsUtil.location.VisitedLocation;
 
-/**********************************************************************************
- * 
- * Methods Below: For Internal Testing
- * 
- **********************************************************************************/
-// Database connection will be used for external users, but for testing purposes
-// internal users are provided and stored in memory
-
-public class UserDaoImpl implements IUserDao {
+@Component
+public class UserDaoImpl implements IUserDao{
 	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
-	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
+	//protected final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
 	boolean testMode = true;
 
 	public UserDaoImpl() {
@@ -41,20 +37,17 @@ public class UserDaoImpl implements IUserDao {
 			logger.debug("Finished initializing users");
 		}
 	}
-
-	@Override
+    @Override
 	public void addUser(User user) {
 		if (!internalUserMap.containsKey(user.getUserName())) {
 			internalUserMap.put(user.getUserName(), user);
 		}
 	}
-
-	@Override
+    @Override
 	public User getUser(String userName) {
 		return internalUserMap.get(userName);
 	}
-
-	@Override
+    @Override
 	public List<User> getAllUsers(ExecutorService executor) throws InterruptedException, ExecutionException {
 		CompletableFuture<List<User>> future = new CompletableFuture<>();
 		try {
@@ -65,8 +58,36 @@ public class UserDaoImpl implements IUserDao {
 		}
 		return future.get();
 	}
+    @Override
+	public List<UserReward> getUserRewards(User user) {
+		return user.getUserRewards();
+	}
+    @Override
+	public void addUserLocation(User user, VisitedLocation visitedLocation) {
+		user.addToVisitedLocations(visitedLocation);
+		user.setLastVisitedLocation();
+		
+	}
+    @Override
+	public VisitedLocation getUserLocation(User user) {
+		return user.getVisitedLocations().get(0);
+	}
+    @Override
+	public VisitedLocation getLastUserLocation(User user) {
+		return user.getLastVisitedLocation();
+	}
 
-	@Override
+
+	/**********************************************************************************
+	 * 
+	 * Methods Below: For Internal Testing
+	 * 
+	 **********************************************************************************/
+	// Database connection will be used for external users, but for testing purposes
+	// internal users are provided and stored in memory
+	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
+	
+	 @Override
 	public void initializeInternalUsers() {
 		IntStream.range(0, InternalUserTestHelper.getInternalUserNumber()).forEach(i -> {
 			String userName = "internalUser" + i;
@@ -74,8 +95,7 @@ public class UserDaoImpl implements IUserDao {
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
 			InternalUserHistoryLocationTestHelper.setUserHistoryLocation(user);
-			InternalUserPreferenceTestHelper.setUserPreference(user);
-
+			 InternalUserPreferenceTestHelper.setUserPreference(user);
 			internalUserMap.put(userName, user);
 		});
 		logger.debug("Created " + InternalUserTestHelper.getInternalUserNumber() + " internal test users.");

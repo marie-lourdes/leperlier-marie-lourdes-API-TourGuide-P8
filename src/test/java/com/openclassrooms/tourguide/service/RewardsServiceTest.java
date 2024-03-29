@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import com.openclassrooms.tourguide.dao.UserDaoImpl;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 
@@ -32,7 +33,7 @@ public class RewardsServiceTest {
 
 	@Test // A ajouter dans un test de UserService
 	public void testUserGetRewards() throws InterruptedException, ExecutionException{
-		UserService userService = new UserService();
+		UserService userService = new UserService(new UserDaoImpl() );
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
@@ -57,7 +58,7 @@ public class RewardsServiceTest {
 																												// try/catch																										// ConcurrentModificationException
 		rewardsService.setDefaultProximityBuffer(Integer.MAX_VALUE);
 
-		UserService userService = new UserService();
+		UserService userService = new UserService(new UserDaoImpl() );
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
 		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
 		userService.tracker.stopTracking();
