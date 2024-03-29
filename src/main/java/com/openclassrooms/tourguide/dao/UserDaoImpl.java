@@ -19,17 +19,17 @@ import com.openclassrooms.tourguide.helper.InternalUserPreferenceTestHelper;
 import com.openclassrooms.tourguide.helper.InternalUserTestHelper;
 import com.openclassrooms.tourguide.model.User;
 
+
+/**********************************************************************************
+ * 
+ * Methods Below: For Internal Testing
+ * 
+ **********************************************************************************/
+// Database connection will be used for external users, but for testing purposes
+// internal users are provided and stored in memory
+
 public class UserDaoImpl implements IUserDao {
 	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
-	
-	/**********************************************************************************
-	 * 
-	 * Methods Below: For Internal Testing
-	 * 
-	 **********************************************************************************/
-	// Database connection will be used for external users, but for testing purposes
-	// internal users are provided and stored in memory
-	
 	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
 	boolean testMode = true;
 
