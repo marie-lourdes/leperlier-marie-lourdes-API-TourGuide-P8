@@ -21,7 +21,7 @@ import com.openclassrooms.tourguide.helper.InternalUserHistoryLocationTestHelper
 import com.openclassrooms.tourguide.helper.InternalUserTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
-import com.openclassrooms.tourguide.tracker.Tracker;
+import com.openclassrooms.tourguide.utils.Tracker;
 
 import gpsUtil.location.VisitedLocation;
 

@@ -16,9 +16,6 @@ public class InternalUserHistoryLocationTestHelper {
 	private static double randomLongitude = generateRandomLongitude();
 	private static Date randomTime = getRandomTime();
 
-	private InternalUserHistoryLocationTestHelper() {
-	}
-
 	public static void setUserHistoryLocation(User user) {
 		IntStream.range(0, 3).forEach(i -> {
 			user.addToVisitedLocations(

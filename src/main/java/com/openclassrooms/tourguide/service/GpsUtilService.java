@@ -12,7 +12,7 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.User;
-import com.openclassrooms.tourguide.tracker.Tracker;
+import com.openclassrooms.tourguide.utils.Tracker;
 
 import gpsUtil.GpsUtil;
 import gpsUtil.location.Attraction;
