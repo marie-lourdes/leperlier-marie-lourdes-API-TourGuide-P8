@@ -11,6 +11,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.commons.lang3.time.StopWatch;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import com.openclassrooms.tourguide.dao.UserDaoImpl;
@@ -62,11 +63,11 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	@Disabled
+	//@Disabled
 	@Test
+	@DisplayName("Users should be incremented up to 100,000, and test finishes within 20 minutes")
 	public void testHighVolumeTrackLocation() throws Exception {
-		// Users should be incremented up to 100,000, and test finishes within 15
-		// minutes
+		// 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 		allUsers.parallelStream().forEach(user -> {
@@ -100,8 +101,9 @@ public class PerformanceTest {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	 @Disabled
+	@Disabled
 	@Test
+	@DisplayName("Users should be incremented up to 100,000, and test finishes within 20 minutes")
 	public void testHighVolumeGetRewards() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 20
 		// minutes

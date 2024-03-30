@@ -57,7 +57,7 @@ public class RewardsService implements ICalculatorDistance {
 				}
 			}
 		} catch (ConcurrentModificationException | InterruptedException | ExecutionException e) {
-			System.err.print(e.getMessage());
+			logger.error(e.getMessage());
 		}
 	}
 
@@ -84,13 +84,4 @@ public class RewardsService implements ICalculatorDistance {
 	public int getAttractionRewardPoints(Attraction attraction, User user) {
 		return rewardCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
-	
-	/*private void addShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("Shutdown UserService");
-				tracker.stopTracking();
-			}
-		});
-	}*/
 }

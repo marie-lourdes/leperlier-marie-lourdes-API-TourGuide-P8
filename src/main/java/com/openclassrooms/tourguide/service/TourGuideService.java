@@ -9,7 +9,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import com.openclassrooms.tourguide.dao.UserDaoImpl;
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.utils.ConstantTest;
@@ -57,7 +56,6 @@ public class TourGuideService implements ICalculatorDistance {
 		recommendedUserAttractionsSorted = getRecommendedUserAttractionsSortedByDistance(visitedLocation.location,
 				user);
 		return selectFiveClosestRecommendedAttraction(recommendedUserAttractionsSorted);
-
 	}
 
 	private String generateTripPricerApiKey(User user) {
@@ -98,5 +96,4 @@ public class TourGuideService implements ICalculatorDistance {
 		 logger.debug("5 recommended attractionUser: {}", fiveAttractionsClosestUserLocationDistanceSelected);
 		return fiveAttractionsClosestUserLocationDistanceSelected;
 	}
-
 }

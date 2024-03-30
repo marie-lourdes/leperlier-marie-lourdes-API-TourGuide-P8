@@ -50,13 +50,4 @@ public class GpsUtilService{
 		return gpsUtil.getAttractions().stream().filter(element -> element.attractionName.equals(attractionName))
 				.findFirst().orElseThrow(() -> new NullPointerException("Attraction not found"));
 	}
-
-	/*private void addShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {
-				System.out.println("Shutdown GpsUtilService");
-				tracker.stopTracking();
-			}
-		});
-	}	*/
 }

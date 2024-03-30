@@ -44,15 +44,6 @@ public class RewardsServiceTest {
 		assertTrue(userRewards.size() == 1);
 	}
 	
-	/*@Test
-	public void testIsWithinAttractionProximity() {
-		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
-		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));// ? deuxieme parametre doit etre
-																						// un type Location et non
-																						// attraction
-	}*/
-
-	// @Disabled // Needs fixed - can throw ConcurrentModificationException
 	@Test
 	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException, ExecutionException { // ajouter
 																												// try/catch																										// ConcurrentModificationException

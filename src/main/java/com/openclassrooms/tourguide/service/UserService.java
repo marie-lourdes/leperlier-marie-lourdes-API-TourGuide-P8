@@ -61,5 +61,4 @@ public class UserService {
 	public VisitedLocation getLastUserLocation(User user) {
 		return userDaoImplTest.getLastUserLocation(user);
 	}
-
 }

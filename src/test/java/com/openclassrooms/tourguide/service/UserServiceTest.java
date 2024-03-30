@@ -14,7 +14,6 @@ import com.openclassrooms.tourguide.dao.UserDaoImpl;
 import com.openclassrooms.tourguide.model.User;
 
 import gpsUtil.GpsUtil;
-import gpsUtil.location.VisitedLocation;
 
 class UserServiceTest {
 	private GpsUtilService gpsUtilService;
@@ -29,7 +28,6 @@ class UserServiceTest {
 
 	@Test
 	public void testAddUser() throws Exception {
-		//UserService userService = new UserService(rewardsService,gpsUtilService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
 
@@ -47,7 +45,6 @@ class UserServiceTest {
 
 	@Test
 	public void testGetAllUsers() throws Exception {
-		//UserService userService = new UserService(rewardsService,gpsUtilService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
 		userService.addUser(user);
@@ -62,7 +59,6 @@ class UserServiceTest {
 
 	@Test
 	public void testGetUserLocation() throws Exception {
-		//UserService userService = new UserService(rewardsService,gpsUtilService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		
 		gpsUtilService.trackUserLocation(user, userService);
@@ -76,15 +72,4 @@ class UserServiceTest {
 		
 		assertTrue(user.getVisitedLocations().get(0).userId.equals(user.getUserId()));
 	}
-
-	/*@Test
-	public void testTrackUserLocation() throws Exception {
-		//UserService userService = new UserService(rewardsService,gpsUtilService);
-		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		
-	    gpsUtilService.trackUserLocation(user,userService);
-		userService.tracker.stopTracking();
-		VisitedLocation visitedLocation=userService.getUserLocation(user);
-		assertEquals(user.getUserId(), visitedLocation.userId);
-	}*/
 }
