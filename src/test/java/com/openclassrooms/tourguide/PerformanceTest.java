@@ -35,7 +35,7 @@ public class PerformanceTest {
 	public void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
-		userService = new UserService(new UserDaoImpl() );
+		userService = new UserService(new UserDaoImpl());
 		allUsers = userService.getAllUsers();
 	}
 
@@ -62,7 +62,7 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	//@Disabled
+	@Disabled
 	@Test
 	public void testHighVolumeTrackLocation() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 15
@@ -100,7 +100,7 @@ public class PerformanceTest {
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	@Disabled
+	// @Disabled
 	@Test
 	public void testHighVolumeGetRewards() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 20

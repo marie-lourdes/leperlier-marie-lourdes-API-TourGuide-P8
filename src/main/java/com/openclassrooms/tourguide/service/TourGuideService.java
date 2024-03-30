@@ -1,9 +1,9 @@
 package com.openclassrooms.tourguide.service;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 
@@ -27,8 +27,8 @@ public class TourGuideService implements ICalculatorDistance {
 	private final GpsUtilService gpsUtilService;
 	private final TripPricer tripPricer = new TripPricer();
 	private String tripPricerApiKey;
-	private List<RecommendedUserAttraction> attractionsUserLocationDistance = new ArrayList<>();
-	private List<RecommendedUserAttraction> attractionsClosestUserLocationDistanceSorted = new ArrayList<>();
+	private List<RecommendedUserAttraction> recommendedUserAttractionsSorted = new ArrayList<>();
+	private List<RecommendedUserAttraction> fiveAttractionsClosestUserLocationDistanceSelected = new ArrayList<>();
 
 	public TourGuideService(RewardsService rewardsService, GpsUtilService gpsUtilService) {
 		this.rewardsService = rewardsService;
@@ -46,29 +46,10 @@ public class TourGuideService implements ICalculatorDistance {
 	}
 
 	public List<RecommendedUserAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
-		List<Attraction> attractions = gpsUtilService.getAllAttractions();
-		int i = 0;
-		Location userLocation = visitedLocation.location;
-		for (Attraction attraction : attractions) {
-			double dist = calculateDistance(attraction, userLocation);
-			int rewardPoint = rewardsService.getAttractionRewardPoints(attraction, user);
+		recommendedUserAttractionsSorted = getRecommendedUserAttractionsSortedByDistance(visitedLocation.location,
+				user);
+		return selectFiveClosestRecommendedAttraction(recommendedUserAttractionsSorted);
 
-			RecommendedUserAttraction closestAttraction = new RecommendedUserAttraction(attraction.attractionName,
-					attraction.latitude, attraction.longitude, userLocation.latitude, userLocation.longitude, dist,
-					rewardPoint);
-			attractionsUserLocationDistance.add(closestAttraction);
-		}
-		Collections.sort(attractionsUserLocationDistance);
-
-		System.out.println("all recommended attractionUser" + attractionsUserLocationDistance);
-		for (RecommendedUserAttraction attraction : attractionsUserLocationDistance) {
-			i++;
-			if (i <= 5) {
-				attractionsClosestUserLocationDistanceSorted.add(attraction);
-			}
-
-		}
-		return attractionsClosestUserLocationDistanceSorted;
 	}
 
 	private String generateTripPricerApiKey(User user) {
@@ -80,10 +61,34 @@ public class TourGuideService implements ICalculatorDistance {
 		return tripPricerApiKey;
 	}
 
-	/**********************************************************************************
-	 * 
-	 * Methods Below: For Internal Testing
-	 * 
-	 **********************************************************************************/
+	private List<RecommendedUserAttraction> getRecommendedUserAttractionsSortedByDistance(Location userLocation,
+			User user) {
+		List<Attraction> attractions = gpsUtilService.getAllAttractions();
+
+		for (Attraction attraction : attractions) {
+			double dist = calculateDistance(attraction, userLocation);
+			int rewardPoint = rewardsService.getAttractionRewardPoints(attraction, user);
+
+			RecommendedUserAttraction recommendedUserAttraction = new RecommendedUserAttraction(
+					attraction.attractionName, attraction.latitude, attraction.longitude, userLocation.latitude,
+					userLocation.longitude, dist, rewardPoint);
+			recommendedUserAttractionsSorted.add(recommendedUserAttraction);
+		}
+		return recommendedUserAttractionsSorted.stream().sorted().collect(Collectors.toList());
+	}
+
+	private List<RecommendedUserAttraction> selectFiveClosestRecommendedAttraction(
+			List<RecommendedUserAttraction> recommendedUserAttractionsSorted) {
+		int i = 0;
+		for (RecommendedUserAttraction attraction : recommendedUserAttractionsSorted) {
+			i++;
+			if (i <= 5) {
+				fiveAttractionsClosestUserLocationDistanceSelected.add(attraction);
+			}
+
+		}
+		System.out.println("5 recommended attractionUser" + fiveAttractionsClosestUserLocationDistanceSelected);
+		return fiveAttractionsClosestUserLocationDistanceSelected;
+	}
 
 }
