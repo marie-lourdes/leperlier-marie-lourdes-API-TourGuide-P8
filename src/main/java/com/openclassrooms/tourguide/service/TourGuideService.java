@@ -5,12 +5,16 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import com.openclassrooms.tourguide.dao.UserDaoImpl;
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.utils.ConstantTest;
 import com.openclassrooms.tourguide.utils.ICalculatorDistance;
+import com.openclassrooms.tourguide.utils.Tracker;
 
 import gpsUtil.location.Attraction;
 import gpsUtil.location.Location;
@@ -20,20 +24,24 @@ import tripPricer.TripPricer;
 
 @Service
 public class TourGuideService implements ICalculatorDistance {
-	// private static final Logger logger = LogManager.getLogger(
-	// TourGuideService.class);
+	 private static final Logger logger = LogManager.getLogger(TourGuideService.class);
 
 	private final RewardsService rewardsService;
 	private final GpsUtilService gpsUtilService;
 	private final TripPricer tripPricer = new TripPricer();
 	private String tripPricerApiKey;
+	public final Tracker tracker;
 	private List<RecommendedUserAttraction> recommendedUserAttractionsSorted = new ArrayList<>();
 	private List<RecommendedUserAttraction> fiveAttractionsClosestUserLocationDistanceSelected = new ArrayList<>();
 
 	public TourGuideService(RewardsService rewardsService, GpsUtilService gpsUtilService) {
+		Locale.setDefault(Locale.US);
 		this.rewardsService = rewardsService;
 		this.gpsUtilService = gpsUtilService;
-		Locale.setDefault(Locale.US);
+		
+		tracker = new Tracker("Thread-4-TourGuideService");
+		tracker.addShutDownHook();
+		logger.debug("Shutdown RewardsService");
 	}
 
 	public List<Provider> getTripDeals(User user) {
@@ -53,7 +61,7 @@ public class TourGuideService implements ICalculatorDistance {
 	}
 
 	private String generateTripPricerApiKey(User user) {
-
+	
 		if (null != user.getUserId()) {
 			tripPricerApiKey = ConstantTest.LONG_SECRET_STRING_ENCODE_API_KEY + user.getUserId().toString();
 		}
@@ -87,7 +95,7 @@ public class TourGuideService implements ICalculatorDistance {
 			}
 
 		}
-		System.out.println("5 recommended attractionUser" + fiveAttractionsClosestUserLocationDistanceSelected);
+		 logger.debug("5 recommended attractionUser: {}", fiveAttractionsClosestUserLocationDistanceSelected);
 		return fiveAttractionsClosestUserLocationDistanceSelected;
 	}
 

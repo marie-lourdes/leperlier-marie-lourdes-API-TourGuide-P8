@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 @Data
 public class UserPreference {
 	
-	private int attractionProximity = Integer.MAX_VALUE;
+	private int attractionProximity ;
 	private int tripDuration;
 	private int ticketQuantity;
 	private int numberOfAdults;
