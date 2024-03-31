@@ -37,24 +37,39 @@ public class TourGuideService implements ICalculatorDistance {
 		Locale.setDefault(Locale.US);
 		this.rewardsService = rewardsService;
 		this.gpsUtilService = gpsUtilService;
-
 		tracker = new Tracker("Thread-4-TourGuideService");
 		tracker.addShutDownHook();
 		logger.debug("Shutdown RewardsService");
 	}
 
 	public List<Provider> getTripDeals(User user) {
-		List<Provider> providers = tripPricer.getPrice(generateTripPricerApiKey(user), user.getUserId(),
-				user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(),
-				user.getUserPreferences().getTripDuration(), rewardsService.calculateTotalRewardsPoints(user));
-		user.setTripDeals(providers);
-		return providers;
+		logger.debug("getting TripDeals for: {} ", user.getUserName());
+		try {
+			List<Provider> providers = tripPricer.getPrice(generateTripPricerApiKey(user), user.getUserId(),
+					user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(),
+					user.getUserPreferences().getTripDuration(), rewardsService.calculateTotalRewardsPoints(user));
+			if (null != providers) {
+				user.setTripDeals(providers);
+			}
+			return providers;
+		} catch (Exception e) {
+			logger.error("Trip deals not found for: {} ", user.getUserName());
+			return new ArrayList<>();
+		}
+
 	}
 
 	public List<RecommendedUserAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
-		recommendedUserAttractionsSorted = getRecommendedUserAttractionsSortedByDistance(visitedLocation.location,
-				user);
-		return selectFiveClosestRecommendedAttraction(recommendedUserAttractionsSorted);
+		logger.debug("getting five closest RecommendedUserAttraction for: {} ", user.getUserName());
+		try {
+			recommendedUserAttractionsSorted = getRecommendedUserAttractionsSortedByDistance(visitedLocation.location,
+					user);
+			return selectFiveClosestRecommendedAttraction(recommendedUserAttractionsSorted);
+		} catch (Exception e) {
+			logger.error( "RecommendedUserAttractions not found");
+			return new ArrayList<>();
+		}
+
 	}
 
 	private String generateTripPricerApiKey(User user) {
@@ -92,7 +107,7 @@ public class TourGuideService implements ICalculatorDistance {
 			}
 
 		}
-		logger.debug("5 recommended attractionUser: {}", fiveAttractionsClosestUserLocationDistanceSelected);
+
 		return fiveAttractionsClosestUserLocationDistanceSelected;
 	}
 }

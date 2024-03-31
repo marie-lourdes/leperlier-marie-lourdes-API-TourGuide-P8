@@ -43,6 +43,7 @@ public class RewardsService implements ICalculatorDistance {
 	}
 
 	public void calculateRewards(User user) {
+		logger.debug("Calculating user rewards for: {} ", user.getUserName());
 		try {
 			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations().stream()
 					.collect(Collectors.toList());
@@ -51,13 +52,15 @@ public class RewardsService implements ICalculatorDistance {
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
 				for (Attraction attraction : attractions) {
 					if (user.getUserRewards().stream().filter(
-							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
+							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName))
+							.count() == 0) {
 						this.calculateUserRewardsPoints(visitedLocation, attraction, user);
 					}
 				}
 			}
+			logger.debug("Rewards of user: {} succesfully calculated: {} ", user.getUserName(), user.getUserRewards());
 		} catch (ConcurrentModificationException | InterruptedException | ExecutionException e) {
-			logger.error(e.getMessage());
+			logger.error("Failed to calculate user rewards for: {}, {}", user.getUserName(), e.getMessage());
 		}
 	}
 
@@ -86,6 +89,7 @@ public class RewardsService implements ICalculatorDistance {
 	}
 
 	public int calculateTotalRewardsPoints(User user) {
+		logger.debug("Calculating total Rewards Points for: {} ", user.getUserName());
 		return user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 	}
 }

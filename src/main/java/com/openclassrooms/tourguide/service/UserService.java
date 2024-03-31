@@ -22,10 +22,10 @@ public class UserService {
 	private static final Logger logger = LogManager.getLogger(UserService.class);
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;
-	
+
 	private IUserDao userDaoImpl;
 
-	public UserService( IUserDao  userDaoImpl) {
+	public UserService(IUserDao userDaoImpl) {
 		Locale.setDefault(Locale.US);
 		this.userDaoImpl = userDaoImpl;
 		tracker = new Tracker("Thread-1-UserService");
@@ -33,31 +33,75 @@ public class UserService {
 	}
 
 	public void addUser(User user) {
-		userDaoImpl.addUser(user);
-	}
+		try {
+			userDaoImpl.addUser(user);
+			logger.debug("Adding user: {}", user);
+		} catch (Exception e) {
+			logger.error("Failed to add user{}", user);
+		}
 
-	public User getUser(String userName) {
-		return userDaoImpl.getUser(userName);
-	}
-
-	public List<User> getAllUsers() throws InterruptedException, ExecutionException {
-		return userDaoImpl.getAllUsers(executor);
-	}
-
-	public List<UserReward> getUserRewards(User user) {
-		return userDaoImpl.getUserRewards(user);
 	}
 
 	public void addUserLocation(User user, VisitedLocation visitedLocation) {
-		userDaoImpl.addUserLocation(user, visitedLocation);
-		tracker.finalizeTrackUser(user);
+		try {
+			userDaoImpl.addUserLocation(user, visitedLocation);
+			tracker.finalizeTrackUser(user);
+			logger.debug("Adding user  visited location: {} for: {} ", visitedLocation, user.getUserName());
+		} catch (Exception e) {
+			logger.error("Failed to add user visited location for: {} ", user.getUserName());
+		}
+	}
+
+	public User getUser(String userName) {
+		logger.debug("Getting user: {} ", userName);
+		try {
+			return userDaoImpl.getUser(userName);
+		} catch (NullPointerException e) {
+			logger.error("User not found:{} ", userName);
+			return null;
+		}
+	}
+
+	public List<User> getAllUsers() throws InterruptedException, ExecutionException {
+		logger.debug("Getting All users");
+		try {
+			return userDaoImpl.getAllUsers(executor);
+		} catch (NullPointerException e) {
+			logger.error("Users not found");
+			return null;
+		}
+
+	}
+
+	public List<UserReward> getUserRewards(User user) {
+		logger.debug("Getting user rewards for: {} ", user.getUserName());
+		try {
+			return userDaoImpl.getUserRewards(user);
+		} catch (NullPointerException e) {
+			logger.error("User Rewards not found");
+			return null;
+		}
+
 	}
 
 	public VisitedLocation getUserLocation(User user) {
-		return userDaoImpl.getUserLocation(user);
+		logger.debug("Getting user location for: {} ", user.getUserName());
+		try {
+			return userDaoImpl.getUserLocation(user);
+		} catch (NullPointerException e) {
+			logger.error("User location not found");
+			return null;
+		}
 	}
 
 	public VisitedLocation getLastUserLocation(User user) {
-		return userDaoImpl.getLastUserLocation(user);
+		logger.debug("Getting user location for: {} ", user.getUserName());
+		try {
+			return userDaoImpl.getLastUserLocation(user);
+		} catch (NullPointerException e) {
+			logger.error("Last user location not found");
+			return null;
+		}
+
 	}
 }
