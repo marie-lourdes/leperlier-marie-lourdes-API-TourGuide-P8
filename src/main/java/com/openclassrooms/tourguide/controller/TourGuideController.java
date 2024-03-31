@@ -1,5 +1,6 @@
 package com.openclassrooms.tourguide.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -24,73 +25,92 @@ import tripPricer.Provider;
 @RestController
 @RequestMapping("tourguide")
 public class TourGuideController {
-	private Logger logger = LoggerFactory.getLogger(TourGuideController .class);
-	
+	private final static Logger logger = LoggerFactory.getLogger(TourGuideController.class);
+
 	private TourGuideService tourGuideService;
 	private UserService userService;
 	private GpsUtilService gpsUtilService;
-	private  RewardsService rewardsService; 
-	
-	public TourGuideController(TourGuideService tourGuideService,UserService userService,GpsUtilService gpsUtilService,RewardsService rewardsService) {
-		this.tourGuideService= tourGuideService;
-		this.userService= userService;// for testing controller with internalUser
-		this.gpsUtilService= gpsUtilService;
-		this.rewardsService= rewardsService;
+	private RewardsService rewardsService;
+
+	public TourGuideController(TourGuideService tourGuideService, UserService userService,
+			GpsUtilService gpsUtilService, RewardsService rewardsService) {
+		this.tourGuideService = tourGuideService;
+		this.userService = userService;// for testing controller with internalUser
+		this.gpsUtilService = gpsUtilService;
+		this.rewardsService = rewardsService;
 	}
+
+	@GetMapping("/")
+	public String index() {
+		return "Greetings from TourGuide!";
+	}
+
+	@GetMapping("/getLocation")
+	public VisitedLocation getLocation(@RequestParam String userName) {
+		User userFoundByName = userService.getUser(userName);
 		
-    @GetMapping("/")
-    public String index() {
-        return "Greetings from TourGuide!";
-    }
-    
-    @GetMapping("/getLocation") 
-    public VisitedLocation getLocation(@RequestParam String userName) {
-    	User userFoundByName = userService.getUser(userName);
-    	try {
-			if(userFoundByName.getVisitedLocations().size() == 0){
-				gpsUtilService.trackUserLocation(userFoundByName,userService);
-				return userService.getUserLocation(userFoundByName);
+		try {
+			if (0 == userFoundByName.getVisitedLocations().size()) {
+				gpsUtilService.trackUserLocation(userFoundByName, userService);
 			}
-					
+
 		} catch (InterruptedException | ExecutionException e) {
-			logger.error(e.getMessage());
+			logger.error("Failed to get user location {}", e.getMessage());
 		}
-    	return  userService.getUserLocation(userFoundByName);
-    }
-    
-    //  TODO: Change this method to no longer return a List of Attractions.
- 	//  Instead: Get the closest five tourist attractions to the user - no matter how far away they are.
- 	//  Return a new JSON object that contains:
-    	// Name of Tourist attraction, 
-        // Tourist attractions lat/long, 
-        // The user's location lat/long, 
-        // The distance in miles between the user's location and each of the attractions.
-        // The reward points for visiting each Attraction.
-        //    Note: Attraction reward points can be gathered from RewardsCentral
-    @GetMapping("/getNearbyAttractions") 
-    public List<RecommendedUserAttraction> getNearbyAttractions(@RequestParam String userName) {
-      	User userFoundByName = userService.getUser(userName);
-    	try {
-			if(null ==userFoundByName.getLastVisitedLocation()){
-				gpsUtilService.trackUserLocation(userFoundByName,userService);
+		
+		VisitedLocation visitedLocation = userService.getUserLocation(userFoundByName);
+		logger.info("User location successfully retrieved {}", visitedLocation);
+		return visitedLocation;
+	}
+
+	@GetMapping("/getNearbyAttractions")
+	public List<RecommendedUserAttraction> getNearbyAttractions(@RequestParam String userName) {
+		User userFoundByName = userService.getUser(userName);
+		List<RecommendedUserAttraction> closestRecommendedUserAttractions = new ArrayList<>();
+		
+		try {
+			if (null == userFoundByName.getLastVisitedLocation()) {
+				gpsUtilService.trackUserLocation(userFoundByName, userService);
 			}
-					
+			VisitedLocation lastVisitedLocation = userService.getLastUserLocation(userFoundByName);
+			closestRecommendedUserAttractions = tourGuideService.getNearByAttractions(lastVisitedLocation,
+					userService.getUser(userName));
 		} catch (InterruptedException | ExecutionException e) {
-			logger.error(e.getMessage());
+			logger.error("Failed to get closest user attractions {}", e.getMessage());
 		}
-    	VisitedLocation visitedLocation = userService.getLastUserLocation(userFoundByName);	
-    	return tourGuideService.getNearByAttractions(visitedLocation,userService.getUser(userName));
-    }
-    
-    @GetMapping("/getRewards") 
-    public List<UserReward> getRewards(@RequestParam String userName) {
-    	rewardsService.calculateRewards(userService.getUser(userName));
-    	return userService.getUserRewards(userService.getUser(userName)); 
-    }
-       
-    @GetMapping("/getTripDeals")
-    public List<Provider> getTripDeals(@RequestParam String userName) {
-    	return tourGuideService.getTripDeals(userService.getUser(userName));
-    }
- 
+		
+		logger.info("closest recommended user attractions successfully retrieved {} for: {}",
+				closestRecommendedUserAttractions, userName);
+		return closestRecommendedUserAttractions;
+	}
+
+	@GetMapping("/getRewards")
+	public List<UserReward> getRewards(@RequestParam String userName) {
+		List<UserReward> userRewards = new ArrayList<>();
+		
+		try {
+			rewardsService.calculateRewards(userService.getUser(userName));
+			userRewards = userService.getUserRewards(userService.getUser(userName));
+		} catch (Exception e) {
+			logger.error("Failed to get user rewards  {}", e.getMessage());
+		}
+
+		logger.info("User rewards successfully retrieved {} for: {}", userRewards, userName);
+		return userRewards;
+	}
+
+	@GetMapping("/getTripDeals")
+	public List<Provider> getTripDeals(@RequestParam String userName) {
+		List<Provider> providers = new ArrayList<>();
+		
+		try {
+			providers = tourGuideService.getTripDeals(userService.getUser(userName));
+		} catch (Exception e) {
+			logger.error("Failed to get all providers  {}", e.getMessage());
+		}
+
+		logger.info("All providers successfully retrieved {} for: {}", providers, userName);
+		return providers;
+	}
+
 }

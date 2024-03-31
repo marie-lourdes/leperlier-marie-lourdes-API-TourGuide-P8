@@ -18,6 +18,7 @@ public class RecommendedUserAttraction implements Comparable<RecommendedUserAttr
 		this.attractionLat = attractionLat;
 		this.attractionLong = attractionLong;
 		this.userLocationLat = userLocationLat;
+		this.userLocationLong= userLocationLong;
 		this.distance = distance;
 		this.rewardPoints =rewardPoints;
 		
