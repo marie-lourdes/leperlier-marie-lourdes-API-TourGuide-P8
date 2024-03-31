@@ -34,7 +34,7 @@ public class RewardsServiceTest {
 
 	@Test // A ajouter dans un test de UserService
 	public void testUserGetRewards() throws InterruptedException, ExecutionException{
-		UserService userService = new UserService(UserServiceFactory.create(UserServiceMode.TEST));
+		UserService userService = UserServiceFactory.create(UserServiceMode.TEST);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
@@ -50,7 +50,7 @@ public class RewardsServiceTest {
 																												// try/catch																										// ConcurrentModificationException
 		rewardsService.setDefaultProximityBuffer(Integer.MAX_VALUE);
 
-		UserService userService = new UserService(UserServiceFactory.create(UserServiceMode.TEST) );
+		UserService userService = UserServiceFactory.create(UserServiceMode.TEST) ;
 		rewardsService.calculateRewards(userService.getAllUsers().get(0));
 		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
 		userService.tracker.stopTracking();

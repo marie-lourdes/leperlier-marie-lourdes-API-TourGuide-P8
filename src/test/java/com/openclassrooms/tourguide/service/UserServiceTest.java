@@ -24,7 +24,7 @@ class UserServiceTest {
 	public void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
-		userService = new UserService(UserServiceFactory.create(UserServiceMode.TEST) );
+		userService = UserServiceFactory.create(UserServiceMode.TEST) ;
 	}
 
 	@Test

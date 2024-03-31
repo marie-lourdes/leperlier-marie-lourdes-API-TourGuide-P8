@@ -35,7 +35,7 @@ public class TourGuideController {
 	
 	public TourGuideController(TourGuideService tourGuideService,GpsUtilService gpsUtilService,RewardsService rewardsService) {
 		this.tourGuideService= tourGuideService;
-		this.userService= new UserService(UserServiceFactory.create(UserServiceMode.TEST) );// for testing controller with internalUser
+		this.userService= UserServiceFactory.create(UserServiceMode.TEST) ;// for testing controller with internalUser
 		this.gpsUtilService= gpsUtilService;
 		this.rewardsService= rewardsService;
 	}

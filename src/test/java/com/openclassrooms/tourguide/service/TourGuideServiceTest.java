@@ -35,7 +35,7 @@ public class TourGuideServiceTest {
 	// @Disabled // Not yet implemented
 	@Test
 	public void testGetNearbyAttractions() throws Exception {
-		UserService userService = new UserService(UserServiceFactory.create(UserServiceMode.TEST)) ;
+		UserService userService =UserServiceFactory.create(UserServiceMode.TEST) ;
 		tourGuideService = new TourGuideService(rewardsService,gpsUtilService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		

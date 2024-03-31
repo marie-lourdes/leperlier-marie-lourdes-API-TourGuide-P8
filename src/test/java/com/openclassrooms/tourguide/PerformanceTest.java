@@ -36,7 +36,7 @@ public class PerformanceTest {
 	public void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
-		userService = new UserService(UserServiceFactory.create(UserServiceMode.TEST));
+		userService = UserServiceFactory.create(UserServiceMode.TEST);
 		allUsers = userService.getAllUsers();
 	}
 
@@ -65,7 +65,7 @@ public class PerformanceTest {
 
 	//@Disabled
 	@Test
-	@DisplayName("Users should be incremented up to 100,000, and test finishes within 20 minutes")
+	@DisplayName("Users should be incremented up to 100,000, and test finishes within 15 minutes")
 	public void testHighVolumeTrackLocation() throws Exception {
 		// 
 		StopWatch stopWatch = new StopWatch();
