@@ -23,7 +23,6 @@ import com.openclassrooms.tourguide.model.UserReward;
 
 import gpsUtil.location.VisitedLocation;
 
-
 /**********************************************************************************
  * 
  * Class and Methods Below: For Internal Testing
@@ -33,13 +32,14 @@ import gpsUtil.location.VisitedLocation;
 // internal users are provided and stored in memory
 
 @Component
-public class UserDaoImpl implements IUserDao {
-	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
-	
-	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
-	boolean testMode = true;
+public class UserDaoTestImpl implements IUserDao {
+	private static final Logger logger = LogManager.getLogger(UserDaoTestImpl.class);
 
-	public UserDaoImpl() {
+	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
+	private boolean testMode;
+
+	public UserDaoTestImpl(boolean isTestMode) {
+		this.testMode = isTestMode;
 		if (testMode) {
 			logger.info("TestMode enabled");
 			logger.debug("Initializing users");

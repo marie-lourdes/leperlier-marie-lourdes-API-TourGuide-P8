@@ -11,7 +11,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.dao.IUserDao;
-import com.openclassrooms.tourguide.dao.UserDaoImpl;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 import com.openclassrooms.tourguide.utils.Tracker;
@@ -24,9 +23,8 @@ public class UserService {
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;
 	private IUserDao userDaoImplTest;
-	boolean testMode = true;
 
-	public UserService(UserDaoImpl userDaoImpl) {
+	public UserService(IUserDao  userDaoImpl) {
 		Locale.setDefault(Locale.US);
 		this.userDaoImplTest = userDaoImpl;
 		tracker = new Tracker("Thread-1-UserService");
