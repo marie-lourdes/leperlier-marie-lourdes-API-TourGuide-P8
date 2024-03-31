@@ -10,7 +10,8 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.openclassrooms.tourguide.dao.UserDaoTestImpl;
+import com.openclassrooms.tourguide.UserServiceFactory;
+import com.openclassrooms.tourguide.UserServiceFactory.UserServiceMode;
 import com.openclassrooms.tourguide.model.User;
 
 import gpsUtil.GpsUtil;
@@ -23,7 +24,7 @@ class UserServiceTest {
 	public void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
-		userService = new UserService(new UserDaoTestImpl(true) );
+		userService = new UserService(UserServiceFactory.create(UserServiceMode.TEST) );
 	}
 
 	@Test

@@ -32,22 +32,25 @@ import gpsUtil.location.VisitedLocation;
 // internal users are provided and stored in memory
 
 @Component
-public class UserDaoTestImpl implements IUserDao {
-	private static final Logger logger = LogManager.getLogger(UserDaoTestImpl.class);
+public class UserDaoImpl implements IUserDao {
+	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
 
 	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
 	private boolean testMode;
-
-	public UserDaoTestImpl(boolean isTestMode) {
+	
+	public UserDaoImpl( boolean isTestMode) {
 		this.testMode = isTestMode;
-		if (testMode) {
+		if(testMode) {
 			logger.info("TestMode enabled");
 			logger.debug("Initializing users");
 			initializeInternalUsers();
 			logger.debug("Finished initializing users");
 		}
+			
 	}
 
+	public UserDaoImpl(){}
+	
 	@Override
 	public void addUser(User user) {
 		if (!internalUserMap.containsKey(user.getUserName())) {

@@ -22,41 +22,42 @@ public class UserService {
 	private static final Logger logger = LogManager.getLogger(UserService.class);
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;
-	private IUserDao userDaoImplTest;
+	
+	private IUserDao userDaoImpl;
 
-	public UserService(IUserDao  userDaoImpl) {
+	public UserService( IUserDao  userDaoImpl) {
 		Locale.setDefault(Locale.US);
-		this.userDaoImplTest = userDaoImpl;
+		this.userDaoImpl = userDaoImpl;
 		tracker = new Tracker("Thread-1-UserService");
 		tracker.addShutDownHook();
 	}
 
 	public void addUser(User user) {
-		userDaoImplTest.addUser(user);
+		userDaoImpl.addUser(user);
 	}
 
 	public User getUser(String userName) {
-		return userDaoImplTest.getUser(userName);
+		return userDaoImpl.getUser(userName);
 	}
 
 	public List<User> getAllUsers() throws InterruptedException, ExecutionException {
-		return userDaoImplTest.getAllUsers(executor);
+		return userDaoImpl.getAllUsers(executor);
 	}
 
 	public List<UserReward> getUserRewards(User user) {
-		return userDaoImplTest.getUserRewards(user);
+		return userDaoImpl.getUserRewards(user);
 	}
 
 	public void addUserLocation(User user, VisitedLocation visitedLocation) {
-		userDaoImplTest.addUserLocation(user, visitedLocation);
+		userDaoImpl.addUserLocation(user, visitedLocation);
 		tracker.finalizeTrackUser(user);
 	}
 
 	public VisitedLocation getUserLocation(User user) {
-		return userDaoImplTest.getUserLocation(user);
+		return userDaoImpl.getUserLocation(user);
 	}
 
 	public VisitedLocation getLastUserLocation(User user) {
-		return userDaoImplTest.getLastUserLocation(user);
+		return userDaoImpl.getLastUserLocation(user);
 	}
 }

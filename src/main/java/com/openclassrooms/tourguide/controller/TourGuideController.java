@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.openclassrooms.tourguide.UserServiceFactory;
+import com.openclassrooms.tourguide.UserServiceFactory.UserServiceMode;
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
@@ -31,9 +33,9 @@ public class TourGuideController {
 	private GpsUtilService gpsUtilService;
 	private  RewardsService rewardsService; 
 	
-	public TourGuideController(TourGuideService tourGuideService, UserService userService,GpsUtilService gpsUtilService,RewardsService rewardsService) {
+	public TourGuideController(TourGuideService tourGuideService,GpsUtilService gpsUtilService,RewardsService rewardsService) {
 		this.tourGuideService= tourGuideService;
-		this.userService=  userService;
+		this.userService= new UserService(UserServiceFactory.create(UserServiceMode.TEST) );// for testing controller with internalUser
 		this.gpsUtilService= gpsUtilService;
 		this.rewardsService= rewardsService;
 	}
