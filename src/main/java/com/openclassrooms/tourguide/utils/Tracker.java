@@ -18,7 +18,7 @@ import com.openclassrooms.tourguide.service.UserService;
 
 public class Tracker extends Thread {
 	private static final Logger logger = LogManager.getLogger(Tracker.class);
-	private static final long trackingPollingInterval = TimeUnit.SECONDS.toSeconds(5);
+	private static final long TRACKING_POLLING_INTERVAL = TimeUnit.SECONDS.toSeconds(5);
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private UserService userService;
 	private GpsUtilService gpsUtilService;
@@ -89,7 +89,7 @@ public class Tracker extends Thread {
 
 			try {
 				logger.debug("Tracker sleeping {} ", threadName);
-				TimeUnit.SECONDS.sleep(trackingPollingInterval);
+				TimeUnit.SECONDS.sleep(TRACKING_POLLING_INTERVAL);
 			} catch (InterruptedException e) {
 				this.stopTracking();
 				break;

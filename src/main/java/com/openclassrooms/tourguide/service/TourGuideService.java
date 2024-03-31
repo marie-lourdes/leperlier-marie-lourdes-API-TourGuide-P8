@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
-import com.openclassrooms.tourguide.utils.ConstantTest;
+import com.openclassrooms.tourguide.utils.Constant;
 import com.openclassrooms.tourguide.utils.ICalculatorDistance;
 import com.openclassrooms.tourguide.utils.Tracker;
 
@@ -23,7 +23,7 @@ import tripPricer.TripPricer;
 
 @Service
 public class TourGuideService implements ICalculatorDistance {
-	 private static final Logger logger = LogManager.getLogger(TourGuideService.class);
+	private static final Logger logger = LogManager.getLogger(TourGuideService.class);
 
 	private final RewardsService rewardsService;
 	private final GpsUtilService gpsUtilService;
@@ -37,14 +37,13 @@ public class TourGuideService implements ICalculatorDistance {
 		Locale.setDefault(Locale.US);
 		this.rewardsService = rewardsService;
 		this.gpsUtilService = gpsUtilService;
-		
+
 		tracker = new Tracker("Thread-4-TourGuideService");
 		tracker.addShutDownHook();
 		logger.debug("Shutdown RewardsService");
 	}
 
 	public List<Provider> getTripDeals(User user) {
-		//int cumulatativeRewardPoints = 
 		List<Provider> providers = tripPricer.getPrice(generateTripPricerApiKey(user), user.getUserId(),
 				user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(),
 				user.getUserPreferences().getTripDuration(), rewardsService.calculateTotalRewardsPoints(user));
@@ -59,9 +58,9 @@ public class TourGuideService implements ICalculatorDistance {
 	}
 
 	private String generateTripPricerApiKey(User user) {
-	
+
 		if (null != user.getUserId()) {
-			tripPricerApiKey = ConstantTest.LONG_SECRET_STRING_ENCODE_API_KEY + user.getUserId().toString();
+			tripPricerApiKey = Constant.LONG_SECRET_STRING_ENCODE_API_KEY + user.getUserId().toString();
 		}
 
 		return tripPricerApiKey;
@@ -93,7 +92,7 @@ public class TourGuideService implements ICalculatorDistance {
 			}
 
 		}
-		 logger.debug("5 recommended attractionUser: {}", fiveAttractionsClosestUserLocationDistanceSelected);
+		logger.debug("5 recommended attractionUser: {}", fiveAttractionsClosestUserLocationDistanceSelected);
 		return fiveAttractionsClosestUserLocationDistanceSelected;
 	}
 }
