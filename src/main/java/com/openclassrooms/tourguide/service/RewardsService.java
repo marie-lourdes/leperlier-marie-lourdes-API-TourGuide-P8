@@ -52,7 +52,7 @@ public class RewardsService implements ICalculatorDistance {
 				for (Attraction attraction : attractions) {
 					if (user.getUserRewards().stream().filter(
 							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-						this.calculateUserRewards(visitedLocation, attraction, user);
+						this.calculateUserRewardsPoints(visitedLocation, attraction, user);
 					}
 				}
 			}
@@ -61,7 +61,7 @@ public class RewardsService implements ICalculatorDistance {
 		}
 	}
 
-	public void calculateUserRewards(VisitedLocation visitedLocation, Attraction attraction, User user)
+	public void calculateUserRewardsPoints(VisitedLocation visitedLocation, Attraction attraction, User user)
 			throws InterruptedException, ExecutionException {
 		double distance = calculateDistance(visitedLocation.location, attraction);
 		if (distance <= defaultProximityBuffer) {
@@ -83,5 +83,9 @@ public class RewardsService implements ICalculatorDistance {
 
 	public int getAttractionRewardPoints(Attraction attraction, User user) {
 		return rewardCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
+	}
+
+	public int calculateTotalRewardsPoints(User user) {
+		return user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 	}
 }
