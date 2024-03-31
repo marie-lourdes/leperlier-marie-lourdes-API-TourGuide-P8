@@ -11,10 +11,6 @@ public class InternalUserConfig {
 
 	@Bean
 	UserService userServiceTest() {
-		
-			return new UserService(new UserDaoImpl());
-		
-		
-		
+		return new UserService(new UserDaoImpl());
 	}
 }

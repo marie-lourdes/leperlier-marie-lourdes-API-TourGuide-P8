@@ -32,7 +32,7 @@ import gpsUtil.location.VisitedLocation;
 // internal users are provided and stored in memory
 
 @Component
-public class UserDaoImpl implements IUserDao {
+public class UserDaoImpl implements IUserDao{
 	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
 
 	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();

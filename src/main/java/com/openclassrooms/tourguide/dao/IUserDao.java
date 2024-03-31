@@ -4,14 +4,12 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 
 import gpsUtil.location.VisitedLocation;
 
-public interface IUserDao extends JpaRepository<User, Integer> {
+public interface IUserDao{
 	void initializeInternalUsers();
 
 	void addUser(User user);
