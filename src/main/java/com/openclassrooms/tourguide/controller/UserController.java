@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.tourguide.UserServiceFactory;
-import com.openclassrooms.tourguide.UserServiceFactory.UserServiceMode;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.UserService;
 
@@ -16,8 +14,8 @@ import com.openclassrooms.tourguide.service.UserService;
 public class UserController {
 	private UserService userService;
 
-	public UserController() {
-		this.userService = UserServiceFactory.create(UserServiceMode.TEST);
+	public UserController(UserService userService) {
+		this.userService =userService;
 	}
 
 	@PostMapping("/add")

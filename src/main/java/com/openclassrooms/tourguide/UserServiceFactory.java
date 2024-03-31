@@ -3,7 +3,7 @@ package com.openclassrooms.tourguide;
 import com.openclassrooms.tourguide.dao.UserDaoImpl;
 import com.openclassrooms.tourguide.service.UserService;
 
-public class UserServiceFactory {
+/*public class UserServiceFactory {
 
 		public enum UserServiceMode{
 			NORMAL,TEST
@@ -19,5 +19,10 @@ public class UserServiceFactory {
 			}
 
 			return new UserService(new UserDaoImpl(false));
+			/*if(UserServiceMode.TEST != null) {
+				return new UserService(new UserDaoImpl(true));
+			}else {
+				return new UserService(new UserDaoImpl(false));
+			}
 		}
-}
+}*/

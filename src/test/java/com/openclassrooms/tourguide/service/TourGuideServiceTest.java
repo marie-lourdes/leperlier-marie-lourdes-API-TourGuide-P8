@@ -9,8 +9,7 @@ import java.util.concurrent.TimeUnit;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.openclassrooms.tourguide.UserServiceFactory;
-import com.openclassrooms.tourguide.UserServiceFactory.UserServiceMode;
+import com.openclassrooms.tourguide.dao.UserDaoImpl;
 import com.openclassrooms.tourguide.helper.InternalUserPreferenceTestHelper;
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
@@ -35,7 +34,7 @@ public class TourGuideServiceTest {
 	// @Disabled // Not yet implemented
 	@Test
 	public void testGetNearbyAttractions() throws Exception {
-		UserService userService =UserServiceFactory.create(UserServiceMode.TEST) ;
+		UserService userService =new UserService(new UserDaoImpl());
 		tourGuideService = new TourGuideService(rewardsService,gpsUtilService);
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		

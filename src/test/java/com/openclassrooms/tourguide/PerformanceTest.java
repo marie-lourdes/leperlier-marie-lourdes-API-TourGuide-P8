@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import com.openclassrooms.tourguide.UserServiceFactory.UserServiceMode;
+import com.openclassrooms.tourguide.dao.UserDaoImpl;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.GpsUtilService;
 import com.openclassrooms.tourguide.service.RewardsService;
@@ -36,7 +36,7 @@ public class PerformanceTest {
 	public void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
-		userService = UserServiceFactory.create(UserServiceMode.TEST);
+		userService =new UserService(new UserDaoImpl());
 		allUsers = userService.getAllUsers();
 	}
 

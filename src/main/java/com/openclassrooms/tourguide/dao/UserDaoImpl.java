@@ -36,20 +36,20 @@ public class UserDaoImpl implements IUserDao {
 	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
 
 	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
-	private boolean testMode;
+	//private boolean testMode=false;
 	
-	public UserDaoImpl( boolean isTestMode) {
-		this.testMode = isTestMode;
-		if(testMode) {
+	public UserDaoImpl( ) {
+//this.testMode = isTestMode;
+		//if(isTestMode) {
 			logger.info("TestMode enabled");
 			logger.debug("Initializing users");
 			initializeInternalUsers();
 			logger.debug("Finished initializing users");
-		}
+		//}
 			
 	}
 
-	public UserDaoImpl(){}
+//	public UserDaoImpl(){}
 	
 	@Override
 	public void addUser(User user) {
