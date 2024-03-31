@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 
 import com.openclassrooms.tourguide.model.RecommendedUserAttraction;
 import com.openclassrooms.tourguide.model.User;
-import com.openclassrooms.tourguide.model.UserReward;
 import com.openclassrooms.tourguide.utils.ConstantTest;
 import com.openclassrooms.tourguide.utils.ICalculatorDistance;
 import com.openclassrooms.tourguide.utils.Tracker;
@@ -45,9 +44,10 @@ public class TourGuideService implements ICalculatorDistance {
 	}
 
 	public List<Provider> getTripDeals(User user) {
+		//int cumulatativeRewardPoints = 
 		List<Provider> providers = tripPricer.getPrice(generateTripPricerApiKey(user), user.getUserId(),
 				user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(),
-				user.getUserPreferences().getTripDuration(), calculateTotalRewardsPoints(user));
+				user.getUserPreferences().getTripDuration(), rewardsService.calculateTotalRewardsPoints(user));
 		user.setTripDeals(providers);
 		return providers;
 	}
@@ -58,9 +58,6 @@ public class TourGuideService implements ICalculatorDistance {
 		return selectFiveClosestRecommendedAttraction(recommendedUserAttractionsSorted);
 	}
 
-	private int calculateTotalRewardsPoints(User user) {
-		return user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
-	}
 	private String generateTripPricerApiKey(User user) {
 	
 		if (null != user.getUserId()) {
