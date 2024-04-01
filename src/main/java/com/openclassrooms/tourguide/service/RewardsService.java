@@ -27,7 +27,7 @@ import rewardCentral.RewardCentral;
 public class RewardsService implements ICalculatorDistance {
 	private static final Logger logger = LogManager.getLogger(RewardsService.class);
 	// proximity in miles
-	private double defaultProximityBuffer = 1000.00;
+	private int defaultProximityInMiles = 10;
 	private final GpsUtilService gpsUtilService;
 	private final RewardCentral rewardCentral;
 	public final Tracker tracker;
@@ -42,6 +42,13 @@ public class RewardsService implements ICalculatorDistance {
 
 	}
 
+	// For testing calculateRewards with distance user visitedLocation <
+	// defaultproximity and random distance, allow adjusting distance minimum for
+	// get rewards
+	public void setDefaultProximityInMiles(int defaultProximityInMiles) {
+		this.defaultProximityInMiles = defaultProximityInMiles;
+	}
+
 	public void calculateRewards(User user) {
 		logger.debug("Calculating user rewards for: {} ", user.getUserName());
 		try {
@@ -53,7 +60,7 @@ public class RewardsService implements ICalculatorDistance {
 				for (Attraction attraction : attractions) {
 					if (user.getUserRewards().stream().filter(
 							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName))
-							.count()==0) {
+							.count() == 0) {
 						this.calculateUserRewardsPoints(visitedLocation, attraction, user);
 					}
 				}
@@ -67,7 +74,7 @@ public class RewardsService implements ICalculatorDistance {
 	public void calculateUserRewardsPoints(VisitedLocation visitedLocation, Attraction attraction, User user)
 			throws InterruptedException, ExecutionException {
 		double distance = calculateDistance(visitedLocation.location, attraction);
-		if (distance <= defaultProximityBuffer) {
+		if (distance <= defaultProximityInMiles) {
 			UserReward userReward = new UserReward(visitedLocation, attraction);
 			getUserRewardPoints(userReward, attraction, user);
 			user.addUserReward(userReward);
