@@ -60,7 +60,7 @@ public class UserDaoImpl implements IUserDao{
 
 	@Override
 	public User getUser(String userName) {
-		return internalUserMap.get(userName);
+		return internalUserMap.values().stream().filter(elem-> elem.getUserName().equals(userName)).findFirst().get();
 	}
 
 	@Override

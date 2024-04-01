@@ -48,7 +48,7 @@ public class TourGuideController {
 	@GetMapping("/getLocation")
 	public VisitedLocation getLocation(@RequestParam String userName) {
 		User userFoundByName = userService.getUser(userName);
-		
+
 		try {
 			if (0 == userFoundByName.getVisitedLocations().size()) {
 				gpsUtilService.trackUserLocation(userFoundByName, userService);
@@ -57,7 +57,7 @@ public class TourGuideController {
 		} catch (InterruptedException | ExecutionException e) {
 			logger.error("Failed to get user location {}", e.getMessage());
 		}
-		
+
 		VisitedLocation visitedLocation = userService.getUserLocation(userFoundByName);
 		logger.info("User location successfully retrieved {}", visitedLocation);
 		return visitedLocation;
@@ -67,30 +67,29 @@ public class TourGuideController {
 	public List<RecommendedUserAttraction> getNearbyAttractions(@RequestParam String userName) {
 		User userFoundByName = userService.getUser(userName);
 		List<RecommendedUserAttraction> closestRecommendedUserAttractions = new ArrayList<>();
-		
+
 		try {
-			if(null!= userFoundByName.getLastVisitedLocation()) {
+			if (null != userFoundByName.getLastVisitedLocation()) {
 				VisitedLocation lastVisitedLocation = userService.getUserLocation(userFoundByName);
-				closestRecommendedUserAttractions= tourGuideService.getNearByAttractions(lastVisitedLocation,userService.getUser(userName));
+				closestRecommendedUserAttractions = tourGuideService.getNearByAttractions(lastVisitedLocation,
+						userService.getUser(userName));
 			}
-		
+
 		} catch (Exception e) {
 			logger.error("Failed to get closest user attractions {}", e.getMessage());
 		}
 
-		
 		logger.info("closest recommended user attractions successfully retrieved {} for: {}",
 				closestRecommendedUserAttractions, userName);
-		logger.info("user location for: {}",
-				userService.getUserLocation(userFoundByName));
-		
-		  return closestRecommendedUserAttractions;
+		logger.info("user location for: {}", userService.getUserLocation(userFoundByName));
+
+		return closestRecommendedUserAttractions;
 	}
 
 	@GetMapping("/getRewards")
 	public List<UserReward> getRewards(@RequestParam String userName) {
 		List<UserReward> userRewards = new ArrayList<>();
-		
+
 		try {
 			rewardsService.calculateRewards(userService.getUser(userName));
 			userRewards = userService.getUserRewards(userService.getUser(userName));
@@ -105,7 +104,7 @@ public class TourGuideController {
 	@GetMapping("/getTripDeals")
 	public List<Provider> getTripDeals(@RequestParam String userName) {
 		List<Provider> providers = new ArrayList<>();
-		
+
 		try {
 			providers = tourGuideService.getTripDeals(userService.getUser(userName));
 		} catch (Exception e) {
