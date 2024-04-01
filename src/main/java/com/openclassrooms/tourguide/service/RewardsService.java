@@ -51,9 +51,9 @@ public class RewardsService implements ICalculatorDistance {
 
 			for (VisitedLocation visitedLocation : userVisitedLocations) {
 				for (Attraction attraction : attractions) {
-					if (0==user.getUserRewards().stream().filter(
+					if (user.getUserRewards().stream().filter(
 							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName))
-							.count() ) {
+							.count()==0) {
 						this.calculateUserRewardsPoints(visitedLocation, attraction, user);
 					}
 				}

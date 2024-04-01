@@ -20,6 +20,7 @@ import com.openclassrooms.tourguide.helper.InternalUserPreferenceTestHelper;
 import com.openclassrooms.tourguide.helper.InternalUserTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
+import com.openclassrooms.tourguide.service.RewardsService;
 
 import gpsUtil.location.VisitedLocation;
 
@@ -34,7 +35,6 @@ import gpsUtil.location.VisitedLocation;
 @Component
 public class UserDaoImpl implements IUserDao{
 	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
-
 	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
 	//private boolean testMode=false;
 	
@@ -60,7 +60,7 @@ public class UserDaoImpl implements IUserDao{
 
 	@Override
 	public User getUser(String userName) {
-		return internalUserMap.values().stream().filter(elem-> elem.getUserName().equals(userName)).findFirst().get();
+		return internalUserMap.values().stream().filter(elem-> elem.getUserName().equals(userName)).findFirst().orElseThrow(()-> new NullPointerException("User not found"));
 	}
 
 	@Override

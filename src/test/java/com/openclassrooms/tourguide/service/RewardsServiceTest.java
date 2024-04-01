@@ -40,7 +40,7 @@ public class RewardsServiceTest {
 		rewardsService.calculateRewards(user);
 		List<UserReward> userRewards = userService.getUserRewards(user);
 		
-		userService.tracker.stopTracking();
+		rewardsService.tracker.stopTracking();
 		assertTrue(userRewards.size() == 1);
 	}
 	

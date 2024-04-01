@@ -3,6 +3,7 @@ package com.openclassrooms.tourguide.controller;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,10 +90,14 @@ public class TourGuideController {
 	@GetMapping("/getRewards")
 	public List<UserReward> getRewards(@RequestParam String userName) {
 		List<UserReward> userRewards = new ArrayList<>();
-
+		User userFoundByName = userService.getUser(userName);
 		try {
-			rewardsService.calculateRewards(userService.getUser(userName));
-			userRewards = userService.getUserRewards(userService.getUser(userName));
+		
+			rewardsService.calculateRewards( userFoundByName );
+			
+			userRewards = userService.getUserRewards( userFoundByName );
+			logger.debug("userRewards  from controller {} ",userRewards );
+			logger.info("User rewards successfully retrieved {} for: {}", userRewards, userName);
 		} catch (Exception e) {
 			logger.error("Failed to get user rewards  {}", e.getMessage());
 		}
