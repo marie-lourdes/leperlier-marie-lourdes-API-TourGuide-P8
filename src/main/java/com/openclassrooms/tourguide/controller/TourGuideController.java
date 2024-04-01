@@ -92,9 +92,8 @@ public class TourGuideController {
 		List<UserReward> userRewards = new ArrayList<>();
 		User userFoundByName = userService.getUser(userName);
 		try {
-		
-			rewardsService.calculateRewards( userFoundByName );
 			
+			rewardsService.calculateRewards( userFoundByName );
 			userRewards = userService.getUserRewards( userFoundByName );
 			logger.debug("userRewards  from controller {} ",userRewards );
 			logger.info("User rewards successfully retrieved {} for: {}", userRewards, userName);
@@ -102,7 +101,7 @@ public class TourGuideController {
 			logger.error("Failed to get user rewards  {}", e.getMessage());
 		}
 
-	
+		
 		return userRewards;
 	}
 

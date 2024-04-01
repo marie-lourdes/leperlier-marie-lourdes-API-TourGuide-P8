@@ -27,7 +27,7 @@ import rewardCentral.RewardCentral;
 public class RewardsService implements ICalculatorDistance {
 	private static final Logger logger = LogManager.getLogger(RewardsService.class);
 	// proximity in miles
-	private int defaultProximityBuffer = 10;
+	private double defaultProximityBuffer = 1000.00;
 	private final GpsUtilService gpsUtilService;
 	private final RewardCentral rewardCentral;
 	public final Tracker tracker;
@@ -70,6 +70,9 @@ public class RewardsService implements ICalculatorDistance {
 		if (distance <= defaultProximityBuffer) {
 			UserReward userReward = new UserReward(visitedLocation, attraction);
 			getUserRewardPoints(userReward, attraction, user);
+			user.addUserReward(userReward);
+		}else if(distance <=5000.00){
+			UserReward userReward = new UserReward(visitedLocation, attraction,10);
 			user.addUserReward(userReward);
 		}
 	}
