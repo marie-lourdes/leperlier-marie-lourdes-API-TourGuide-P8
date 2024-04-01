@@ -93,7 +93,7 @@ public class User {
 	}
 
 	public void setLastVisitedLocation() {
-		this.lastVisitedLocation = visitedLocations.get(visitedLocations.size() - 1);
+		this.lastVisitedLocation =visitedLocations.get(visitedLocations.size() - 1) ;
 	}
 
 	public VisitedLocation getLastVisitedLocation() {

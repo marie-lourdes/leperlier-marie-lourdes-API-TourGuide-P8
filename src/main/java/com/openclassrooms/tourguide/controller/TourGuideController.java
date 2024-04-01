@@ -69,19 +69,22 @@ public class TourGuideController {
 		List<RecommendedUserAttraction> closestRecommendedUserAttractions = new ArrayList<>();
 		
 		try {
-			if (null == userFoundByName.getLastVisitedLocation()) {
-				gpsUtilService.trackUserLocation(userFoundByName, userService);
+			if(null!= userFoundByName.getLastVisitedLocation()) {
+				VisitedLocation lastVisitedLocation = userService.getUserLocation(userFoundByName);
+				closestRecommendedUserAttractions= tourGuideService.getNearByAttractions(lastVisitedLocation,userService.getUser(userName));
 			}
-			VisitedLocation lastVisitedLocation = userService.getLastUserLocation(userFoundByName);
-			closestRecommendedUserAttractions = tourGuideService.getNearByAttractions(lastVisitedLocation,
-					userService.getUser(userName));
-		} catch (InterruptedException | ExecutionException e) {
+		
+		} catch (Exception e) {
 			logger.error("Failed to get closest user attractions {}", e.getMessage());
 		}
+
 		
 		logger.info("closest recommended user attractions successfully retrieved {} for: {}",
 				closestRecommendedUserAttractions, userName);
-		return closestRecommendedUserAttractions;
+		logger.info("user location for: {}",
+				userService.getUserLocation(userFoundByName));
+		
+		  return closestRecommendedUserAttractions;
 	}
 
 	@GetMapping("/getRewards")

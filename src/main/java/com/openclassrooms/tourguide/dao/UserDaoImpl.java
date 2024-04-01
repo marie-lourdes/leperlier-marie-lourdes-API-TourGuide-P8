@@ -89,13 +89,13 @@ public class UserDaoImpl implements IUserDao{
 
 	@Override
 	public VisitedLocation getUserLocation(User user) {
-		return user.getVisitedLocations().get(0);
+		return  user.getLastVisitedLocation();
 	}
 
-	@Override
+	/*@Override
 	public VisitedLocation getLastUserLocation(User user) {
 		return user.getLastVisitedLocation();
-	}
+	}*/
 
 	@Override
 	public void initializeInternalUsers() {

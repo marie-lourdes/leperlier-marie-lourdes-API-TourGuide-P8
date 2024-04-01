@@ -18,8 +18,10 @@ public class InternalUserHistoryLocationTestHelper {
 
 	public static void setUserHistoryLocation(User user) {
 		IntStream.range(0, 3).forEach(i -> {
+			VisitedLocation visitedLocation=new VisitedLocation(user.getUserId(), new Location(randomLatitude, randomLongitude), randomTime);
 			user.addToVisitedLocations(
-					new VisitedLocation(user.getUserId(), new Location(randomLatitude, randomLongitude), randomTime));
+					visitedLocation);
+			user.setLastVisitedLocation();
 		});
 	}
 

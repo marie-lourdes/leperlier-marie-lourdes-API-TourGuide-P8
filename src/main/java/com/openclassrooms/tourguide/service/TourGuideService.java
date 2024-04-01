@@ -67,7 +67,7 @@ public class TourGuideService implements ICalculatorDistance {
 			return selectFiveClosestRecommendedAttraction(recommendedUserAttractionsSorted);
 		} catch (Exception e) {
 			logger.error( "RecommendedUserAttractions not found");
-			return new ArrayList<>();
+			return null;
 		}
 
 	}

@@ -93,15 +93,4 @@ public class UserService {
 			return null;
 		}
 	}
-
-	public VisitedLocation getLastUserLocation(User user) {
-		logger.debug("Getting user location for: {} ", user.getUserName());
-		try {
-			return userDaoImpl.getLastUserLocation(user);
-		} catch (NullPointerException e) {
-			logger.error("Last user location not found");
-			return null;
-		}
-
-	}
 }

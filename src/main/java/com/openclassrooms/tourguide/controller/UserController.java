@@ -28,12 +28,13 @@ public class UserController {
 	public User addUser() {
 		logger.debug("testing add user");
 		try {
-			String userName = "internalUser" ;
+			String userName = "jon" ;
 			String phone = "000";
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
 			InternalUserHistoryLocationTestHelper.setUserHistoryLocation(user);
 			InternalUserPreferenceTestHelper.setUserPreference(user);
+			userService.addUser(user);
 			return user;
 		}catch(Exception e) {
 			logger.error("Failed to creating user for test{}", e.getMessage());
@@ -41,4 +42,7 @@ public class UserController {
 			
 		}
 	}
+
+	/*@PostMapping("/testing/add")
+	public User addUser() {}*/
 }

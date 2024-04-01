@@ -39,6 +39,7 @@ public class GpsUtilService {
 			CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executor)
 					.thenAccept(visitedLocation -> {
 						userService.addUserLocation(user, visitedLocation);
+						//user.setLastVisitedLocation(visitedLocation);
 					});
 			logger.debug("tracking userLocation successfully {}: ", user.getUserName());
 		} catch (ConcurrentModificationException e) {
