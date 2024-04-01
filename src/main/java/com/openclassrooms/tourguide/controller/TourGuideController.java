@@ -97,7 +97,7 @@ public class TourGuideController {
 			logger.error("Failed to get user rewards  {}", e.getMessage());
 		}
 
-		logger.info("User rewards successfully retrieved {} for: {}", userRewards, userName);
+	
 		return userRewards;
 	}
 

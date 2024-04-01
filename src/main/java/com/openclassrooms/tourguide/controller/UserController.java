@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.openclassrooms.tourguide.helper.InternalUserHistoryLocationTestHelper;
 import com.openclassrooms.tourguide.helper.InternalUserPreferenceTestHelper;
+import com.openclassrooms.tourguide.helper.InternalUserRewardsTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.UserService;
 
@@ -29,15 +30,9 @@ public class UserController {
 	}
 
 	@PostMapping("/testing/add")
-	public User addUser() {
-		logger.debug("testing add user");
+	public User addUser(User user) {
+		logger.debug("adding user");
 		try {
-			String userName = "jon";
-			String phone = "000";
-			String email = userName + "@tourGuide.com";
-			User user = new User(UUID.randomUUID(), userName, phone, email);
-			InternalUserHistoryLocationTestHelper.setUserHistoryLocation(user);
-			InternalUserPreferenceTestHelper.setUserPreference(user);
 			userService.addUser(user);
 			return user;
 		} catch (Exception e) {
