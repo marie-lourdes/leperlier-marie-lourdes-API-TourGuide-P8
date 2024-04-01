@@ -63,7 +63,7 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	@Disabled
+	//@Disabled
 	@Test
 	@DisplayName("Users should be incremented up to 100,000, and test finishes within 15 minutes")
 	public void testHighVolumeTrackLocation() throws Exception {
