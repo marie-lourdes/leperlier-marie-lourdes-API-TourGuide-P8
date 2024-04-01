@@ -76,7 +76,6 @@ public class UserDaoImpl implements IUserDao{
 	public void addUserLocation(User user, VisitedLocation visitedLocation) {
 		user.addToVisitedLocations(visitedLocation);
 		user.setLastVisitedLocation();
-
 	}
 
 	@Override
