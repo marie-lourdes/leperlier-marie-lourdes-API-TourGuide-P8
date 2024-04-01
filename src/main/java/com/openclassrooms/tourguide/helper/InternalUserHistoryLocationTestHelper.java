@@ -15,6 +15,7 @@ public class InternalUserHistoryLocationTestHelper {
 	private static double randomLatitude = generateRandomLatitude();
 	private static double randomLongitude = generateRandomLongitude();
 	private static Date randomTime = getRandomTime();
+	private static  double random= new Random().nextDouble();
 
 	public static void setUserHistoryLocation(User user) {
 		IntStream.range(0, 3).forEach(i -> {
@@ -28,13 +29,13 @@ public class InternalUserHistoryLocationTestHelper {
 	private static double generateRandomLongitude() {
 		double leftLimit = -180;
 		double rightLimit = 180;
-		return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);
+		return leftLimit + random * (rightLimit - leftLimit);
 	}
 
 	private static double generateRandomLatitude() {
 		double leftLimit = -85.05112878;
 		double rightLimit = 85.05112878;
-		return leftLimit + new Random().nextDouble() * (rightLimit - leftLimit);
+		return leftLimit + random * (rightLimit - leftLimit);
 	}
 
 	private static Date getRandomTime() {

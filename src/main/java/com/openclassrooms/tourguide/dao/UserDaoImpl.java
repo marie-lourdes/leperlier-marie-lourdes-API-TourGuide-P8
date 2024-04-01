@@ -90,7 +90,8 @@ public class UserDaoImpl implements IUserDao{
 			String phone = "000";
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
-			InternalUserHistoryLocationTestHelper.setUserHistoryLocation(user);
+			InternalUserHistoryLocationTestHelper internalUserHistoryLocationTestHelper=new InternalUserHistoryLocationTestHelper();
+					internalUserHistoryLocationTestHelper.setUserHistoryLocation(user);
 			InternalUserPreferenceTestHelper.setUserPreference(user);
 			internalUserMap.put(userName, user);
 		});
