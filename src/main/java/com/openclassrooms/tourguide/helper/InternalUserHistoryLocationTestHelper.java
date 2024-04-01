@@ -15,7 +15,9 @@ public class InternalUserHistoryLocationTestHelper {
 	private static double randomLatitude = generateRandomLatitude();
 	private static double randomLongitude = generateRandomLongitude();
 	private static Date randomTime = getRandomTime();
-	private static  double random= new Random().nextDouble();
+	private static Random random = new Random();
+	private static  int randomInt= generateRandomInt();
+	private static  double randomDouble= generateRandomDouble();
 
 	public static void setUserHistoryLocation(User user) {
 		IntStream.range(0, 3).forEach(i -> {
@@ -29,17 +31,31 @@ public class InternalUserHistoryLocationTestHelper {
 	private static double generateRandomLongitude() {
 		double leftLimit = -180;
 		double rightLimit = 180;
-		return leftLimit + random * (rightLimit - leftLimit);
+		return leftLimit + randomDouble * (rightLimit - leftLimit);
 	}
 
 	private static double generateRandomLatitude() {
 		double leftLimit = -85.05112878;
 		double rightLimit = 85.05112878;
-		return leftLimit + random * (rightLimit - leftLimit);
+		return leftLimit + randomDouble * (rightLimit - leftLimit);
 	}
 
 	private static Date getRandomTime() {
-		LocalDateTime localDateTime = LocalDateTime.now().minusDays(new Random().nextInt(30));
+		LocalDateTime localDateTime = LocalDateTime.now().minusDays( randomInt);
 		return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
 	}
+
+	 public static int generateRandomInt() {
+		 
+			 int  randomIntValue = random.nextInt(30);
+			 return randomIntValue;
+		 }
+	 
+	 public static double generateRandomDouble() {
+		 
+		 double randomDoubleValue = random.nextDouble();
+		 return randomDoubleValue;
+	 }
+     
+	   
 }
