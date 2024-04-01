@@ -1,5 +1,6 @@
 package com.openclassrooms.tourguide.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.ExecutionException;
@@ -62,15 +63,22 @@ public class UserService {
 		}
 	}
 
-	public List<User> getAllUsers() throws InterruptedException, ExecutionException {
+	public List<User> getAllUsers() {
 		logger.debug("Getting All users");
-		try {
-			return userDaoImpl.getAllUsers(executor);
+		List<User> allUsers= new ArrayList<>();
+		try {		
+			try {	
+				allUsers =userDaoImpl.getAllUsers(executor);
+			} catch (InterruptedException e) {
+				logger.error(e.getMessage());
+			} catch (ExecutionException e) {
+				logger.error(e.getMessage());
+			}
 		} catch (NullPointerException e) {
 			logger.error("Users not found");
-			return null;
+			
 		}
-
+		return allUsers;
 	}
 
 	public List<UserReward> getUserRewards(User user) {

@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
@@ -70,14 +69,8 @@ public class PerformanceTest {
 		// 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		allUsers.parallelStream().forEach(user -> {
-			try {
-				gpsUtilService.trackUserLocation(user, userService);
-			} catch (InterruptedException e) {
-
-			} catch (ExecutionException e) {
-
-			}
+		allUsers.parallelStream().forEach(user -> {	
+				gpsUtilService.trackUserLocation(user, userService);	
 		});
 
 		allUsers.forEach(user -> {

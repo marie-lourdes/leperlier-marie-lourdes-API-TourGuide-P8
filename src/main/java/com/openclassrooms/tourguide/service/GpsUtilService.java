@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -33,7 +32,7 @@ public class GpsUtilService {
 		logger.debug("Shutdown GpsUtilService");
 	}
 
-	public void trackUserLocation(User user, UserService userService) throws InterruptedException, ExecutionException {
+	public void trackUserLocation(User user, UserService userService) {
 		logger.debug("tracking userLocation");
 		try {
 			CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executor)
@@ -44,7 +43,7 @@ public class GpsUtilService {
 			logger.debug("tracking userLocation successfully {}: ", user.getUserName());
 		} catch (ConcurrentModificationException e) {
 			logger.error(e.getMessage());
-		}
+		} 
 	}
 
 	public List<Attraction> getAllAttractions() {

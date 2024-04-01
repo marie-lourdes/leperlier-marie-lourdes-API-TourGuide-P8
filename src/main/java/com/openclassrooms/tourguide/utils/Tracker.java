@@ -3,7 +3,6 @@ package com.openclassrooms.tourguide.utils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -41,27 +40,14 @@ public class Tracker extends Thread {
 				break;
 			}
 
-			List<User> users = null;
-			try {
-				users = userService.getAllUsers();
-			} catch (InterruptedException | ExecutionException e) {
-				this.stopTracking();
-				logger.error(e.getMessage());
-				break;
-			}
+			List<User> users = userService.getAllUsers();
 
 			users.forEach(user -> completedTrackingUsersMap.put(user, false));
 			logger.debug("Begin Tracker. Tracking {}, with {}  users. ", threadName, users.size());
 			stopWatch.start();
 			users.forEach(user -> {
-				try {
-					gpsUtilService.trackUserLocation(user, userService);
-				} catch (InterruptedException e) {
-					logger.error("Tracker interrupted {}", threadName);
-					this.stopTracking();
-				} catch (ExecutionException e) {
-					logger.error(e.getMessage());
-				}
+				gpsUtilService.trackUserLocation(user, userService);
+
 			});
 
 			boolean notFinished = true;
@@ -113,10 +99,10 @@ public class Tracker extends Thread {
 		stop = true;
 		executorService.shutdownNow();
 	}
-	
+
 	public void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
-			public void run() {		
+			public void run() {
 				stopTracking();
 			}
 		});
