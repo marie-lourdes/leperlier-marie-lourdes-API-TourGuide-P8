@@ -20,7 +20,6 @@ import com.openclassrooms.tourguide.helper.InternalUserPreferenceTestHelper;
 import com.openclassrooms.tourguide.helper.InternalUserTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
-import com.openclassrooms.tourguide.service.RewardsService;
 
 import gpsUtil.location.VisitedLocation;
 
@@ -36,21 +35,14 @@ import gpsUtil.location.VisitedLocation;
 public class UserDaoImpl implements IUserDao{
 	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
 	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
-	//private boolean testMode=false;
 	
 	public UserDaoImpl( ) {
-//this.testMode = isTestMode;
-		//if(isTestMode) {
 			logger.info("TestMode enabled");
 			logger.debug("Initializing users");
 			initializeInternalUsers();
-			logger.debug("Finished initializing users");
-		//}
-			
+			logger.debug("Finished initializing users");		
 	}
 
-//	public UserDaoImpl(){}
-	
 	@Override
 	public void addUser(User user) {
 		if (!internalUserMap.containsKey(user.getUserName())) {
@@ -91,11 +83,6 @@ public class UserDaoImpl implements IUserDao{
 	public VisitedLocation getUserLocation(User user) {
 		return  user.getLastVisitedLocation();
 	}
-
-	/*@Override
-	public VisitedLocation getLastUserLocation(User user) {
-		return user.getLastVisitedLocation();
-	}*/
 
 	@Override
 	public void initializeInternalUsers() {

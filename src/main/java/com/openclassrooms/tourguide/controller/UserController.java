@@ -1,7 +1,5 @@
 package com.openclassrooms.tourguide.controller;
 
-import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
 import org.slf4j.Logger;
@@ -12,9 +10,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.openclassrooms.tourguide.helper.InternalUserHistoryLocationTestHelper;
-import com.openclassrooms.tourguide.helper.InternalUserPreferenceTestHelper;
-import com.openclassrooms.tourguide.helper.InternalUserRewardsTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.UserService;
 
