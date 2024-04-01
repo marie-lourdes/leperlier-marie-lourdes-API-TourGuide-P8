@@ -71,9 +71,6 @@ public class RewardsService implements ICalculatorDistance {
 			UserReward userReward = new UserReward(visitedLocation, attraction);
 			getUserRewardPoints(userReward, attraction, user);
 			user.addUserReward(userReward);
-		}else if(distance <=5000.00){
-			UserReward userReward = new UserReward(visitedLocation, attraction,10);
-			user.addUserReward(userReward);
 		}
 	}
 
