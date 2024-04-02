@@ -62,7 +62,7 @@ public class UserService {
 
 		try {
 			userFound = userDaoImpl.getUser(userName);
-			logger.debug("Use found by username location: {}  ", userFound);
+			logger.debug("Use found by username: {}  ", userFound);
 		} catch (NullPointerException e) {
 			logger.error("User not found:{} ", userName);
 		}

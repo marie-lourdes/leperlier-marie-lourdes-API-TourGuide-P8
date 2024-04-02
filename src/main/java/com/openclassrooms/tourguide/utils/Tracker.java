@@ -17,7 +17,7 @@ import com.openclassrooms.tourguide.service.UserService;
 
 public class Tracker implements Runnable {
 	private static final Logger logger = LogManager.getLogger(Tracker.class);
-	
+
 	private static final long TRACKING_POLLING_INTERVAL = TimeUnit.SECONDS.toSeconds(5);
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private UserService userService;
@@ -36,7 +36,7 @@ public class Tracker implements Runnable {
 		StopWatch stopWatch = new StopWatch();
 		while (true) {
 			if (Thread.currentThread().isInterrupted() || stop) {
-				logger.debug("Tracker stopping {}", threadName);	
+				logger.debug("Tracker stopping {}", threadName);
 				break;
 			}
 
@@ -57,7 +57,7 @@ public class Tracker implements Runnable {
 					TimeUnit.MILLISECONDS.sleep(100);
 				} catch (InterruptedException e) {
 					logger.error("Tracker interrupted, {} ", threadName);
-					 Thread.currentThread().interrupt();
+					Thread.currentThread().interrupt();
 					break;
 				}
 
@@ -77,7 +77,7 @@ public class Tracker implements Runnable {
 				logger.debug("Tracker sleeping {} ", threadName);
 				TimeUnit.SECONDS.sleep(TRACKING_POLLING_INTERVAL);
 			} catch (InterruptedException e) {
-				 Thread.currentThread().interrupt();
+				Thread.currentThread().interrupt();
 				break;
 			}
 		}
