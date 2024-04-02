@@ -24,6 +24,4 @@ public interface IUserDao{
 
 	List<UserReward> getUserRewards(User user);
 
-	//VisitedLocation getLastUserLocation(User user);
-
 }

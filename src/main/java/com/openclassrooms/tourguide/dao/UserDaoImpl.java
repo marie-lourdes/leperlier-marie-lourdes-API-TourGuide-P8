@@ -1,5 +1,6 @@
 package com.openclassrooms.tourguide.dao;
 
+import java.util.ArrayList;
 import java.util.ConcurrentModificationException;
 import java.util.List;
 import java.util.Map;
@@ -10,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -32,15 +34,15 @@ import gpsUtil.location.VisitedLocation;
 // internal users are provided and stored in memory
 
 @Component
-public class UserDaoImpl implements IUserDao{
+public class UserDaoImpl implements IUserDao {
 	private static final Logger logger = LogManager.getLogger(UserDaoImpl.class);
 	private final Map<String, User> internalUserMap = new ConcurrentHashMap<>();
-	
-	public UserDaoImpl( ) {
-			logger.info("TestMode enabled");
-			logger.debug("Initializing users");
-			initializeInternalUsers();
-			logger.debug("Finished initializing users");		
+
+	public UserDaoImpl() {
+		logger.info("TestMode enabled");
+		logger.debug("Initializing users");
+		initializeInternalUsers();
+		logger.debug("Finished initializing users");
 	}
 
 	@Override
@@ -52,14 +54,15 @@ public class UserDaoImpl implements IUserDao{
 
 	@Override
 	public User getUser(String userName) {
-		return internalUserMap.values().stream().filter(elem-> elem.getUserName().equals(userName)).findFirst().orElseThrow(()-> new NullPointerException("User not found"));
+		return internalUserMap.values().stream().filter(elem -> elem.getUserName().equals(userName)).findFirst()
+				.orElseThrow(() -> new NullPointerException("User not found"));
 	}
 
 	@Override
 	public List<User> getAllUsers(ExecutorService executor) throws InterruptedException, ExecutionException {
 		CompletableFuture<List<User>> future = new CompletableFuture<>();
 		try {
-			future = CompletableFuture.supplyAsync(() -> internalUserMap.values().stream().collect(Collectors.toList()),
+			future = CompletableFuture.supplyAsync(() -> internalUserMap.values().stream().toList(),
 					executor);
 		} catch (ConcurrentModificationException e) {
 			logger.error(e.getMessage());
@@ -80,21 +83,23 @@ public class UserDaoImpl implements IUserDao{
 
 	@Override
 	public VisitedLocation getUserLocation(User user) {
-		return  user.getLastVisitedLocation();
+		return user.getLastVisitedLocation();
 	}
 
 	@Override
 	public void initializeInternalUsers() {
+	
 		IntStream.range(0, InternalUserTestHelper.getInternalUserNumber()).forEach(i -> {
 			String userName = "internalUser" + i;
 			String phone = "000";
 			String email = userName + "@tourGuide.com";
 			User user = new User(UUID.randomUUID(), userName, phone, email);
-			InternalUserHistoryLocationTestHelper internalUserHistoryLocationTestHelper=new InternalUserHistoryLocationTestHelper();
-					internalUserHistoryLocationTestHelper.setUserHistoryLocation(user);
+
+			InternalUserHistoryLocationTestHelper.setUserHistoryLocation(user);
 			InternalUserPreferenceTestHelper.setUserPreference(user);
-			internalUserMap.put(userName, user);
-		});
-		logger.debug("Created " + InternalUserTestHelper.getInternalUserNumber() + " internal test users.");
+			internalUserMap.put(userName, user);		
+		}) ;
+		
+		logger.debug("Created: {} internal test users. " , InternalUserTestHelper.getInternalUserNumber() );
 	}
 }
