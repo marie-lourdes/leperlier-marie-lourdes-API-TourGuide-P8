@@ -3,6 +3,7 @@ package com.openclassrooms.tourguide.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Collectors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -97,7 +98,7 @@ public class TourGuideService implements ICalculatorDistance {
 					userLocation.longitude, dist, rewardPoint);
 			recommendedUserAttractionsSorted.add(recommendedUserAttraction);
 		}
-		return recommendedUserAttractionsSorted.stream().sorted().toList();
+		return recommendedUserAttractionsSorted.stream().sorted().collect(Collectors.toList());
 	}
 
 	private List<RecommendedUserAttraction> selectFiveClosestRecommendedAttraction(
