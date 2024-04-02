@@ -13,8 +13,8 @@ public interface ICalculatorDistance {
 						.acos(Math.sin(lat1) * Math.sin(lat2) + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2));
 
 				double nauticalMiles = 60 * Math.toDegrees(angle);
-				double statuteMiles = Constant.STATUTE_MILES_PER_NAUTICAL_MILE * nauticalMiles;
-				return statuteMiles;
+				return Constant.STATUTE_MILES_PER_NAUTICAL_MILE * nauticalMiles;
+				
 			}
  }
 

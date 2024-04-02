@@ -63,7 +63,7 @@ import rewardCentral.RewardCentral;
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	@Disabled
+	//@Disabled //disable test because run code with 100 000 user , use test when it's needed
 	@Test
 	@DisplayName("Users should be incremented up to 100,000, and test finishes within 15 minutes")
 	void testHighVolumeTrackLocation() throws Exception {
@@ -88,7 +88,7 @@ import rewardCentral.RewardCentral;
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	@Disabled
+	@Disabled // disable test because run code with 100 000 user , use test when it's needed
 	@Test
 	@DisplayName("Users should be incremented up to 100,000, and test finishes within 20 minutes")
 	void testHighVolumeGetRewards() throws Exception {
