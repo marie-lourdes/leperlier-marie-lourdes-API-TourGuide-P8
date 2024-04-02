@@ -1,13 +1,16 @@
 package com.openclassrooms.tourguide;
 
+import static org.assertj.core.api.Assertions.not;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -62,7 +65,7 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	@Disabled
+	//@Disabled
 	@Test
 	@DisplayName("Users should be incremented up to 100,000, and test finishes within 15 minutes")
 	public void testHighVolumeTrackLocation() throws Exception {
@@ -74,14 +77,16 @@ public class PerformanceTest {
 		});
 
 		allUsers.forEach(user -> {
-			while (user.getVisitedLocations().size() < 4) {
+			CompletableFuture.supplyAsync(()->user.getVisitedLocations());
+			// Awaitility.await().until(()->user.getVisitedLocations().size()<4);
+		/*	while (user.getVisitedLocations().size() < 4) {
 				try {
-					TimeUnit.MILLISECONDS.sleep(100);
+					Thread.sleep(100);
 				} catch (InterruptedException e) {
 					gpsUtilService.tracker.stopTracking();
 					break;
 				}
-			}
+			}*/
 			assertNotNull(user.getVisitedLocations().get(3));
 		});
 
@@ -113,14 +118,15 @@ public class PerformanceTest {
 		allUsers.parallelStream().forEach(user -> rewardsService.calculateRewards(user));
 
 		allUsers.forEach(user -> {
-			while (user.getUserRewards().isEmpty()) {
+			CompletableFuture.supplyAsync(()->user.getUserRewards());
+		/*	while (user.getUserRewards().isEmpty()) {
 				try {
 					TimeUnit.MILLISECONDS.sleep(100);
 				} catch (InterruptedException e) {
 					gpsUtilService.tracker.stopTracking();
 					break;
 				}
-			}
+			}*/
 			assertTrue(user.getUserRewards().size() > 0);
 		});
 

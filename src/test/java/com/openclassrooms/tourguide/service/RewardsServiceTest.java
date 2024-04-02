@@ -1,6 +1,6 @@
 package com.openclassrooms.tourguide.service;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.util.Date;
 import java.util.List;
@@ -40,7 +40,7 @@ public class RewardsServiceTest {
 		List<UserReward> userRewards = userService.getUserRewards(user);
 		
 		rewardsService.tracker.stopTracking();
-		assertTrue(userRewards.size() == 1);
+		assertEquals(1,userRewards.size());
 	}
 	
 	/*@Test

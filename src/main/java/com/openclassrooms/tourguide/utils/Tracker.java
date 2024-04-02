@@ -15,8 +15,9 @@ import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.service.GpsUtilService;
 import com.openclassrooms.tourguide.service.UserService;
 
-public class Tracker extends Thread {
+public class Tracker implements Runnable {
 	private static final Logger logger = LogManager.getLogger(Tracker.class);
+	
 	private static final long TRACKING_POLLING_INTERVAL = TimeUnit.SECONDS.toSeconds(5);
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private UserService userService;
@@ -102,6 +103,7 @@ public class Tracker extends Thread {
 
 	public void addShutDownHook() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
 			public void run() {
 				stopTracking();
 			}
