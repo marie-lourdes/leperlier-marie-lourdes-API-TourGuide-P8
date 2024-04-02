@@ -1,6 +1,5 @@
 package com.openclassrooms.tourguide;
 
-import static org.assertj.core.api.Assertions.not;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -10,7 +9,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.commons.lang3.time.StopWatch;
-import org.awaitility.Awaitility;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -27,7 +25,7 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
-public class PerformanceTest {
+ class PerformanceTest {
 
 	private GpsUtilService gpsUtilService;
 	private RewardsService rewardsService;
@@ -35,7 +33,7 @@ public class PerformanceTest {
 	private List<User> allUsers;
 
 	@BeforeEach
-	public void init() throws Exception {
+	 void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		userService =new UserService(new UserDaoImpl());
@@ -65,10 +63,10 @@ public class PerformanceTest {
 	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	 */
 
-	//@Disabled
+	@Disabled
 	@Test
 	@DisplayName("Users should be incremented up to 100,000, and test finishes within 15 minutes")
-	public void testHighVolumeTrackLocation() throws Exception {
+	void testHighVolumeTrackLocation() throws Exception {
 		// 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
@@ -77,8 +75,8 @@ public class PerformanceTest {
 		});
 
 		allUsers.forEach(user -> {
-			CompletableFuture.supplyAsync(()->user.getVisitedLocations());
-			assertNotNull(user.getVisitedLocations().get(3));
+			CompletableFuture.supplyAsync(()->user.getVisitedLocations().get(3))
+			.thenAccept((visitedLocation->assertNotNull(visitedLocation)));
 		});
 
 		stopWatch.stop();
@@ -93,7 +91,7 @@ public class PerformanceTest {
 	@Disabled
 	@Test
 	@DisplayName("Users should be incremented up to 100,000, and test finishes within 20 minutes")
-	public void testHighVolumeGetRewards() throws Exception {
+	void testHighVolumeGetRewards() throws Exception {
 		// Users should be incremented up to 100,000, and test finishes within 20
 		// minutes
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());

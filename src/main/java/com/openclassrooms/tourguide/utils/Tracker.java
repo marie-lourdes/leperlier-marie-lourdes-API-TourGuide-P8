@@ -36,8 +36,7 @@ public class Tracker implements Runnable {
 		StopWatch stopWatch = new StopWatch();
 		while (true) {
 			if (Thread.currentThread().isInterrupted() || stop) {
-				logger.debug("Tracker stopping {}", threadName);
-				this.stopTracking();
+				logger.debug("Tracker stopping {}", threadName);	
 				break;
 			}
 
@@ -58,7 +57,7 @@ public class Tracker implements Runnable {
 					TimeUnit.MILLISECONDS.sleep(100);
 				} catch (InterruptedException e) {
 					logger.error("Tracker interrupted, {} ", threadName);
-					this.stopTracking();
+					 Thread.currentThread().interrupt();
 					break;
 				}
 
@@ -78,7 +77,7 @@ public class Tracker implements Runnable {
 				logger.debug("Tracker sleeping {} ", threadName);
 				TimeUnit.SECONDS.sleep(TRACKING_POLLING_INTERVAL);
 			} catch (InterruptedException e) {
-				this.stopTracking();
+				 Thread.currentThread().interrupt();
 				break;
 			}
 		}

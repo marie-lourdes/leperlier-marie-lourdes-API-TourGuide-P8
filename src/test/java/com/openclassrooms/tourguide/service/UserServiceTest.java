@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.CompletableFuture;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,14 +20,14 @@ class UserServiceTest {
 	private UserService userService;
 
 	@BeforeEach
-	public void init() throws Exception {
+	 void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		userService = new UserService(new UserDaoImpl());
 	}
 
 	@Test
-	public void testAddUser() throws Exception {
+	 void testAddUser() throws Exception {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
 
@@ -44,7 +44,7 @@ class UserServiceTest {
 	}
 
 	@Test
-	public void testGetAllUsers() throws Exception {
+	 void testGetAllUsers() throws Exception {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
 		userService.addUser(user);
@@ -58,18 +58,13 @@ class UserServiceTest {
 	}
 
 	@Test
-	public void testGetUserLocation() throws Exception {
+	void testGetUserLocation() throws Exception {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		
 		gpsUtilService.trackUserLocation(user, userService);
-		while(user.getVisitedLocations().isEmpty()) {
-			try {
-				TimeUnit.MILLISECONDS.sleep(50);
-			} catch (InterruptedException e) {
-			}
-		}
+		CompletableFuture.supplyAsync(()->user.getVisitedLocations().get(0))
+		.thenAccept((visitedLocation)->assertTrue(visitedLocation.userId.equals(user.getUserId())));
+	
 		gpsUtilService.tracker.stopTracking();
-		
-		assertTrue(user.getVisitedLocations().get(0).userId.equals(user.getUserId()));
 	}
 }

@@ -19,19 +19,19 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
-public class RewardsServiceTest {
+class RewardsServiceTest {
 	private GpsUtilService gpsUtilService;
 	private RewardsService rewardsService;
 
 	@BeforeEach
-	public void init() throws Exception {
+	 void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 	}
 
 	@Test // A ajouter dans un test de UserService
-	public void testUserGetRewards() throws InterruptedException, ExecutionException{
+	 void testUserGetRewards() throws InterruptedException, ExecutionException{
 		UserService userService = new UserService(new UserDaoImpl());
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
