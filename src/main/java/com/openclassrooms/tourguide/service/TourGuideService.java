@@ -43,14 +43,17 @@ public class TourGuideService implements ICalculatorDistance {
 	}
 
 	public List<Provider> getTripDeals(User user) {
-		logger.debug("getting TripDeals for: {} ", user.getUserName());
+		logger.debug("Getting TripDeals for: {} ", user.getUserName());
+		List<Provider> providers = new ArrayList<>();
+
 		try {
-			List<Provider> providers = tripPricer.getPrice(generateTripPricerApiKey(user), user.getUserId(),
+			providers = tripPricer.getPrice(generateTripPricerApiKey(user), user.getUserId(),
 					user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(),
 					user.getUserPreferences().getTripDuration(), rewardsService.calculateTotalRewardsPoints(user));
 			if (null != providers) {
 				user.setTripDeals(providers);
 			}
+			logger.debug(" TripDeals  {} for: {} ", providers, user.getUserName());
 			return providers;
 		} catch (Exception e) {
 			logger.error("Trip deals not found for: {} ", user.getUserName());
@@ -60,16 +63,19 @@ public class TourGuideService implements ICalculatorDistance {
 	}
 
 	public List<RecommendedUserAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
+
 		logger.debug("getting five closest RecommendedUserAttraction for: {} ", user.getUserName());
+		List<RecommendedUserAttraction> closestRecommendedUserAttraction = new ArrayList<>();
 		try {
 			recommendedUserAttractionsSorted = getRecommendedUserAttractionsSortedByDistance(visitedLocation.location,
 					user);
-			return selectFiveClosestRecommendedAttraction(recommendedUserAttractionsSorted);
+			closestRecommendedUserAttraction = selectFiveClosestRecommendedAttraction(recommendedUserAttractionsSorted);
+			logger.debug("RecommendedUserAttractions: {}", closestRecommendedUserAttraction );
 		} catch (Exception e) {
-			logger.error( "RecommendedUserAttractions not found");
-			return null;
-		}
+			logger.error("RecommendedUserAttractions not found");
 
+		}
+		return closestRecommendedUserAttraction;
 	}
 
 	private String generateTripPricerApiKey(User user) {

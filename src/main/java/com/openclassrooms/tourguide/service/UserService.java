@@ -34,20 +34,23 @@ public class UserService {
 	}
 
 	public void addUser(User user) {
+		logger.debug("Adding user: {}", user);
+
 		try {
 			userDaoImpl.addUser(user);
-			logger.debug("Adding user: {}", user);
+			logger.debug("User created: {}  ", user);
 		} catch (Exception e) {
 			logger.error("Failed to add user{}", user);
 		}
-
 	}
 
 	public void addUserLocation(User user, VisitedLocation visitedLocation) {
+		logger.debug("Adding user  visited location for: {} ", visitedLocation, user.getUserName());
+
 		try {
 			userDaoImpl.addUserLocation(user, visitedLocation);
 			tracker.finalizeTrackUser(user);
-			logger.debug("Adding user  visited location: {} for: {} ", visitedLocation, user.getUserName());
+			logger.debug("User  visited location added: {}  ", visitedLocation);
 		} catch (Exception e) {
 			logger.error("Failed to add user visited location for: {} ", user.getUserName());
 		}
@@ -55,20 +58,25 @@ public class UserService {
 
 	public User getUser(String userName) {
 		logger.debug("Getting user: {} ", userName);
+		User userFound = null;
+
 		try {
-			return userDaoImpl.getUser(userName);
+			userFound = userDaoImpl.getUser(userName);
+			logger.debug("Use found by username location: {}  ", userFound);
 		} catch (NullPointerException e) {
 			logger.error("User not found:{} ", userName);
-			return null;
 		}
+
+		return userFound;
 	}
 
 	public List<User> getAllUsers() {
 		logger.debug("Getting All users");
-		List<User> allUsers= new ArrayList<>();
-		try {		
-			try {	
-				allUsers =userDaoImpl.getAllUsers(executor);
+		List<User> allUsers = new ArrayList<>();
+
+		try {
+			try {
+				allUsers = userDaoImpl.getAllUsers(executor);
 			} catch (InterruptedException e) {
 				logger.error(e.getMessage());
 			} catch (ExecutionException e) {
@@ -76,29 +84,35 @@ public class UserService {
 			}
 		} catch (NullPointerException e) {
 			logger.error("Users not found");
-			
+
 		}
 		return allUsers;
 	}
 
 	public List<UserReward> getUserRewards(User user) {
 		logger.debug("Getting user rewards for: {} ", user.getUserName());
+		List<UserReward> allUserRewards = new ArrayList<>();
 		try {
-			return userDaoImpl.getUserRewards(user);
+			allUserRewards = userDaoImpl.getUserRewards(user);
+			logger.debug("All user rewards {} for: {} ", allUserRewards, user.getUserName());
 		} catch (NullPointerException e) {
 			logger.error("User Rewards not found");
-			return null;
 		}
 
+		return allUserRewards;
 	}
 
 	public VisitedLocation getUserLocation(User user) {
 		logger.debug("Getting user location for: {} ", user.getUserName());
+		VisitedLocation userLocation = null;
+
 		try {
-			return userDaoImpl.getUserLocation(user);
+			userLocation = userDaoImpl.getUserLocation(user);
+			logger.debug("User location {} ", userLocation, user.getUserName());
 		} catch (NullPointerException e) {
 			logger.error("User location not found");
-			return null;
 		}
+
+		return userLocation;
 	}
 }

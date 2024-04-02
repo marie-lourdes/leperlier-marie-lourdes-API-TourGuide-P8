@@ -45,7 +45,7 @@ public class TourGuideController {
 	}
 
 	@GetMapping("/getLocation")
-	public VisitedLocation getLocation(@RequestParam String userName) {
+	public VisitedLocation getLocation(@RequestParam String userName) throws InterruptedException {
 
 		VisitedLocation visitedLocation = null;
 		try {
@@ -76,8 +76,7 @@ public class TourGuideController {
 						userService.getUser(userName));
 			}
 
-			logger.info("closest recommended user attractions successfully retrieved {} for: {}",
-					closestRecommendedUserAttractions, userName);
+			logger.info("closest recommended user attractions successfully retrieved for: {}", userName);
 		} catch (Exception e) {
 			logger.error("Failed to get closest user attractions {}", e.getMessage());
 		}

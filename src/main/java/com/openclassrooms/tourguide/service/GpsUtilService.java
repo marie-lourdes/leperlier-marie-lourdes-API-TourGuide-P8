@@ -38,27 +38,38 @@ public class GpsUtilService {
 			CompletableFuture.supplyAsync(() -> gpsUtil.getUserLocation(user.getUserId()), executor)
 					.thenAccept(visitedLocation -> {
 						userService.addUserLocation(user, visitedLocation);
-						//user.setLastVisitedLocation(visitedLocation);
 					});
 			logger.debug("tracking userLocation successfully {}: ", user.getUserName());
 		} catch (ConcurrentModificationException e) {
 			logger.error(e.getMessage());
-		} 
+		}
 	}
 
 	public List<Attraction> getAllAttractions() {
-		logger.debug("getting all attractions");
+		logger.debug("Getting all attractions");
+		List<Attraction> AllAttractions = new ArrayList<>();
 		try {
-			return gpsUtil.getAttractions().stream().collect(Collectors.toList());
+			AllAttractions = gpsUtil.getAttractions().stream().collect(Collectors.toList());
+			logger.debug("All attractions: {}", AllAttractions);
 		} catch (NullPointerException e) {
 			logger.error("Attractions not found");
-			return new ArrayList<>();
 		}
-
+		return AllAttractions;
 	}
 
 	public Attraction getOneAttraction(String attractionName) {
-		return gpsUtil.getAttractions().stream().filter(element -> element.attractionName.equals(attractionName))
-				.findFirst().orElseThrow(() -> new NullPointerException("Attraction not found : " + attractionName));
+		logger.debug("Getting  attraction: {}", attractionName);
+		Attraction attractionFound=null ;
+
+		try {
+			attractionFound = gpsUtil.getAttractions().stream()
+					.filter(element -> element.attractionName.equals(attractionName)).findFirst()
+					.orElseThrow(() -> new NullPointerException("Attraction not found : " + attractionName));
+			logger.debug("attraction found : {}", attractionFound);
+		} catch (NullPointerException e) {
+			logger.error("Attractions not found");
+		}
+
+		return attractionFound;
 	}
 }
