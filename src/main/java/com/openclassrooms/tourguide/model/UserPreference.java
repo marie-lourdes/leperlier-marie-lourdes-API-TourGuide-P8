@@ -1,21 +1,15 @@
 package com.openclassrooms.tourguide.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
-@AllArgsConstructor
-@RequiredArgsConstructor
 @Data
-public class UserPreference {
-	
+public class UserPreference {	
 	private int attractionProximity ;
 	private int tripDuration;
 	private int ticketQuantity;
 	private int numberOfAdults;
 	private int numberOfChildren ;
-	
-	
+		
 	public void setAttractionProximity(int attractionProximity) {
 		this.attractionProximity = attractionProximity;
 	}

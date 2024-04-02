@@ -1,6 +1,7 @@
 package com.openclassrooms.tourguide;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
@@ -25,7 +26,25 @@ import gpsUtil.location.Attraction;
 import gpsUtil.location.VisitedLocation;
 import rewardCentral.RewardCentral;
 
- class PerformanceTest {
+/*
+ * A note on performance improvements:
+ * 
+ * The number of users generated for the high volume tests can be easily
+ * adjusted via this method:
+ * 
+ * InternalTestHelper.setInternalUserNumber(100000);
+ * 
+ * These are performance metrics that we are trying to hit:
+ * 
+ * highVolumeTrackLocation: 100,000 users within 15 minutes:
+ * assertTrue(TimeUnit.MINUTES.toSeconds(15) >=
+ * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
+ *
+ * highVolumeGetRewards: 100,000 users within 20 minutes:
+ * assertTrue(TimeUnit.MINUTES.toSeconds(20) >=
+ * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
+ */
+class PerformanceTest {
 
 	private GpsUtilService gpsUtilService;
 	private RewardsService rewardsService;
@@ -33,50 +52,27 @@ import rewardCentral.RewardCentral;
 	private List<User> allUsers;
 
 	@BeforeEach
-	 void init() throws Exception {
+	void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
-		userService =new UserService(new UserDaoImpl());
+		userService = new UserService(new UserDaoImpl());
 		allUsers = userService.getAllUsers();
 	}
 
-	/*
-	 * A note on performance improvements:
-	 * 
-	 * The number of users generated for the high volume tests can be easily
-	 * adjusted via this method:
-	 * 
-	 * InternalTestHelper.setInternalUserNumber(100000);
-	 * 
-	 * 
-	 * These tests can be modified to suit new solutions, just as long as the
-	 * performance metrics at the end of the tests remains consistent.
-	 * 
-	 * These are performance metrics that we are trying to hit:
-	 * 
-	 * highVolumeTrackLocation: 100,000 users within 15 minutes:
-	 * assertTrue(TimeUnit.MINUTES.toSeconds(15) >=
-	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
-	 *
-	 * highVolumeGetRewards: 100,000 users within 20 minutes:
-	 * assertTrue(TimeUnit.MINUTES.toSeconds(20) >=
-	 * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
-	 */
-
-	//@Disabled //disable test because run code with 100 000 user , use test when it's needed
+	// disable test because run code with 100 000 user , use test when it's needed to improve performance
+	@Disabled
 	@Test
-	@DisplayName("Users should be incremented up to 100,000, and test finishes within 15 minutes")
+	@DisplayName("With 100,000 users , test should be finish within 15 minutes")
 	void testHighVolumeTrackLocation() throws Exception {
-		// 
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
-		allUsers.parallelStream().forEach(user -> {	
-				gpsUtilService.trackUserLocation(user, userService);	
+		allUsers.parallelStream().forEach(user -> {
+			gpsUtilService.trackUserLocation(user, userService);
 		});
 
 		allUsers.forEach(user -> {
-			CompletableFuture.supplyAsync(()->user.getVisitedLocations().get(3))
-			.thenAccept((visitedLocation->assertNotNull(visitedLocation)));
+			CompletableFuture.supplyAsync(() -> user.getVisitedLocations().get(3))
+					.thenAccept((visitedLocation -> assertNotNull(visitedLocation)));
 		});
 
 		stopWatch.stop();
@@ -88,12 +84,11 @@ import rewardCentral.RewardCentral;
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 	}
 
-	@Disabled // disable test because run code with 100 000 user , use test when it's needed
+	// disable test because run code with 100 000 user , use test when it's needed to improve performance
+	@Disabled
 	@Test
-	@DisplayName("Users should be incremented up to 100,000, and test finishes within 20 minutes")
+	@DisplayName("With 100,000 users , test should be finish within 20 minutes")
 	void testHighVolumeGetRewards() throws Exception {
-		// Users should be incremented up to 100,000, and test finishes within 20
-		// minutes
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		StopWatch stopWatch = new StopWatch();
@@ -107,7 +102,7 @@ import rewardCentral.RewardCentral;
 		allUsers.parallelStream().forEach(user -> rewardsService.calculateRewards(user));
 
 		allUsers.forEach(user -> {
-			CompletableFuture.supplyAsync(()->user.getUserRewards());
+			CompletableFuture.supplyAsync(() -> user.getUserRewards());
 			assertTrue(user.getUserRewards().size() > 0);
 		});
 

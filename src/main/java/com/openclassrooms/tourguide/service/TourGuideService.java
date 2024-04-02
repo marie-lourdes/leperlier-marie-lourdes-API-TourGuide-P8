@@ -58,18 +58,17 @@ public class TourGuideService implements ICalculatorDistance {
 			logger.error("Trip deals not found for: {} ", user.getUserName());
 			return new ArrayList<>();
 		}
-
 	}
 
 	public List<RecommendedUserAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
-
 		logger.debug("getting five closest RecommendedUserAttraction for: {} ", user.getUserName());
 		List<RecommendedUserAttraction> closestRecommendedUserAttraction = new ArrayList<>();
+		
 		try {
 			recommendedUserAttractionsSorted = getRecommendedUserAttractionsSortedByDistance(visitedLocation.location,
 					user);
 			closestRecommendedUserAttraction = selectFiveClosestRecommendedAttraction(recommendedUserAttractionsSorted);
-			logger.debug("RecommendedUserAttractions: {}", closestRecommendedUserAttraction );
+			logger.debug("RecommendedUserAttractions: {}", closestRecommendedUserAttraction);
 		} catch (Exception e) {
 			logger.error("RecommendedUserAttractions not found");
 
@@ -78,7 +77,6 @@ public class TourGuideService implements ICalculatorDistance {
 	}
 
 	private String generateTripPricerApiKey(User user) {
-
 		if (null != user.getUserId()) {
 			tripPricerApiKey = Constant.LONG_SECRET_STRING_ENCODE_API_KEY + user.getUserId().toString();
 		}
@@ -110,7 +108,6 @@ public class TourGuideService implements ICalculatorDistance {
 			if (i <= 5) {
 				fiveAttractionsClosestUserLocationDistanceSelected.add(attraction);
 			}
-
 		}
 
 		return fiveAttractionsClosestUserLocationDistanceSelected;

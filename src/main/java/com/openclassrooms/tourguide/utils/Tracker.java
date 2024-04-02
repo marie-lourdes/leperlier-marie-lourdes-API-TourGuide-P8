@@ -83,10 +83,6 @@ public class Tracker implements Runnable {
 		}
 	}
 
-	public synchronized void finalizeTrackUser(User user) {
-		completedTrackingUsersMap.put(user, true);
-	}
-
 	public void startTracking(String threadName) {
 		logger.debug("Starting {}", threadName);
 		executorService.submit(this);
@@ -108,4 +104,9 @@ public class Tracker implements Runnable {
 			}
 		});
 	}
+
+	public synchronized void finalizeTrackUser(User user) {
+		completedTrackingUsersMap.put(user, true);
+	}
+
 }

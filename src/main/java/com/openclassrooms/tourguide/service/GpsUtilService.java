@@ -20,8 +20,8 @@ import gpsUtil.location.Attraction;
 
 @Service
 public class GpsUtilService {
-	private static final Logger logger = LogManager.getLogger(GpsUtilService .class);
-	
+	private static final Logger logger = LogManager.getLogger(GpsUtilService.class);
+
 	private final GpsUtil gpsUtil;
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;
@@ -60,7 +60,7 @@ public class GpsUtilService {
 
 	public Attraction getOneAttraction(String attractionName) {
 		logger.debug("Getting  attraction: {}", attractionName);
-		Attraction attractionFound=null ;
+		Attraction attractionFound = null;
 
 		try {
 			attractionFound = gpsUtil.getAttractions().stream()

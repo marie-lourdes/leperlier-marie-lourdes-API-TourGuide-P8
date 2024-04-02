@@ -31,7 +31,6 @@ class TourGuideServiceTest {
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 	}
 
-	// @Disabled // Not yet implemented
 	@Test
 	void testGetNearbyAttractions() throws Exception {
 		UserService userService = new UserService(new UserDaoImpl());

@@ -16,7 +16,6 @@ import com.openclassrooms.tourguide.service.UserService;
 
 import jakarta.servlet.http.HttpServletResponse;
 
-//For testing Tourguidecontroller, add default user without internalUserMap
 @RestController
 @RequestMapping("tourguide/user")
 public class UserController {

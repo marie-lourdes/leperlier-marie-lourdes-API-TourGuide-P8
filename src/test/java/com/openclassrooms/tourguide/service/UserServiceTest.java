@@ -20,14 +20,14 @@ class UserServiceTest {
 	private UserService userService;
 
 	@BeforeEach
-	 void init() throws Exception {
+	void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		userService = new UserService(new UserDaoImpl());
 	}
 
 	@Test
-	 void testAddUser() throws Exception {
+	void testAddUser() throws Exception {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
 
@@ -36,7 +36,7 @@ class UserServiceTest {
 
 		User retrivedUser = userService.getUser(user.getUserName());
 		User retrivedUser2 = userService.getUser(user2.getUserName());
-	
+
 		userService.tracker.stopTracking();
 
 		assertEquals(user, retrivedUser);
@@ -44,7 +44,7 @@ class UserServiceTest {
 	}
 
 	@Test
-	 void testGetAllUsers() throws Exception {
+	void testGetAllUsers() throws Exception {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
 		userService.addUser(user);
@@ -60,11 +60,11 @@ class UserServiceTest {
 	@Test
 	void testGetUserLocation() throws Exception {
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		
+
 		gpsUtilService.trackUserLocation(user, userService);
-		CompletableFuture.supplyAsync(()->user.getVisitedLocations().get(0))
-		.thenAccept((visitedLocation)->assertTrue(visitedLocation.userId.equals(user.getUserId())));
-	
+		CompletableFuture.supplyAsync(() -> user.getVisitedLocations().get(0))
+				.thenAccept((visitedLocation) -> assertTrue(visitedLocation.userId.equals(user.getUserId())));
+
 		gpsUtilService.tracker.stopTracking();
 	}
 }

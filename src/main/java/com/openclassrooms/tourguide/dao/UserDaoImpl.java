@@ -59,8 +59,7 @@ public class UserDaoImpl implements IUserDao {
 	public List<User> getAllUsers(ExecutorService executor) throws InterruptedException, ExecutionException {
 		CompletableFuture<List<User>> future = new CompletableFuture<>();
 		try {
-			future = CompletableFuture.supplyAsync(() -> internalUserMap.values().stream().toList(),
-					executor);
+			future = CompletableFuture.supplyAsync(() -> internalUserMap.values().stream().toList(), executor);
 		} catch (ConcurrentModificationException e) {
 			logger.error(e.getMessage());
 		}
@@ -85,7 +84,6 @@ public class UserDaoImpl implements IUserDao {
 
 	@Override
 	public void initializeInternalUsers() {
-	
 		IntStream.range(0, InternalUserTestHelper.getInternalUserNumber()).forEach(i -> {
 			String userName = "internalUser" + i;
 			String phone = "000";
@@ -94,9 +92,9 @@ public class UserDaoImpl implements IUserDao {
 
 			InternalUserHistoryLocationTestHelper.setUserHistoryLocation(user);
 			InternalUserPreferenceTestHelper.setUserPreference(user);
-			internalUserMap.put(userName, user);		
-		}) ;
-		
-		logger.debug("Created: {} internal test users. " , InternalUserTestHelper.getInternalUserNumber() );
+			internalUserMap.put(userName, user);
+		});
+
+		logger.debug("Created: {} internal test users. ", InternalUserTestHelper.getInternalUserNumber());
 	}
 }

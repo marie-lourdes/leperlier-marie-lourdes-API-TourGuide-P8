@@ -14,8 +14,6 @@ public class InternalUserPreferenceTestHelper {
 			userPreference.setTicketQuantity(1);
 			userPreference.setNumberOfAdults(1);
 			userPreference.setNumberOfChildren(0);
-			user.setUserPreferences(userPreference);
-	
-	}
-	
+			user.setUserPreferences(userPreference);	
+	}	
 }

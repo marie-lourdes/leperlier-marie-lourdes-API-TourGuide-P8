@@ -24,36 +24,23 @@ class RewardsServiceTest {
 	private RewardsService rewardsService;
 
 	@BeforeEach
-	 void init() throws Exception {
+	void init() throws Exception {
 		GpsUtil gpsUtil = new GpsUtil();
 		gpsUtilService = new GpsUtilService(gpsUtil);
 		rewardsService = new RewardsService(gpsUtilService, new RewardCentral());
 	}
 
-	@Test // A ajouter dans un test de UserService
-	 void testUserGetRewards() throws InterruptedException, ExecutionException{
+	@Test
+	void testUserGetRewards() throws InterruptedException, ExecutionException {
 		UserService userService = new UserService(new UserDaoImpl());
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 		rewardsService.calculateRewards(user);
 		List<UserReward> userRewards = userService.getUserRewards(user);
-		
+
 		rewardsService.tracker.stopTracking();
-		assertEquals(1,userRewards.size());
+		assertEquals(1, userRewards.size());
 	}
-	
-	/*@Test
-	public void testIsNearAttraction_WithAllAttractionsAndUserRewardsCalculated() throws InterruptedException, ExecutionException { // ajouter
-																												// try/catch																										// ConcurrentModificationException
-		rewardsService.setDefaultProximityBuffer(Integer.MAX_VALUE);
 
-		UserService userService = new UserService(new UserDaoImpl());
-		rewardsService.calculateRewards(userService.getAllUsers().get(0));
-		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
-		userService.tracker.stopTracking();
-
-		assertEquals(gpsUtilService.getAllAttractions().size(), userRewards.size());
-		
-	}*/
 }

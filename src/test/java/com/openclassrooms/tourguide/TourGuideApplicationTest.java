@@ -11,7 +11,7 @@ class TourGuideApplicationTest {
 
 	@Test
 	void contextLoads() {
-		assertEquals("6.1.5",SpringVersion.getVersion());
+		assertEquals("6.1.5", SpringVersion.getVersion());
 	}
 
 }
