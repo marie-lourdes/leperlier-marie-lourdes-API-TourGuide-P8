@@ -78,15 +78,6 @@ public class PerformanceTest {
 
 		allUsers.forEach(user -> {
 			CompletableFuture.supplyAsync(()->user.getVisitedLocations());
-			// Awaitility.await().until(()->user.getVisitedLocations().size()<4);
-		/*	while (user.getVisitedLocations().size() < 4) {
-				try {
-					Thread.sleep(100);
-				} catch (InterruptedException e) {
-					gpsUtilService.tracker.stopTracking();
-					break;
-				}
-			}*/
 			assertNotNull(user.getVisitedLocations().get(3));
 		});
 
@@ -119,14 +110,6 @@ public class PerformanceTest {
 
 		allUsers.forEach(user -> {
 			CompletableFuture.supplyAsync(()->user.getUserRewards());
-		/*	while (user.getUserRewards().isEmpty()) {
-				try {
-					TimeUnit.MILLISECONDS.sleep(100);
-				} catch (InterruptedException e) {
-					gpsUtilService.tracker.stopTracking();
-					break;
-				}
-			}*/
 			assertTrue(user.getUserRewards().size() > 0);
 		});
 
