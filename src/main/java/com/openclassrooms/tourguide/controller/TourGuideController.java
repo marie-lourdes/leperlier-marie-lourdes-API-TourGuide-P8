@@ -58,7 +58,7 @@ public class TourGuideController {
 			}
 			visitedLocation = userService.getUserLocation(userFoundByName);
 
-			logger.info("User location successfully retrieved {}", visitedLocation);
+			logger.info("User location successfully retrieved for {}", userName);
 		} catch (NullPointerException e) {
 			response.sendError(404);
 			logger.error("Failed to get user location {}", e.getMessage());
@@ -101,7 +101,7 @@ public class TourGuideController {
 			rewardsService.calculateRewards(userFoundByName);
 			userRewards = userService.getUserRewards(userFoundByName);
 
-			logger.info("User rewards successfully retrieved {} for: {}", userRewards, userName);
+			logger.info("User rewards successfully retrieved for: {}", userName);
 		} catch (NullPointerException e) {
 			response.sendError(404);
 			logger.error("Failed to get user rewards  {}", e.getMessage());
@@ -118,7 +118,7 @@ public class TourGuideController {
 			User userFoundByName = userService.getUser(userName);
 			providers = tourGuideService.getTripDeals(userFoundByName);
 
-			logger.info("All providers successfully retrieved {} for: {}", providers, userName);
+			logger.info("All providers successfully retrieved for: {}", userName);
 		} catch (NullPointerException e) {
 			response.sendError(404);
 			logger.error("Failed to get all providers  {}", e.getMessage());

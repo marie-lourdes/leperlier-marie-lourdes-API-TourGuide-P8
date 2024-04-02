@@ -16,16 +16,17 @@ public class InternalUserHistoryLocationTestHelper {
 	private static double randomLongitude = generateRandomLongitude();
 	private static Date randomTime = getRandomTime();
 	private static Random random = new Random();
-	private static  int randomInt= generateRandomInt();
-	private static  double randomDouble= generateRandomDouble();
-	
-	private InternalUserHistoryLocationTestHelper(){}
+	private static int randomInt = generateRandomInt();
+	private static double randomDouble = generateRandomDouble();
+
+	private InternalUserHistoryLocationTestHelper() {
+	}
 
 	public static void setUserHistoryLocation(User user) {
 		IntStream.range(0, 3).forEach(i -> {
-			VisitedLocation visitedLocation=new VisitedLocation(user.getUserId(), new Location(randomLatitude, randomLongitude), randomTime);
-			user.addToVisitedLocations(
-					visitedLocation);
+			VisitedLocation visitedLocation = new VisitedLocation(user.getUserId(),
+					new Location(randomLatitude, randomLongitude), randomTime);
+			user.addToVisitedLocations(visitedLocation);
 			user.setLastVisitedLocation();
 		});
 	}
@@ -43,21 +44,16 @@ public class InternalUserHistoryLocationTestHelper {
 	}
 
 	private static Date getRandomTime() {
-		LocalDateTime localDateTime = LocalDateTime.now().minusDays( randomInt);
+		LocalDateTime localDateTime = LocalDateTime.now().minusDays(randomInt);
 		return Date.from(localDateTime.toInstant(ZoneOffset.UTC));
 	}
 
-	 public static int generateRandomInt() {
-		 
-			 int  randomIntValue = random.nextInt(30);
-			 return randomIntValue;
-		 }
-	 
-	 public static double generateRandomDouble() {
-		 
-		 double randomDoubleValue = random.nextDouble();
-		 return randomDoubleValue;
-	 }
-     
-	   
+	public static int generateRandomInt() {
+		return random.nextInt(30);
+	}
+
+	public static double generateRandomDouble() {
+		return random.nextDouble();
+	}
+
 }
