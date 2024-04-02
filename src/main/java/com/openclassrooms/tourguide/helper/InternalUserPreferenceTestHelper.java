@@ -5,6 +5,9 @@ import com.openclassrooms.tourguide.model.UserPreference;
 
 public class InternalUserPreferenceTestHelper {
 	private static UserPreference userPreference=new UserPreference();
+	
+	private InternalUserPreferenceTestHelper (){}
+	
 	public static void setUserPreference(User user) {	
 			userPreference.setAttractionProximity(Integer.MAX_VALUE);
 			userPreference.setTripDuration(1);

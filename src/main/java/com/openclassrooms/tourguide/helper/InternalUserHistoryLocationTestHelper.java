@@ -18,6 +18,8 @@ public class InternalUserHistoryLocationTestHelper {
 	private static Random random = new Random();
 	private static  int randomInt= generateRandomInt();
 	private static  double randomDouble= generateRandomDouble();
+	
+	private InternalUserHistoryLocationTestHelper(){}
 
 	public static void setUserHistoryLocation(User user) {
 		IntStream.range(0, 3).forEach(i -> {
