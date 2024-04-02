@@ -1,16 +1,15 @@
-package com.openclassrooms.tourguide.user;
+package com.openclassrooms.tourguide.model;
 
-public class UserPreferences {
-	
-	private int attractionProximity = Integer.MAX_VALUE;
-	private int tripDuration = 1;
-	private int ticketQuantity = 1;
-	private int numberOfAdults = 1;
-	private int numberOfChildren = 0;
-	
-	public UserPreferences() {
-	}
-	
+import lombok.Data;
+
+@Data
+public class UserPreference {	
+	private int attractionProximity ;
+	private int tripDuration;
+	private int ticketQuantity;
+	private int numberOfAdults;
+	private int numberOfChildren ;
+		
 	public void setAttractionProximity(int attractionProximity) {
 		this.attractionProximity = attractionProximity;
 	}

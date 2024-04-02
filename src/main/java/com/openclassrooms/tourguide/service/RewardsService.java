@@ -1,80 +1,107 @@
 package com.openclassrooms.tourguide.service;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
-import gpsUtil.GpsUtil;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
-import rewardCentral.RewardCentral;
-import com.openclassrooms.tourguide.user.User;
-import com.openclassrooms.tourguide.user.UserReward;
+import com.openclassrooms.tourguide.model.User;
+import com.openclassrooms.tourguide.model.UserReward;
+import com.openclassrooms.tourguide.utils.ICalculatorDistance;
+import com.openclassrooms.tourguide.utils.Tracker;
 
+import gpsUtil.location.Attraction;
+import gpsUtil.location.VisitedLocation;
+import lombok.Data;
+import rewardCentral.RewardCentral;
+
+@Data
 @Service
-public class RewardsService {
-    private static final double STATUTE_MILES_PER_NAUTICAL_MILE = 1.15077945;
+public class RewardsService implements ICalculatorDistance {
+	private static final Logger logger = LogManager.getLogger(RewardsService.class);
 
 	// proximity in miles
-    private int defaultProximityBuffer = 10;
-	private int proximityBuffer = defaultProximityBuffer;
-	private int attractionProximityRange = 200;
-	private final GpsUtil gpsUtil;
-	private final RewardCentral rewardsCentral;
-	
-	public RewardsService(GpsUtil gpsUtil, RewardCentral rewardCentral) {
-		this.gpsUtil = gpsUtil;
-		this.rewardsCentral = rewardCentral;
+	private int defaultProximityInMiles = 10;
+	private final GpsUtilService gpsUtilService;
+	private final RewardCentral rewardCentral;
+	public final Tracker tracker;
+	private ExecutorService executor = Executors.newFixedThreadPool(100000);
+
+	public RewardsService(GpsUtilService gpsUtilService, RewardCentral rewardCentral) {
+		this.gpsUtilService = gpsUtilService;
+		this.rewardCentral = rewardCentral;
+		tracker = new Tracker("Thread-3-RewardsService");
+		tracker.addShutDownHook();
+		logger.debug("Shutdown RewardsService");
+
 	}
-	
-	public void setProximityBuffer(int proximityBuffer) {
-		this.proximityBuffer = proximityBuffer;
+
+	// For testing calculateRewards with distance user visitedLocation <
+	// defaultproximity and random distance, allow adjusting distance minimum for
+	// get rewards
+	public void setDefaultProximityInMiles(int defaultProximityInMiles) {
+		this.defaultProximityInMiles = defaultProximityInMiles;
 	}
-	
-	public void setDefaultProximityBuffer() {
-		proximityBuffer = defaultProximityBuffer;
-	}
-	
+
 	public void calculateRewards(User user) {
-		List<VisitedLocation> userLocations = user.getVisitedLocations();
-		List<Attraction> attractions = gpsUtil.getAttractions();
-		
-		for(VisitedLocation visitedLocation : userLocations) {
-			for(Attraction attraction : attractions) {
-				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
-					if(nearAttraction(visitedLocation, attraction)) {
-						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
+		logger.debug("Calculating user rewards for: {} ", user.getUserName());
+		try {
+			List<VisitedLocation> userVisitedLocations = user.getVisitedLocations().stream()
+					.collect(Collectors.toList());
+			List<Attraction> attractions = gpsUtilService.getAllAttractions().stream().collect(Collectors.toList());
+
+			for (VisitedLocation visitedLocation : userVisitedLocations) {
+				for (Attraction attraction : attractions) {
+					if (user.getUserRewards().stream().filter(
+							userReward -> userReward.attraction.attractionName.equals(attraction.attractionName))
+							.count() == 0) {
+						this.calculateUserRewardsPoints(visitedLocation, attraction, user);
 					}
 				}
 			}
+			logger.debug("Rewards of user: {} succesfully calculated: {} ", user.getUserName(), user.getUserRewards());
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage());
+			Thread.currentThread().interrupt();
+		} catch (ExecutionException e) {
+			logger.error(e.getMessage());
+		} catch (Exception e) {
+			logger.error("Failed to calculate user rewards for: {}, {}", user.getUserName(), e.getMessage());
 		}
 	}
-	
-	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
-		return getDistance(attraction, location) > attractionProximityRange ? false : true;
-	}
-	
-	private boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
-		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
-	}
-	
-	private int getRewardPoints(Attraction attraction, User user) {
-		return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
-	}
-	
-	public double getDistance(Location loc1, Location loc2) {
-        double lat1 = Math.toRadians(loc1.latitude);
-        double lon1 = Math.toRadians(loc1.longitude);
-        double lat2 = Math.toRadians(loc2.latitude);
-        double lon2 = Math.toRadians(loc2.longitude);
 
-        double angle = Math.acos(Math.sin(lat1) * Math.sin(lat2)
-                               + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2));
-
-        double nauticalMiles = 60 * Math.toDegrees(angle);
-        double statuteMiles = STATUTE_MILES_PER_NAUTICAL_MILE * nauticalMiles;
-        return statuteMiles;
+	public void calculateUserRewardsPoints(VisitedLocation visitedLocation, Attraction attraction, User user)
+			throws InterruptedException, ExecutionException {
+		double distance = calculateDistance(visitedLocation.location, attraction);
+		if (distance <= defaultProximityInMiles) {
+			UserReward userReward = new UserReward(visitedLocation, attraction);
+			getUserRewardPoints(userReward, attraction, user);
+			user.addUserReward(userReward);
+		}
 	}
 
+	public int getUserRewardPoints(UserReward userReward, Attraction attraction, User user)
+			throws InterruptedException, ExecutionException {
+		CompletableFuture.supplyAsync(() -> {
+			return rewardCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
+		}, executor).thenAccept(points -> {
+			userReward.setRewardPoints(points);
+		});
+		return userReward.getRewardPoints();
+	}
+
+	public int getAttractionRewardPoints(Attraction attraction, User user) {
+		return rewardCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
+	}
+
+	public int calculateTotalRewardsPoints(User user) {
+		logger.debug("Calculating total Rewards Points for: {} ", user.getUserName());
+		return user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
+	}
 }
