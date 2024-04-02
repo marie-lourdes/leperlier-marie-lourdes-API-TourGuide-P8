@@ -21,7 +21,7 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class UserService {
 	private static final Logger logger = LogManager.getLogger(UserService.class);
-	
+
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;
 	private IUserDao userDaoImpl;
@@ -75,16 +75,14 @@ public class UserService {
 		List<User> allUsers = new ArrayList<>();
 
 		try {
-			try {
-				allUsers = userDaoImpl.getAllUsers(executor);
-			} catch (InterruptedException e) {
-				logger.error(e.getMessage());
-			} catch (ExecutionException e) {
-				logger.error(e.getMessage());
-			}
+			allUsers = userDaoImpl.getAllUsers(executor);
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage());
+			Thread.currentThread().interrupt();
+		} catch (ExecutionException e) {
+			logger.error(e.getMessage());
 		} catch (NullPointerException e) {
 			logger.error("Users not found");
-
 		}
 		return allUsers;
 	}

@@ -20,7 +20,7 @@ import gpsUtil.location.Attraction;
 
 @Service
 public class GpsUtilService {
-	private static final Logger logger = LogManager.getLogger(UserService.class);
+	private static final Logger logger = LogManager.getLogger(GpsUtilService .class);
 	
 	private final GpsUtil gpsUtil;
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
@@ -48,14 +48,14 @@ public class GpsUtilService {
 
 	public List<Attraction> getAllAttractions() {
 		logger.debug("Getting all attractions");
-		List<Attraction> AllAttractions = new ArrayList<>();
+		List<Attraction> allAttractions = new ArrayList<>();
 		try {
-			AllAttractions = gpsUtil.getAttractions().stream().collect(Collectors.toList());
-			logger.debug("All attractions: {}", AllAttractions);
+			allAttractions = gpsUtil.getAttractions().stream().collect(Collectors.toList());
+			logger.debug("All attractions: {}", allAttractions);
 		} catch (NullPointerException e) {
 			logger.error("Attractions not found");
 		}
-		return AllAttractions;
+		return allAttractions;
 	}
 
 	public Attraction getOneAttraction(String attractionName) {

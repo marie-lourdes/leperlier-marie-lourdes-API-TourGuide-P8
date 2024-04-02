@@ -67,7 +67,12 @@ public class RewardsService implements ICalculatorDistance {
 				}
 			}
 			logger.debug("Rewards of user: {} succesfully calculated: {} ", user.getUserName(), user.getUserRewards());
-		} catch (ConcurrentModificationException | InterruptedException | ExecutionException e) {
+		} catch (InterruptedException e) {
+			logger.error(e.getMessage());
+			Thread.currentThread().interrupt();
+		} catch (ExecutionException e) {
+			logger.error(e.getMessage());
+		} catch (Exception e) {
 			logger.error("Failed to calculate user rewards for: {}, {}", user.getUserName(), e.getMessage());
 		}
 	}

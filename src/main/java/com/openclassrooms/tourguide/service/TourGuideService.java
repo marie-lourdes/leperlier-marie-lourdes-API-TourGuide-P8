@@ -100,7 +100,7 @@ public class TourGuideService implements ICalculatorDistance {
 					userLocation.longitude, dist, rewardPoint);
 			recommendedUserAttractionsSorted.add(recommendedUserAttraction);
 		}
-		return recommendedUserAttractionsSorted.stream().sorted().collect(Collectors.toList());
+		return recommendedUserAttractionsSorted.stream().sorted().toList();
 	}
 
 	private List<RecommendedUserAttraction> selectFiveClosestRecommendedAttraction(
