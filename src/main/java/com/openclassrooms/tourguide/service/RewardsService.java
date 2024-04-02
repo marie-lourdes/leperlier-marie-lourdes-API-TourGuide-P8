@@ -26,6 +26,7 @@ import rewardCentral.RewardCentral;
 @Service
 public class RewardsService implements ICalculatorDistance {
 	private static final Logger logger = LogManager.getLogger(RewardsService.class);
+	
 	// proximity in miles
 	private int defaultProximityInMiles = 10;
 	private final GpsUtilService gpsUtilService;

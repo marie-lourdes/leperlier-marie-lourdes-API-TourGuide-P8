@@ -21,6 +21,7 @@ import gpsUtil.location.Attraction;
 @Service
 public class GpsUtilService {
 	private static final Logger logger = LogManager.getLogger(UserService.class);
+	
 	private final GpsUtil gpsUtil;
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;

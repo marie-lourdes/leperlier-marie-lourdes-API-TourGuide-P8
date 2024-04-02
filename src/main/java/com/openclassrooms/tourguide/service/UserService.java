@@ -21,9 +21,9 @@ import gpsUtil.location.VisitedLocation;
 @Service
 public class UserService {
 	private static final Logger logger = LogManager.getLogger(UserService.class);
+	
 	private ExecutorService executor = Executors.newFixedThreadPool(100000);
 	public final Tracker tracker;
-
 	private IUserDao userDaoImpl;
 
 	public UserService(IUserDao userDaoImpl) {

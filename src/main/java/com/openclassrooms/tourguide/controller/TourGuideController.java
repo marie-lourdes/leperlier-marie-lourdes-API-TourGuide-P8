@@ -1,5 +1,6 @@
 package com.openclassrooms.tourguide.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,12 +20,13 @@ import com.openclassrooms.tourguide.service.TourGuideService;
 import com.openclassrooms.tourguide.service.UserService;
 
 import gpsUtil.location.VisitedLocation;
+import jakarta.servlet.http.HttpServletResponse;
 import tripPricer.Provider;
 
 @RestController
 @RequestMapping("tourguide")
 public class TourGuideController {
-	private final static Logger logger = LoggerFactory.getLogger(TourGuideController.class);
+	private static final Logger logger = LoggerFactory.getLogger(TourGuideController.class);
 
 	private TourGuideService tourGuideService;
 	private UserService userService;
@@ -45,7 +47,8 @@ public class TourGuideController {
 	}
 
 	@GetMapping("/getLocation")
-	public VisitedLocation getLocation(@RequestParam String userName) throws InterruptedException {
+	public VisitedLocation getLocation(@RequestParam String userName, HttpServletResponse response)
+			throws InterruptedException, IOException {
 
 		VisitedLocation visitedLocation = null;
 		try {
@@ -56,15 +59,16 @@ public class TourGuideController {
 			visitedLocation = userService.getUserLocation(userFoundByName);
 
 			logger.info("User location successfully retrieved {}", visitedLocation);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
+			response.sendError(404);
 			logger.error("Failed to get user location {}", e.getMessage());
 		}
-
 		return visitedLocation;
 	}
 
 	@GetMapping("/getNearbyAttractions")
-	public List<RecommendedUserAttraction> getNearbyAttractions(@RequestParam String userName) {
+	public List<RecommendedUserAttraction> getNearbyAttractions(@RequestParam String userName,
+			HttpServletResponse response) throws IOException {
 
 		List<RecommendedUserAttraction> closestRecommendedUserAttractions = new ArrayList<>();
 
@@ -77,7 +81,8 @@ public class TourGuideController {
 			}
 
 			logger.info("closest recommended user attractions successfully retrieved for: {}", userName);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
+			response.sendError(404);
 			logger.error("Failed to get closest user attractions {}", e.getMessage());
 		}
 
@@ -85,7 +90,7 @@ public class TourGuideController {
 	}
 
 	@GetMapping("/getRewards")
-	public List<UserReward> getRewards(@RequestParam String userName) {
+	public List<UserReward> getRewards(@RequestParam String userName, HttpServletResponse response) throws IOException {
 		List<UserReward> userRewards = new ArrayList<>();
 
 		try {
@@ -97,7 +102,8 @@ public class TourGuideController {
 			userRewards = userService.getUserRewards(userFoundByName);
 
 			logger.info("User rewards successfully retrieved {} for: {}", userRewards, userName);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
+			response.sendError(404);
 			logger.error("Failed to get user rewards  {}", e.getMessage());
 		}
 
@@ -105,7 +111,7 @@ public class TourGuideController {
 	}
 
 	@GetMapping("/getTripDeals")
-	public List<Provider> getTripDeals(@RequestParam String userName) {
+	public List<Provider> getTripDeals(@RequestParam String userName, HttpServletResponse response) throws IOException {
 		List<Provider> providers = new ArrayList<>();
 
 		try {
@@ -113,7 +119,8 @@ public class TourGuideController {
 			providers = tourGuideService.getTripDeals(userFoundByName);
 
 			logger.info("All providers successfully retrieved {} for: {}", providers, userName);
-		} catch (Exception e) {
+		} catch (NullPointerException e) {
+			response.sendError(404);
 			logger.error("Failed to get all providers  {}", e.getMessage());
 		}
 
