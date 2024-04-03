@@ -3,6 +3,7 @@
 > Java 17  
 > Spring Boot 3.X  
 > JUnit 5  
+>Docker 25.0.3
 
 # How to have gpsUtil, rewardCentral and tripPricer dependencies available ?
 
