@@ -53,7 +53,7 @@ jobs:
           mvn install:install-file -Dfile=libs/TripPricer.jar -DgroupId=tripPricer -DartifactId=tripPricer -Dversion=1.0.0 -Dpackaging=jar
           
       - name: Exécution des tests
-        run: mvn verify
+        run: ./mvnw test
       - name: Archive des résultats de tests
         uses: actions/upload-artifact@v2
         with:
