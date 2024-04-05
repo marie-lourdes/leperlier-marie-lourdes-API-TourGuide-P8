@@ -2,6 +2,8 @@ FROM eclipse-temurin:17-jdk-alpine as builder
 
 WORKDIR application
 
+COPY /target/*.jar tourguide-1.0.0.jar
+
 RUN java -jar tourguide-1.0.0.jar 
 
 FROM eclipse-temurin:17
