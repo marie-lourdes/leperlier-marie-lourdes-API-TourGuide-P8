@@ -8,8 +8,6 @@ RUN java -Djarmode=layertools -jar tourguide-1.0.0.jar extract
 
 FROM eclipse-temurin:17
 
-WORKDIR application
-
 EXPOSE 8080
 
 ENV SPRING_PROFILES_ACTIVE docker
