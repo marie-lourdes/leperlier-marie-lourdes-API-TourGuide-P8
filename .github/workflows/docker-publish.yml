@@ -44,7 +44,22 @@ jobs:
         uses: sigstore/cosign-installer@6e04d228eb30da1757ee4e1dd75a0ec73a653e06 #v3.1.1
         with:
           cosign-release: 'v2.1.1'
-
+          
+     # Extract dependencies gpsUtil, RewardCentral, TripPricer
+      - name: Install dependencies gpsUtil, RewardCentral, TripPricer
+        run: |
+          mvn install:install-file -Dfile=/libs/gpsUtil.jar -DgroupId=gpsUtil -DartifactId=gpsUtil -Dversion=1.0.0 -Dpackaging=jar
+          mvn install:install-file -Dfile=/libs/RewardCentral.jar -DgroupId=rewardCentral -DartifactId=rewardCentral -Dversion=1.0.0 -Dpackaging=jar
+          mvn install:install-file -Dfile=/libs/TripPricer.jar -DgroupId=tripPricer -DartifactId=tripPricer -Dversion=1.0.0 -Dpackaging=jar
+          
+      - name: Exécution des tests
+        run: mvn verify
+      - name: Archive des résultats de tests
+        uses: actions/upload-artifact@v2
+        with:
+          name: test-results
+          path: test-results
+          
       # Set up BuildKit Docker container builder to be able to build
       # multi-platform images and export cache
       # https://github.com/docker/setup-buildx-action
@@ -97,19 +112,6 @@ jobs:
         # against the sigstore community Fulcio instance.
         run: echo "${TAGS}" | xargs -I {} cosign sign --yes {}@${DIGEST}
         
-         # Extract dependencies gpsUtil, RewardCentral, TripPricer
-      - name: Install dependencies gpsUtil, RewardCentral, TripPricer
-        run: |
-          mvn install:install-file -Dfile=/libs/gpsUtil.jar -DgroupId=gpsUtil -DartifactId=gpsUtil -Dversion=1.0.0 -Dpackaging=jar
-          mvn install:install-file -Dfile=/libs/RewardCentral.jar -DgroupId=rewardCentral -DartifactId=rewardCentral -Dversion=1.0.0 -Dpackaging=jar
-          mvn install:install-file -Dfile=/libs/TripPricer.jar -DgroupId=tripPricer -DartifactId=tripPricer -Dversion=1.0.0 -Dpackaging=jar
-          
-      - name: Exécution des tests
-        run: mvn verify
-      - name: Archive des résultats de tests
-        uses: actions/upload-artifact@v2
-        with:
-          name: test-results
-          path: test-results
+    
    
           
