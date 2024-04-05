@@ -1,7 +1,7 @@
 FROM eclipse-temurin:17-jdk-alpine as builder
 
 VOLUME /tmp
-ARG JAR_FILE
+ARG JAR_FILE=target/*.jar
 COPY &{JAR_FILE} /tourguide-1.0.0.jar
 
 RUN java -Djarmode=layertools -jar tourguide-1.0.0.jar extract 
