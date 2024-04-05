@@ -1,4 +1,4 @@
-package com.openclassrooms.tourguide.helper;
+package com.openclassrooms.tourguide.helper
 
 public class InternalUserTestHelper {
 	//Default default internal user number to 100,000 for testing
