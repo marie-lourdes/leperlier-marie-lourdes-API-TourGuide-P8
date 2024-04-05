@@ -2,7 +2,7 @@ FROM eclipse-temurin:17-jdk-alpine as builder
 
 WORKDIR application
 
-RUN java -Djarmode=layertools -jar tourguide-1.0.0.jar extract 
+RUN java -jar tourguide-1.0.0.jar 
 
 FROM eclipse-temurin:17
 
