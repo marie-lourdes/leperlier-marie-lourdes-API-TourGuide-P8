@@ -60,11 +60,8 @@ jobs:
       - name: Run the Maven verify phase
         run: mvn --batch-mode --update-snapshots verify
    docker:
-        runs-on: ubuntu-latest
-        steps:
-       # Set up BuildKit Docker container builder to be able to build
-      # multi-platform images and export cache
-      # https://github.com/docker/setup-buildx-action
+    runs-on: ubuntu-latest
+    steps:
       -
         name: Set up QEMU
         uses: docker/setup-qemu-action@v3
