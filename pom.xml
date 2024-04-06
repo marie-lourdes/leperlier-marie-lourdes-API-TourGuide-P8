@@ -13,11 +13,9 @@
 	<version>1.0.0</version>
 	<name>tourguide</name>
 	<description>Api for TourGuide</description>
-
 	<properties>
 		<java.version>17</java.version>
 	</properties>
-
 	<dependencies>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
