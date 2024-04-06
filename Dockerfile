@@ -4,7 +4,7 @@ WORKDIR /api
 
 VOLUME /tmp
 
-ADD target/*.jar tourguide-1.0.0.jar
+ADD ./target/*.jar tourguide-1.0.0.jar
  
 EXPOSE 8080
  
