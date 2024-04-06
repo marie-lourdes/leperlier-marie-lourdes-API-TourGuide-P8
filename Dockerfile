@@ -1,9 +1,9 @@
-
-# Container image that runs your code
 FROM eclipse-temurin:17-jdk-alpine
 
-# Copies your code file from your action repository to the filesystem path `/` of the container
-COPY entrypoint.sh /entrypoint.sh
+VOLUME /tmp
 
-# Code file to execute when the docker container starts up (`entrypoint.sh`)
-ENTRYPOINT ["/entrypoint.sh"]
+ADD target/*.jar tourguide-1.0.0.jar
+
+EXPOSE 8080
+ 
+ENTRYPOINT ["java","-jar","tourguide-1.0.0.jar"]
