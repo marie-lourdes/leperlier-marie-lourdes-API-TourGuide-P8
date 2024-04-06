@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.openclassrooms</groupId>
 	<artifactId>tourguide</artifactId>
-	<version>1.0.0</version>
+	<version>0.0.1-SNAPSHOT</version>
 	<name>tourguide</name>
 	<description>Api for TourGuide</description>
 	<properties>
@@ -102,6 +102,9 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
+					<layers>
+                        <enabled>true</enabled>
+                    </layers>
 				</configuration>
 			</plugin>
 			<plugin>
