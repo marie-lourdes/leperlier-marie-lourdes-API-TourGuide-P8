@@ -1,0 +1,5 @@
+# action.yml
+name: 'Docker image tourguide'
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
