@@ -1,22 +1,9 @@
-FROM eclipse-temurin:17-jdk-alpine as builder
+FROM eclipse-temurin:17-jdk-alpine 
 
 VOLUME /tmp
 
-ADD target/*.jar tourguide-1.0.0.jar
-
-RUN java -Djarmode=layertools -jar tourguide-0.0.1-SNAPSHOT.jar extract
- 
-
-FROM eclipse-temurin:17-jdk-alpine
+ADD target/*.jar tourguide-0.0.1-SNAPSHOT.jar
 
 EXPOSE 8080
-
-COPY --from=builder dependencies/ ./
-
-COPY --from=builder snapshot-dependencies/ ./
-
-COPY --from=builder spring-boot-loader/ ./
-
-COPY --from=builder application/ ./
-
-ENTRYPOINT ["java", "org.springframework.boot.loader.JarLauncher"]
+ 
+ENTRYPOINT ["java","-jar","tourguide-0.0.1-SNAPSHOT.jar"]
