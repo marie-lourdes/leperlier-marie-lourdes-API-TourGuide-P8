@@ -10,3 +10,4 @@ EXPOSE 8080
  
 ENTRYPOINT ["java","-jar","/api/tourguide-1.0.0.jar"]
 
+
