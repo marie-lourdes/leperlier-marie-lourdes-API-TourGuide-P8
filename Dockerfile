@@ -1,7 +1,5 @@
 FROM eclipse-temurin:17-jdk-alpine
 
-VOLUME /tmpfs
-
 WORKDIR /api
 
 ADD target/*.jar tourguide-1.0.0.jar
