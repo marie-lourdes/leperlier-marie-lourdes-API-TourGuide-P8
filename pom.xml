@@ -13,10 +13,28 @@
 	<version>0.0.1-SNAPSHOT</version>
 	<name>tourguide</name>
 	<description>Api for TourGuide</description>
+	
 	<properties>
 		<java.version>17</java.version>
 	</properties>
+	
 	<dependencies>
+		<!-- Modules-->
+		<dependency>
+			<groupId>gpsUtil</groupId>
+			<artifactId>gpsUtil</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>tripPricer</groupId>
+			<artifactId>tripPricer</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
+			<groupId>rewardCentral</groupId>
+			<artifactId>rewardCentral</artifactId>
+			<version>1.0.0</version>
+		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
@@ -72,29 +90,14 @@
 			<artifactId>commons-lang3</artifactId>
 		</dependency>
 
-		<!-- Modules-->
-		<dependency>
-			<groupId>gpsUtil</groupId>
-			<artifactId>gpsUtil</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>tripPricer</groupId>
-			<artifactId>tripPricer</artifactId>
-			<version>1.0.0</version>
-		</dependency>
-		<dependency>
-			<groupId>rewardCentral</groupId>
-			<artifactId>rewardCentral</artifactId>
-			<version>1.0.0</version>
-		</dependency>
+		
 	</dependencies>
 
 	<build>
 		<plugins>
 			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
+			   <groupId>org.apache.maven.plugins</groupId>
+			   <artifactId>maven-install-plugin</artifactId>
 				<configuration>
 					<excludes>
 						<exclude>
@@ -102,27 +105,9 @@
 							<artifactId>lombok</artifactId>
 						</exclude>
 					</excludes>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.jacoco</groupId>
-				<artifactId>jacoco-maven-plugin</artifactId>
-				<version>0.8.11</version>
-				<executions>
-					<execution>
-						<goals>
-							<goal>prepare-agent</goal>
-						</goals>
-					</execution>
-					<execution>
-						<id>report</id>
-						<phase>prepare-package</phase>
-						<goals>
-							<goal>report</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+				</configuration>			
+			</plugin>			 
 		</plugins>
 	</build>
+	
 </project>
