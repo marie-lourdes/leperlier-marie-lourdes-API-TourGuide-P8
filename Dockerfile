@@ -6,3 +6,4 @@ EXPOSE 8080
   
 ENTRYPOINT ["java","-jar","tourguide-1.0.0-SNAPSHOT.jar"]
 
+
