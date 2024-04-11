@@ -1,7 +1,6 @@
 package com.openclassrooms.tourguide;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Date;
@@ -44,6 +43,7 @@ import rewardCentral.RewardCentral;
  * assertTrue(TimeUnit.MINUTES.toSeconds(20) >=
  * TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
  */
+//@TestMethodOrder(OrderAnnotation.class)
 class PerformanceTest {
 
 	private GpsUtilService gpsUtilService;
@@ -72,7 +72,7 @@ class PerformanceTest {
 
 		allUsers.forEach(user -> {
 			CompletableFuture.supplyAsync(() -> user.getVisitedLocations().get(3))
-					.thenAccept((visitedLocation -> assertNotNull(visitedLocation)));
+					.thenAccept(visitedLocation -> assertNotNull(visitedLocation));
 		});
 
 		stopWatch.stop();
@@ -102,7 +102,6 @@ class PerformanceTest {
 		allUsers.parallelStream().forEach(user -> rewardsService.calculateRewards(user));
 
 		allUsers.forEach(user -> {
-			CompletableFuture.supplyAsync(() -> user.getUserRewards());
 			assertTrue(user.getUserRewards().size() > 0);
 		});
 
