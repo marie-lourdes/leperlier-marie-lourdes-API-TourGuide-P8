@@ -43,5 +43,4 @@ class RewardsServiceTest {
 		rewardsService.tracker.stopTracking();
 		assertEquals(1, userRewards.size());
 	}
-
 }
