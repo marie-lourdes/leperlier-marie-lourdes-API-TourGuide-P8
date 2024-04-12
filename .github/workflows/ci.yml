@@ -33,7 +33,7 @@ jobs:
   docker-build:
     runs-on: ubuntu-latest
     needs:
-      - project-build
+      - project-build-test
     steps:
     - uses: actions/checkout@v3
     - name: Build the Docker image
