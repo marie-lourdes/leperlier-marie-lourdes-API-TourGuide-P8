@@ -1,4 +1,4 @@
-# API  Tourguide Application
+# API  Tourguide 
 
 TourGuide is a Spring Boot application and a centerpiece of the company's application portfolio. 
 It allows users to see nearby tourist attractions and get discounts on hotel stays and tickets to various shows.
