@@ -27,28 +27,14 @@ public class UserController {
 		this.userService = userService;
 	}
 
-	@PostMapping("/testing/add")
-	public User addUser(@RequestBody User user, HttpServletResponse response) {
-		logger.debug("adding user");
-		try {
-			userService.addUser(user);
-			response.setStatus(201);
-			return user;
-		} catch (Exception e) {
-			logger.error("Failed to creating user for test{}", e.getMessage());
-			return new User();
-
-		}
-	}
-
-	@GetMapping("/testing/getUser")
+	@GetMapping("/getUser")
 	public User getOneUser(@RequestParam String userName, HttpServletResponse response) throws IOException {
 		logger.debug("testing add user");
 		try {
 			return userService.getUser(userName);
 		} catch (NullPointerException e) {
 			response.sendError(404);
-			logger.error("Failed to creating user for test{}", e.getMessage());
+			logger.error("Failed to get user {}", e.getMessage());
 			return new User();
 		}
 	}
