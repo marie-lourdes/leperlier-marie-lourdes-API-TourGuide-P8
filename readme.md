@@ -51,25 +51,25 @@ The host and port is :http://localhost:8080
 
 This service makes it possible to determine the five closest attractions of the last user position, and to determine  trip deals
 
-- GET: **/tourguide/getNearbyAttractions'**
-- GET: **/tourguide/getTripDeals'**
+- GET: **/tourguide/getNearbyAttractions?userName="userName"**
+- GET: **/tourguide/getTripDeals?userName="userName"**
 
-#### Reward   Service
+#### Endpoints Reward Service
 
 This service makes it possible to determine the points (specific to each tourist attraction) which are awarded to the user who visits a given tourist attraction
 
-- GET: **/tourguide/getRewards?userName=<userName>**
+- GET: **/tourguide/getRewards?userName="userName"**
 
-####GpsUtil  Service
+#### Endpoints GpsUtil  Service
 
 This service makes it possible to determine the geographical position of the user
 
-- GET: **/tourguide/'getLocation?userName=<userName>'**
+- GET: **/tourguide/getLocation?userName="userName"**
 
 
 #### Endpoints  User Service
 
-- GET: **/tourguide/user/getUser?userName=<userName>'**
+- GET: **/tourguide/user/getUser?userName="userName"**
 
 
 ### Use Docker Container
