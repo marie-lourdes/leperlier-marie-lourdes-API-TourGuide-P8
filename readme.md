@@ -54,7 +54,7 @@ This service makes it possible to determine the five closest attractions of the 
 - GET: **/tourguide/getNearbyAttractions'**
 - GET: **/tourguide/getTripDeals'**
 
-####Reward   Service
+#### Reward   Service
 
 This service makes it possible to determine the points (specific to each tourist attraction) which are awarded to the user who visits a given tourist attraction
 
@@ -67,7 +67,7 @@ This service makes it possible to determine the geographical position of the use
 - GET: **/tourguide/'getLocation?userName=<userName>'**
 
 
-####Endpoints  User Service
+#### Endpoints  User Service
 
 - GET: **/tourguide/user/getUser?userName=<userName>'**
 
