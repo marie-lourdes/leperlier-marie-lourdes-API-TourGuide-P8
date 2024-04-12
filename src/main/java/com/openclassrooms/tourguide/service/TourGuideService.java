@@ -63,7 +63,7 @@ public class TourGuideService implements ICalculatorDistance {
 	}
 
 	public List<RecommendedUserAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
-		logger.debug("getting five closest RecommendedUserAttraction for: {} ", user.getUserName());
+		logger.debug("Getting five closest RecommendedUserAttraction for: {} ", user.getUserName());
 		List<RecommendedUserAttraction> closestRecommendedUserAttraction = new ArrayList<>();
 		
 		try {
