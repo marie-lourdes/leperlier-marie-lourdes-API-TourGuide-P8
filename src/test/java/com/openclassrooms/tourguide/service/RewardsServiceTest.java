@@ -11,6 +11,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.openclassrooms.tourguide.dao.UserDaoImpl;
+import com.openclassrooms.tourguide.helper.InternalUserTestHelper;
 import com.openclassrooms.tourguide.model.User;
 import com.openclassrooms.tourguide.model.UserReward;
 
@@ -31,16 +32,31 @@ class RewardsServiceTest {
 	}
 
 	@Test
-	void testUserGetRewards() throws InterruptedException, ExecutionException {
+	void testGetUserRewards() throws InterruptedException, ExecutionException {
 		UserService userService = new UserService(new UserDaoImpl());
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		Attraction attraction = gpsUtilService.getAllAttractions().get(0);
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
-		
+
 		rewardsService.calculateRewards(user);
 		List<UserReward> userRewards = userService.getUserRewards(user);
 
 		rewardsService.tracker.stopTracking();
 		assertEquals(1, userRewards.size());
+	}
+
+	@Test
+	public void testGetUserRewards_WithAllAttractions() {
+		GpsUtil gpsUtil = new GpsUtil();
+		UserService userService = new UserService(new UserDaoImpl());
+		rewardsService.setDefaultProximityInMiles(Integer.MAX_VALUE);
+
+		InternalUserTestHelper.setInternalUserNumber(1);
+
+		rewardsService.calculateRewards(userService.getAllUsers().get(0));
+		List<UserReward> userRewards = userService.getUserRewards(userService.getAllUsers().get(0));
+		userService.tracker.stopTracking();
+
+		assertEquals(gpsUtil.getAttractions().size(), userRewards.size());
 	}
 }
